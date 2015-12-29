@@ -4,16 +4,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
-import java.sql.Time;
 import java.util.Collections;
 import java.util.List;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.border.TitledBorder;
-import javax.swing.text.Document;
-import javax.swing.text.SimpleAttributeSet;
-import javax.swing.text.StyleConstants;
+
 
 import sim.tv2.no.gui.Gui;
 import sim.tv2.no.parser.Parser;
@@ -38,8 +35,7 @@ public class Main {
 	}
 	
 	public static void main(String[] args) {
-		Main m = new Main();
-		
+		new Main();
 	}
 	
 

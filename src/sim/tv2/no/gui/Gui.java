@@ -24,6 +24,10 @@ import javax.swing.border.TitledBorder;
  */
 
 public class Gui extends JFrame {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -7443633601733752828L;
 	private JButton openFileBtn, runButton;
 	private JEditorPane inputPane, outputPane;
 	private JTextArea numberOfPlayersArea;
