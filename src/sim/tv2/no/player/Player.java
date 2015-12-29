@@ -7,7 +7,7 @@ import java.text.DecimalFormat;
  * @author Sindre Moldeklev
  * @version 0.1
  */
-public class Player {
+public class Player implements Comparable<Player> {
 	
 	private String name;
 	private int number, sprints;
@@ -112,5 +112,16 @@ public class Player {
 	public String toString() {
 		DecimalFormat df = new DecimalFormat("##.##");
 		return df.format(this.distance) + " km. - " + this.name;
+	}
+
+	@Override
+	public int compareTo(Player otherPlayer) {
+		Player player2 = otherPlayer;
+		
+		if(this.distance > player2.getDistance()) {
+			return -1;
+		} else if (this.distance < player2.getDistance()) {
+			return 1;
+		} else return 0;
 	}
 }

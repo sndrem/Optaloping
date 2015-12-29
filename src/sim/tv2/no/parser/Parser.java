@@ -1,5 +1,10 @@
 package sim.tv2.no.parser;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,9 +41,14 @@ public class Parser {
 				"29	Marouane Chamakh	5.36	35	6.87	29.94\n" +
 				"42	Jason Puncheon	8.56	52	7.17	29.45\n";
 		List<Player> play = p.parseText(testString);
+	
 		
-		for(Player pl : play) {
-			System.out.println(pl);
+		File file = new File("/Users/sindremoldeklev/Documents/eclipseWorkspace/Optaloping/src/testfil.txt");
+		try {
+			p.parseText(file);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 	
@@ -67,6 +77,34 @@ public class Parser {
 		return players;
 	}
 	
+	/*
+	 * Method to parse a text file
+	 * @params file the file to parse
+	 * @return List<Player> the list of players
+	 */
+	public List<Player> parseText(File file) throws IOException {
+		try {
+			BufferedReader br = new BufferedReader(new FileReader(file));
+			
+			String line;
+			while((line = br.readLine()) != null) {
+				String[] columns = line.split("\t");
+				int number = Integer.parseInt(columns[0]);
+				String name = columns[1];
+				float distance = Float.parseFloat(columns[2]);
+				int sprints = Integer.parseInt(columns[3]);
+				float avgSpeed = Float.parseFloat(columns[4]);
+				float topSpeed = Float.parseFloat(columns[5]);
+				
+				Player player = new Player(name, number, sprints, distance, avgSpeed, topSpeed);
+				players.add(player);
+			}
+		} catch(FileNotFoundException e) {
+			System.out.println(e.getMessage());
+		}
+		return players;
+	}
+	
 	/**
 	 * @return the players
 	 */
@@ -80,6 +118,12 @@ public class Parser {
 	 */
 	public void setPlayers(List<Player> players) {
 		this.players = players;
+	}
+	
+	public int getSize() {
+		if(players != null) {
+			return players.size();
+		} else return 0;
 	}
 	
 	
