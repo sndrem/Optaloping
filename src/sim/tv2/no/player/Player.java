@@ -1,20 +1,30 @@
 package sim.tv2.no.player;
 
 import java.text.DecimalFormat;
+import java.util.Comparator;
 
 /*
  * This class represents a player
  * @author Sindre Moldeklev
  * @version 0.1
  */
-public class Player implements Comparable<Player> {
+public class Player implements Comparator<Player>, Comparable<Player> {
 	
 	private String name;
 	private int number, sprints;
 	private double distance, avgSpeed, topSpeed;
+	private DecimalFormat df;
 
 	
-
+	/*
+	 * Constructor the player class
+	 * @params name		the name of the player
+	 * @params number	the number of the player
+	 * @params sprints	number of sprints for the player
+	 * @params distance	the distance ran for the player
+	 * @params avgSpeed	the average speed for the player
+	 * @params topSpeed	the top speed for the player
+	 */
 	public Player(String name, int number, int sprints, double distance,
 			double avgSpeed, double topSpeed) {
 		this.name = name;
@@ -23,6 +33,7 @@ public class Player implements Comparable<Player> {
 		this.distance = distance;
 		this.avgSpeed = avgSpeed;
 		this.topSpeed = topSpeed;
+		df = new DecimalFormat("##.##");
 	}
 
 	/**
@@ -109,10 +120,31 @@ public class Player implements Comparable<Player> {
 		this.topSpeed = topSpeed;
 	}
 	
+	/**
+	 * Method to print information for the player based on top speed
+	 */
+	public String printTopSpeed() {
+		return df.format(this.topSpeed) + " km/t. - " + this.getName();
+	}
+	
+	/**
+	 * Method to print information for the player based on avgSpeed
+	 */
+	public String printAvgSpeed() {
+		return df.format(this.avgSpeed) + " km/t. - " + this.getName();
+	}
+	
+	/**
+	 * Method to print information for the player based on sprints
+	 */
+	public String printSprints() {
+		return this.name + " har sprintet " + this.sprints + " ganger";
+	}
+		
 	public String toString() {
-		DecimalFormat df = new DecimalFormat("##.##");
 		return df.format(this.distance) + " km. - " + this.name;
 	}
+	
 
 	@Override
 	public int compareTo(Player otherPlayer) {
@@ -123,5 +155,11 @@ public class Player implements Comparable<Player> {
 		} else if (this.distance < player2.getDistance()) {
 			return 1;
 		} else return 0;
+	}
+
+	@Override
+	public int compare(Player o1, Player o2) {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 }

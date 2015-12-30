@@ -6,13 +6,14 @@ import java.awt.GridLayout;
 import java.awt.Rectangle;
 
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.TitledBorder;
@@ -24,9 +25,7 @@ import javax.swing.border.TitledBorder;
  */
 
 public class Gui extends JFrame {
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = -7443633601733752828L;
 	private JButton openFileBtn, runButton;
 	private JEditorPane inputPane, outputPane;
@@ -34,6 +33,7 @@ public class Gui extends JFrame {
 	private static Gui instance = null;
 	private final JFileChooser fileChooser = new JFileChooser(".");
 	private JLabel statusLabel;
+	private JComboBox<String> categoryDropdow;
 	
 	private Gui() {
 		setupGui();
@@ -46,19 +46,30 @@ public class Gui extends JFrame {
 		return instance;
 	}
 	
-
+	/*
+	 * Method to setup the gui
+	 */
 	private void setupGui() {
+		/*
+		 * Set bounds, title, place the program in the center of the screen and set default close operation
+		 */
 		this.setBounds(new Rectangle(600,600));
 		this.setTitle("Løpestats fra Opta");
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		
+		// Set layout for the gui
 		this.setLayout(new BorderLayout());
 		
+		// Create the top-panel. This panel holds the open button, input field for the range of players and the run button
 		JPanel northPanel = new JPanel(new GridLayout());
 		
 		openFileBtn = new JButton("Åpne tekstfil");
 		openFileBtn.setToolTipText("Åpne en tab-separert tekstfil med løpedata");
+		
+		String[] categories = {"Distanse", "Sprinter", "Gjennomsnittsfart", "Toppfart"};
+		
+		setCategoryDropdow(new JComboBox<String>(categories));
 		
 		numberOfPlayersArea = new JTextArea("5");
 		numberOfPlayersArea.setToolTipText("Velg antall spillere du ønsker kalkulert");	
@@ -69,6 +80,7 @@ public class Gui extends JFrame {
 		runButton.setToolTipText("Trykk her for å kalkulere spillere som har løpt mest");
 		
 		northPanel.add(openFileBtn);
+		northPanel.add(getCategoryDropdow());
 
 		northPanel.add(numberOfPlayersArea);
 		northPanel.add(runButton);
@@ -76,26 +88,13 @@ public class Gui extends JFrame {
 		
 		Dimension minimumSize = new Dimension(100,100);
 		
-		inputPane = new JEditorPane();
-		inputPane.setMinimumSize(minimumSize);
-		inputPane.setContentType("text/html");
-		inputPane.setEnabled(false);
+		// Create the ouput-pane where the players will be printed
 		outputPane = new JEditorPane();
 		outputPane.setMinimumSize(minimumSize);
 		outputPane.setEditable(false);
 		
-		JScrollPane inputScrollPane = new JScrollPane(inputPane, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-		inputScrollPane.setBorder(new TitledBorder("Lim inn data her"));
-		inputScrollPane.setToolTipText("Kopier inn tab-separert data fra LM3 her");
-		inputScrollPane.setEnabled(false);
-	
-		
 		JScrollPane outputScrollPane = new JScrollPane(outputPane, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED, ScrollPaneConstants.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 		outputScrollPane.setBorder(new TitledBorder("Oppsummering"));
-		
-		
-		JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, inputScrollPane, outputScrollPane);
-		splitPane.setDividerLocation(450);
 		
 		JPanel centerPanel = new JPanel(new BorderLayout());
 		centerPanel.add(outputScrollPane, BorderLayout.CENTER);
@@ -203,6 +202,29 @@ public class Gui extends JFrame {
 	public void setStatusLabel(JLabel statusLabel) {
 		this.statusLabel = statusLabel;
 	}
+	
+	/*
+	 * Method to show a dialog box
+	 * @params info the info you want to display
+	 */
+	public void showMessage(String info) {
+		JOptionPane.showMessageDialog(this, info);
+	}
+
+	/**
+	 * @return the categoryDropdow
+	 */
+	public JComboBox<String> getCategoryDropdow() {
+		return categoryDropdow;
+	}
+
+	/**
+	 * @param categoryDropdow the categoryDropdow to set
+	 */
+	public void setCategoryDropdow(JComboBox<String> categoryDropdow) {
+		this.categoryDropdow = categoryDropdow;
+	}
+	
 	
 
 }

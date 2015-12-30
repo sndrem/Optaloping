@@ -1,0 +1,14 @@
+1	Kasper Schmeichel	3.93	8	2.48	28.25
+2	Ritchie de Laet	0.22	1	8.66	24.21
+4	Daniel Drinkwater	9.52	36	7.01	31.91
+5	Wes Morgan	8.43	35	5.31	32.13
+6	Robert Huth	8.83	33	5.55	31.35
+9	Jamie Vardy	10.15	58	6.16	33.44
+10	Andy King	1.73	7	7.36	23.13
+11	Marc Albrighton	11.36	68	7.29	33.72
+14	N'Golo Kanté	11.31	67	7.13	33.19
+17	Danny Simpson	9.64	54	6.08	32.28
+23	Leonardo Ulloa	3.14	13	6.90	25.08
+26	Riyad Mahrez	11.06	55	6.96	30.52
+28	Christian Fuchs	10.21	54	6.40	30.13
+33	Gökhan Inler	8.14	27	7.19	30.91
