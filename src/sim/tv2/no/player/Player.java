@@ -138,7 +138,7 @@ public class Player implements Comparator<Player>, Comparable<Player> {
 	 * Method to print information for the player based on sprints
 	 */
 	public String printSprints() {
-		return this.name + " har sprintet " + this.sprints + " ganger";
+		return this.sprints + " - " + this.name;
 	}
 		
 	public String toString() {

@@ -34,6 +34,7 @@ public class Gui extends JFrame {
 	private final JFileChooser fileChooser = new JFileChooser(".");
 	private JLabel statusLabel;
 	private JComboBox<String> categoryDropdow;
+	private JPanel statusPanel;
 	
 	private Gui() {
 		setupGui();
@@ -101,11 +102,11 @@ public class Gui extends JFrame {
 		
 		this.add(centerPanel, BorderLayout.CENTER);
 		
-		JPanel statusPanel = new JPanel();
+		setStatusPanel(new JPanel());
 		statusLabel = new JLabel("Status:");
-		statusPanel.add(statusLabel);
+		getStatusPanel().add(statusLabel);
 		
-		this.add(statusPanel, BorderLayout.SOUTH);
+		this.add(getStatusPanel(), BorderLayout.SOUTH);
 		
 		
 		this.setVisible(true);
@@ -223,6 +224,20 @@ public class Gui extends JFrame {
 	 */
 	public void setCategoryDropdow(JComboBox<String> categoryDropdow) {
 		this.categoryDropdow = categoryDropdow;
+	}
+
+	/**
+	 * @return the statusPanel
+	 */
+	public JPanel getStatusPanel() {
+		return statusPanel;
+	}
+
+	/**
+	 * @param statusPanel the statusPanel to set
+	 */
+	public void setStatusPanel(JPanel statusPanel) {
+		this.statusPanel = statusPanel;
 	}
 	
 	
