@@ -12,6 +12,7 @@ import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -37,6 +38,7 @@ public class Gui extends JFrame {
 	private JComboBox<String> categoryDropdow;
 	private JPanel statusPanel;
 	private JCheckBox orderCheckBox;
+	private JButton copyButton;
 	
 	private Gui() {
 		setupGui();
@@ -60,12 +62,13 @@ public class Gui extends JFrame {
 		this.setTitle("Løpestats fra Opta");
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		
+
+				
 		// Set layout for the gui
 		this.setLayout(new BorderLayout());
 		
 		// Create the top-panel. This panel holds the open button, input field for the range of players and the run button
-		JPanel northPanel = new JPanel(new GridLayout());
+		JPanel northPanel = new JPanel(new GridLayout(2,4));
 		
 		openFileBtn = new JButton("Åpne tekstfil");
 		openFileBtn.setToolTipText("Åpne en tab-separert tekstfil med løpedata");
@@ -84,12 +87,15 @@ public class Gui extends JFrame {
 		runButton.setEnabled(false);
 		runButton.setToolTipText("Trykk her for å kalkulere spillere som har løpt mest");
 		
+		setCopyButton(new JButton("Kopier til clipboard"));
+		
 		northPanel.add(openFileBtn);
 		northPanel.add(getCategoryDropdow());
 		northPanel.add(getOrderCheckBox());
 
 		northPanel.add(numberOfPlayersArea);
 		northPanel.add(runButton);
+		northPanel.add(getCopyButton());
 		this.add(northPanel, BorderLayout.NORTH);
 		
 		Dimension minimumSize = new Dimension(100,100);
@@ -106,6 +112,8 @@ public class Gui extends JFrame {
 		centerPanel.add(outputScrollPane, BorderLayout.CENTER);
 		
 		this.add(centerPanel, BorderLayout.CENTER);
+		
+		
 		
 		setStatusPanel(new JPanel());
 		statusLabel = new JLabel("Status:");
@@ -258,7 +266,19 @@ public class Gui extends JFrame {
 	public void setOrderCheckBox(JCheckBox orderCheckBox) {
 		this.orderCheckBox = orderCheckBox;
 	}
-	
-	
+
+	/**
+	 * @return the copyButton
+	 */
+	public JButton getCopyButton() {
+		return copyButton;
+	}
+
+	/**
+	 * @param copyButton the copyButton to set
+	 */
+	public void setCopyButton(JButton copyButton) {
+		this.copyButton = copyButton;
+	}
 
 }

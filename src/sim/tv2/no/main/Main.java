@@ -1,6 +1,9 @@
 package sim.tv2.no.main;
 
 import java.awt.Color;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -54,6 +57,7 @@ public class Main {
 		Events e = new Events();
 		gui.getOpenFileBtn().addActionListener(e);
 		gui.getRunButton().addActionListener(e);
+		gui.getCopyButton().addActionListener(e);
 	}
 	
 	/*
@@ -66,9 +70,7 @@ public class Main {
 			File file = fileChooser.getSelectedFile();
 			gui.getStatusLabel().setText("Åpnet: " + file.getName());
 			processFile(file);
-		} else {
-			
-		}
+		} 
 	}
 	
 	/*
@@ -86,7 +88,6 @@ public class Main {
 			status += "\n --> Filen er prosessert";
 			gui.getStatusLabel().setText(status);
 			gui.getOutputPane().setText(parser.getSize() + " spillere er tilgjengelig");
-			System.out.println(parser.getSize());
 			gui.getOutputPane().setBorder(new TitledBorder(""));
 		} catch (NumberFormatException ex) {
 			System.out.println(ex.getMessage());
@@ -122,51 +123,65 @@ public class Main {
 			gui.getNumberOfPlayersArea().setText("5");
 		} else {
 		
-			if(numberOfPlayers <= players.size() && players.size() > 0) {
-				gui.getOutputPane().setBorder(new TitledBorder("Viser " + numberOfPlayers + " av " + parser.getSize() + " tilgjengelige spillere"));	
-					switch (category) {
-					case 0:
-						gui.getOutputPane().setText("\nDistanse løpt\n");
-						break;
-					case 1:
-						gui.getOutputPane().setText("\nAntall sprinter\n");
-						break;
-					case 2:
-						gui.getOutputPane().setText("\nGjennomsnittsfart\n");
-						break;
-					case 3:
-						gui.getOutputPane().setText("\nToppfart\n");
-						break;
-					default:
-						break;
-					}
-				for(int i = 0; i < numberOfPlayers; i++) {
-						String output = gui.getOutputPane().getText();
+				
+				if(numberOfPlayers <= players.size() && players.size() > 0) {
+					gui.getOutputPane().setBorder(new TitledBorder("Viser " + numberOfPlayers + " av " + parser.getSize() + " tilgjengelige spillere"));	
 						switch (category) {
 						case 0:
-							gui.getOutputPane().setText(output + "\n" + players.get(i).toString());
+							gui.getOutputPane().setText("\nDistanse løpt\n");
 							break;
 						case 1:
-							gui.getOutputPane().setText(output + "\n" + players.get(i).printSprints());
+							gui.getOutputPane().setText("\nAntall sprinter\n");
 							break;
 						case 2:
-							gui.getOutputPane().setText(output + "\n" + players.get(i).printAvgSpeed());
+							gui.getOutputPane().setText("\nGjennomsnittsfart\n");
 							break;
 						case 3:
-							gui.getOutputPane().setText(output + "\n" + players.get(i).printTopSpeed());
+							gui.getOutputPane().setText("\nToppfart\n");
 							break;
 						default:
 							break;
 						}
-					}
 					
-				} else {
-					gui.showMessage("Du prøver å vise flere spillere enn det finnes\n Du prøvde: " + numberOfPlayers + ". Det er bare " + players.size() + " spillere tilgjengelig");
-					gui.getOutputPane().setBorder(new TitledBorder("Viser " + 0 + " av " + parser.getSize() + " tilgjengelige spillere"));
-				}
+				
+						for(int i = 0; i < numberOfPlayers; i++) {
+							String output = gui.getOutputPane().getText();
+							switch (category) {
+							case 0:
+								gui.getOutputPane().setText(output + "\n" + players.get(i).toString());
+								break;
+							case 1:
+								gui.getOutputPane().setText(output + "\n" + players.get(i).printSprints());
+								break;
+							case 2:
+								gui.getOutputPane().setText(output + "\n" + players.get(i).printAvgSpeed());
+								break;
+							case 3:
+								gui.getOutputPane().setText(output + "\n" + players.get(i).printTopSpeed());
+								break;
+							default:
+								break;
+							}
+						}
+						
+					} else {
+						gui.showMessage("Du prøver å vise flere spillere enn det finnes\n Du prøvde: " + numberOfPlayers + ". Det er bare " + players.size() + " spillere tilgjengelig");
+						gui.getOutputPane().setBorder(new TitledBorder("Viser " + 0 + " av " + parser.getSize() + " tilgjengelige spillere"));
+					}
+			} 
 		} 
-	}
 	
+	/**
+	 * Method to copy the content of the outputPane to the system clipboard
+	 */
+	private void copyContent() {
+		String content = gui.getOutputPane().getText();
+		StringSelection selection = new StringSelection(content);
+		Clipboard clipBoard = Toolkit.getDefaultToolkit().getSystemClipboard();
+		clipBoard.setContents(selection, null);
+	}
+
+		
 	private void sortPlayers(List<Player> players, int category) {
 		switch (category) {
 		case 0:
@@ -184,10 +199,8 @@ public class Main {
 		default:
 			break;
 		}
-		
-		
 	}
-
+	
 	/*
 	 * Private class that implements the ActionListener interface
 	 */
@@ -208,6 +221,8 @@ public class Main {
 					gui.showMessage("Vennligst fyll inn et tall");
 					System.out.println(ex.getMessage());
 				}
+			} else if(e.getSource() == gui.getCopyButton()) {
+				copyContent();
 			}
 		}
 		
