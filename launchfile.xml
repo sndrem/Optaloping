@@ -26,7 +26,7 @@
   <versionInfo>
     <fileVersion>1.0.0.0</fileVersion>
     <txtFileVersion>Yes</txtFileVersion>
-    <fileDescription>Program for å sortere data fra Opta</fileDescription>
+    <fileDescription>Program for stolpegrafikk med Optastats</fileDescription>
     <copyright>Sindre Moldeklev</copyright>
     <productVersion>1.0.0.0</productVersion>
     <txtProductVersion>Yes</txtProductVersion>

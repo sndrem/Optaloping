@@ -113,6 +113,9 @@ public class Main {
 		int category = gui.getCategoryDropdow().getSelectedIndex();
 		sortPlayers(players, category);
 		
+		if(gui.getOrderCheckBox().isSelected()) {
+			Collections.reverse(players);
+		} 
 		
 		if(numberOfPlayers < 0) {
 			gui.showMessage("Vennligst fyll inn et positivt tall");

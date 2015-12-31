@@ -6,6 +6,7 @@ import java.awt.GridLayout;
 import java.awt.Rectangle;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
@@ -35,6 +36,7 @@ public class Gui extends JFrame {
 	private JLabel statusLabel;
 	private JComboBox<String> categoryDropdow;
 	private JPanel statusPanel;
+	private JCheckBox orderCheckBox;
 	
 	private Gui() {
 		setupGui();
@@ -54,7 +56,7 @@ public class Gui extends JFrame {
 		/*
 		 * Set bounds, title, place the program in the center of the screen and set default close operation
 		 */
-		this.setBounds(new Rectangle(600,600));
+		this.setBounds(new Rectangle(800,800));
 		this.setTitle("Løpestats fra Opta");
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -72,6 +74,8 @@ public class Gui extends JFrame {
 		
 		setCategoryDropdow(new JComboBox<String>(categories));
 		
+		setOrderCheckBox(new JCheckBox("Reverse"));
+		
 		numberOfPlayersArea = new JTextArea("5");
 		numberOfPlayersArea.setToolTipText("Velg antall spillere du ønsker kalkulert");	
 		numberOfPlayersArea.setBorder(new TitledBorder("Velg antall spillere"));
@@ -82,6 +86,7 @@ public class Gui extends JFrame {
 		
 		northPanel.add(openFileBtn);
 		northPanel.add(getCategoryDropdow());
+		northPanel.add(getOrderCheckBox());
 
 		northPanel.add(numberOfPlayersArea);
 		northPanel.add(runButton);
@@ -238,6 +243,20 @@ public class Gui extends JFrame {
 	 */
 	public void setStatusPanel(JPanel statusPanel) {
 		this.statusPanel = statusPanel;
+	}
+
+	/**
+	 * @return the orderCheckBox
+	 */
+	public JCheckBox getOrderCheckBox() {
+		return orderCheckBox;
+	}
+
+	/**
+	 * @param orderCheckBox the orderCheckBox to set
+	 */
+	public void setOrderCheckBox(JCheckBox orderCheckBox) {
+		this.orderCheckBox = orderCheckBox;
 	}
 	
 	
