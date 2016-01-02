@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 import javax.swing.JFileChooser;
+import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 
 import sim.tv2.no.gui.Gui;
@@ -22,6 +23,7 @@ import sim.tv2.no.player.DistanceComparator;
 import sim.tv2.no.player.Player;
 import sim.tv2.no.player.SprintComparator;
 import sim.tv2.no.player.TopSpeedComparator;
+import sim.tv2.no.webDriver.OpenOpta;
 
 /*
  * Main class for the application
@@ -33,6 +35,7 @@ public class Main {
 	
 	private Gui gui;
 	private Parser parser;
+	private OpenOpta optaWebDriver = new OpenOpta();
 	
 	public static void main(String[] args) {
 		new Main();
@@ -44,8 +47,12 @@ public class Main {
 	 */
 	public Main() {
 		// TODO Auto-generated constructor stub
-		gui = Gui.getInstance();
-		setupActionListeners();
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				gui = Gui.getInstance();
+				setupActionListeners();
+			}
+		});
 		parser = new Parser();
 	}
 	
@@ -58,6 +65,7 @@ public class Main {
 		gui.getOpenFileBtn().addActionListener(e);
 		gui.getRunButton().addActionListener(e);
 		gui.getCopyButton().addActionListener(e);
+		gui.getOpenOptaItem().addActionListener(e);
 	}
 	
 	/*
@@ -223,6 +231,9 @@ public class Main {
 				}
 			} else if(e.getSource() == gui.getCopyButton()) {
 				copyContent();
+			} else if(e.getSource() == gui.getOpenOptaItem()) {
+				gui.getStatusLabel().setText(gui.getStatusLabel().getText() + " Åpner en tab for hver kamp i Firefox. Dette kan ta litt tid");
+				optaWebDriver.openOptaTabs();
 			}
 		}
 		

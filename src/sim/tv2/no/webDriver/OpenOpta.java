@@ -17,7 +17,7 @@ public class OpenOpta {
 		// TODO Auto-generated constructor stub
 	}
 	
-	private void openOptaTabs() {
+	public void openOptaTabs() {
 		String user = "TV2";
 		String passwd = "goal5LM3";
 		String url = "http://lm3.cloud.opta.net/index.html";
@@ -25,10 +25,7 @@ public class OpenOpta {
 		
 		driver.get(url);
 		driver.manage().window().maximize();
-		waitForPageLoad(5000);
-		
-		System.out.println(driver.getCurrentUrl());
-		System.out.println(driver.getTitle());
+		waitForPageLoad(1000);
 		
 		WebElement loginMail = driver.findElement(By.id("lm3-email-lm3_0"));
 		WebElement loginPwd = driver.findElement(By.id("lm3-password-lm3_0"));
@@ -39,17 +36,16 @@ public class OpenOpta {
 		WebElement submitButton = driver.findElement(By.id("lm3-signin-lm3_0"));
 		submitButton.click();
 		
-		waitForPageLoad(5000);
+		waitForPageLoad(1000);
 		
 		List<WebElement> matches = driver.findElements(By.className("opta-event-link"));
-		List<String> urls = new ArrayList<>();
+		List<String> urls = new ArrayList<String>();
 		
 		for(WebElement elem : matches) {
 			urls.add(elem.getAttribute("href"));
 		}
 		
 		for(String matchUrl : urls) {
-			System.out.println(matchUrl);
 			if(isMac()) {
 				driver.findElement(By.cssSelector("body")).sendKeys(Keys.COMMAND + "t");				
 			} else if(isWindows()) {
@@ -58,9 +54,9 @@ public class OpenOpta {
 			driver.navigate().to(matchUrl);
 			waitForPageLoad(1000);
 			driver.findElement(By.xpath("//*[@id=\"opta-widget-idx-lm3_6\"]/div/ul[1]/li[3]")).click();
+			
 			waitForPageLoad(500);
-			driver.findElement(By.xpath("//*[@id=\"opta-widget-idx-lm3_18\"]/div/ul[1]/li[2]")).click();
-			waitForPageLoad(500);
+			
 		}
 		
 

@@ -12,7 +12,9 @@ import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -39,6 +41,7 @@ public class Gui extends JFrame {
 	private JPanel statusPanel;
 	private JCheckBox orderCheckBox;
 	private JButton copyButton;
+	private JMenuItem openOptaItem;
 	
 	private Gui() {
 		setupGui();
@@ -62,6 +65,16 @@ public class Gui extends JFrame {
 		this.setTitle("Løpestats fra Opta");
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+		
+		JMenuBar menuBar = new JMenuBar();
+		JMenu menu = new JMenu("Meny");
+		menuBar.add(menu);
+		
+		setOpenOptaItem(new JMenuItem("Åpne kamper i Firefox"));
+		getOpenOptaItem().setToolTipText("Åpner en tab for hver kamp i Firefox. Dette kan ta litt tid");
+		menu.add(getOpenOptaItem());
+		
+		this.setJMenuBar(menuBar);
 
 				
 		// Set layout for the gui
@@ -279,6 +292,20 @@ public class Gui extends JFrame {
 	 */
 	public void setCopyButton(JButton copyButton) {
 		this.copyButton = copyButton;
+	}
+
+	/**
+	 * @return the openOptaItem
+	 */
+	public JMenuItem getOpenOptaItem() {
+		return openOptaItem;
+	}
+
+	/**
+	 * @param openOptaItem the openOptaItem to set
+	 */
+	public void setOpenOptaItem(JMenuItem openOptaItem) {
+		this.openOptaItem = openOptaItem;
 	}
 
 }
