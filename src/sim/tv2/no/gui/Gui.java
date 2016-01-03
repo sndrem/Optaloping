@@ -42,6 +42,7 @@ public class Gui extends JFrame {
 	private JCheckBox orderCheckBox;
 	private JButton copyButton;
 	private JMenuItem openOptaItem;
+	private JCheckBox removeFirstNameCheckBox;
 	
 	private Gui() {
 		setupGui();
@@ -92,6 +93,8 @@ public class Gui extends JFrame {
 		
 		setOrderCheckBox(new JCheckBox("Reverse"));
 		
+		setRemoveFirstNameCheckBox(new JCheckBox("Fjern fornavn"));
+		
 		numberOfPlayersArea = new JTextArea("5");
 		numberOfPlayersArea.setToolTipText("Velg antall spillere du ønsker kalkulert");	
 		numberOfPlayersArea.setBorder(new TitledBorder("Velg antall spillere"));
@@ -105,6 +108,7 @@ public class Gui extends JFrame {
 		northPanel.add(openFileBtn);
 		northPanel.add(getCategoryDropdow());
 		northPanel.add(getOrderCheckBox());
+		northPanel.add(getRemoveFirstNameCheckBox());
 
 		northPanel.add(numberOfPlayersArea);
 		northPanel.add(runButton);
@@ -306,6 +310,20 @@ public class Gui extends JFrame {
 	 */
 	public void setOpenOptaItem(JMenuItem openOptaItem) {
 		this.openOptaItem = openOptaItem;
+	}
+
+	/**
+	 * @return the removeFirstNameCheckBox
+	 */
+	public JCheckBox getRemoveFirstNameCheckBox() {
+		return removeFirstNameCheckBox;
+	}
+
+	/**
+	 * @param removeFirstNameCheckBox the removeFirstNameCheckBox to set
+	 */
+	public void setRemoveFirstNameCheckBox(JCheckBox removeFirstNameCheckBox) {
+		this.removeFirstNameCheckBox = removeFirstNameCheckBox;
 	}
 
 }

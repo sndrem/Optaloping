@@ -124,8 +124,11 @@ public class Main {
 		
 		if(gui.getOrderCheckBox().isSelected()) {
 			Collections.reverse(players);
-		} 
+		}
 		
+		boolean trimName = gui.getRemoveFirstNameCheckBox().isSelected();
+		
+	
 		if(numberOfPlayers < 0) {
 			gui.showMessage("Vennligst fyll inn et positivt tall");
 			gui.getNumberOfPlayersArea().setText("5");
@@ -156,16 +159,16 @@ public class Main {
 							String output = gui.getOutputPane().getText();
 							switch (category) {
 							case 0:
-								gui.getOutputPane().setText(output + "\n" + players.get(i).toString());
+								gui.getOutputPane().setText(output + "\n" + players.get(i).toString(trimName).trim());
 								break;
 							case 1:
-								gui.getOutputPane().setText(output + "\n" + players.get(i).printSprints());
+								gui.getOutputPane().setText(output + "\n" + players.get(i).printSprints(trimName).trim());
 								break;
 							case 2:
-								gui.getOutputPane().setText(output + "\n" + players.get(i).printAvgSpeed());
+								gui.getOutputPane().setText(output + "\n" + players.get(i).printAvgSpeed(trimName).trim());
 								break;
 							case 3:
-								gui.getOutputPane().setText(output + "\n" + players.get(i).printTopSpeed());
+								gui.getOutputPane().setText(output + "\n" + players.get(i).printTopSpeed(trimName).trim());
 								break;
 							default:
 								break;
@@ -178,7 +181,7 @@ public class Main {
 					}
 			} 
 		} 
-	
+
 	/**
 	 * Method to copy the content of the outputPane to the system clipboard
 	 */

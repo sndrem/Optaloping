@@ -14,7 +14,6 @@ public class Player implements Comparator<Player>, Comparable<Player> {
 	private int number, sprints;
 	private double distance, avgSpeed, topSpeed;
 	private DecimalFormat df;
-
 	
 	/*
 	 * Constructor the player class
@@ -123,26 +122,55 @@ public class Player implements Comparator<Player>, Comparable<Player> {
 	/**
 	 * Method to print information for the player based on top speed
 	 */
-	public String printTopSpeed() {
-		return df.format(this.topSpeed) + " km/t. - " + this.getName();
+	public String printTopSpeed(boolean deleteFirstName) {
+		if(!deleteFirstName) {
+			return df.format(this.topSpeed) + " km/t. - " + this.getName();
+		} else {
+			return df.format(this.topSpeed) + " km/t. - " + removeFirstName(this.name);
+		}
 	}
 	
+	private String removeFirstName(String name) {
+		String[] wholeName = name.split(" ");
+		String restOfName = "";
+		if(wholeName.length == 1) {
+			return name;
+		} else {
+			for(int i=1; i < wholeName.length; i++) {
+				restOfName += " " + wholeName[i];
+			}
+		}
+		return restOfName;
+	}
+
 	/**
 	 * Method to print information for the player based on avgSpeed
 	 */
-	public String printAvgSpeed() {
-		return df.format(this.avgSpeed) + " km/t. - " + this.getName();
+	public String printAvgSpeed(boolean deleteFirstName) {
+		if(!deleteFirstName) {
+			return df.format(this.avgSpeed) + " km/t. - " + this.getName();
+		} else {
+			return df.format(this.avgSpeed) + " km/t. - " + removeFirstName(this.name);
+		}
 	}
 	
 	/**
 	 * Method to print information for the player based on sprints
 	 */
-	public String printSprints() {
-		return this.sprints + " - " + this.name;
+	public String printSprints(boolean deleteFirstName) {
+		if(!deleteFirstName) {
+			return this.sprints + " - " + this.name;
+		} else {
+			return this.sprints + " - " + removeFirstName(this.name);
+		}
 	}
 		
-	public String toString() {
-		return df.format(this.distance) + " km. - " + this.name;
+	public String toString(boolean deleteFirstName) {
+		if(!deleteFirstName) {
+			return df.format(this.distance) + " km. - " + this.name;
+		} else {
+			return df.format(this.distance) + "km. - " + removeFirstName(this.name);
+		}
 	}
 	
 

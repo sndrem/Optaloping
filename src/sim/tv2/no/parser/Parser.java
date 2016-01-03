@@ -32,6 +32,7 @@ public class Parser {
 	public List<Player> parseFile(File file) throws IOException, NumberFormatException {
 		BufferedReader br = new BufferedReader(new FileReader(file));
 		
+		int lineNumber = 0;
 		try {
 			String line;
 			while((line = br.readLine()) != null) {
@@ -45,12 +46,13 @@ public class Parser {
 				
 				Player player = new Player(name, number, sprints, distance, avgSpeed, topSpeed);
 				players.add(player);
+				lineNumber++;
 			}
 			
 		} catch(NumberFormatException e) {
 			System.out.println(e.getMessage());
 			br.close();
-			throw new NumberFormatException("Feil format på tekstfilen. Dobbelsjekk tekstfilen og prøv igjen");
+			throw new NumberFormatException("Feil format på tekstfilen. Dobbelsjekk tekstfilen og prøv igjen. Sjekk linje: " + lineNumber);
 		} catch(IOException e) {
 			System.out.println(e.getMessage());
 		}
