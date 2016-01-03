@@ -97,38 +97,46 @@ public class Main {
 	 * number name distance sprints avgSpeed topSpeed - all separated by tab (\t)
 	 */
 	public void processFiles(File[] files) {
+		boolean problemWithFile = false;
 		if(files.length > 0) {
 			parser.setPlayers(new ArrayList<Player>());
+			gui.getStatusPanel().setBackground(Color.GREEN);
 			for(File file : files) {
 				try {
 					parser.parseFile(file);
 				} catch (NumberFormatException ex) {
 					System.out.println(ex.getMessage());
-					showFileProcessError(ex);
+					showFileProcessError(ex, file.getName());
+					problemWithFile = true;
+					break;
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-			showFileProcessInfo();
+			showFileProcessInfo(problemWithFile);
 		}
 	}
 
-	private void showFileProcessError(NumberFormatException ex) {
-		gui.showMessage(ex.getMessage());
-		gui.getStatusLabel().setText("Det var en feil med formateringen av filen");
+	private void showFileProcessError(NumberFormatException ex, String fileName) {
+		if(ex != null) {
+			gui.showMessage(ex.getMessage());
+		}
+		gui.getStatusLabel().setText("Det var en feil med formateringen av fil: " + fileName);
 		gui.getStatusLabel().setBackground(Color.RED);
 		gui.getStatusPanel().setBackground(Color.RED);
 		gui.getOutputPane().setText(0 + " spillere er tilgjengelig");
 	}
 
-	private void showFileProcessInfo() {
-		gui.getStatusPanel().setBackground(Color.GREEN);
-		String status = gui.getStatusLabel().getText();
-		status += "\n --> Filen(e) er prosessert";
-		gui.getStatusLabel().setText(status);
-		gui.getOutputPane().setText(parser.getSize() + " spillere er tilgjengelig");
-		gui.getOutputPane().setBorder(new TitledBorder(""));
+	private void showFileProcessInfo(boolean problemWithFile) {
+		if(!problemWithFile) {
+			String status = gui.getStatusLabel().getText();
+			status += "\n --> Filen(e) er prosessert";
+			gui.getStatusLabel().setText(status);
+			gui.getOutputPane().setText(parser.getSize() + " spillere er tilgjengelig");
+			gui.getOutputPane().setBorder(new TitledBorder(""));
+		} 
+		
 	}
 
 

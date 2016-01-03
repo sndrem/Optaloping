@@ -52,7 +52,7 @@ public class Parser {
 		} catch(NumberFormatException e) {
 			System.out.println(e.getMessage());
 			br.close();
-			throw new NumberFormatException("Feil format på tekstfilen. Dobbelsjekk tekstfilen og prøv igjen. Sjekk linje: " + lineNumber);
+			throw new NumberFormatException("Feil format på " + file.getName() + ". Dobbelsjekk tekstfilen og prøv igjen. Sjekk linje: " + lineNumber);
 		} catch(IOException e) {
 			System.out.println(e.getMessage());
 		}
