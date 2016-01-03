@@ -15,6 +15,7 @@ import java.util.List;
 import javax.swing.JFileChooser;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 
 import sim.tv2.no.gui.Gui;
 import sim.tv2.no.parser.Parser;
@@ -74,11 +75,18 @@ public class Main {
 	 */
 	public void openFile() {
 		JFileChooser fileChooser = gui.getFileChooser();
+		fileChooser.setMultiSelectionEnabled(true);
+		FileNameExtensionFilter filter = new FileNameExtensionFilter("Tekstfiler", "txt", "text");
+		fileChooser.setFileFilter(filter);
 		int returnVal = fileChooser.showOpenDialog(gui);
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
-			File file = fileChooser.getSelectedFile();
-			gui.getStatusLabel().setText("Åpnet: " + file.getName());
-			processFile(file);
+			File[] files = fileChooser.getSelectedFiles();
+			if(files.length == 1) {
+				gui.getStatusLabel().setText("Åpnet: " + files[0].getName());
+			} else {
+				gui.getStatusLabel().setText("Åpnet flere filer");
+			}
+			processFiles(files);
 		} 
 	}
 	
@@ -88,27 +96,39 @@ public class Main {
 	 * The file should have this format
 	 * number name distance sprints avgSpeed topSpeed - all separated by tab (\t)
 	 */
-	public void processFile(File file) {
-		try {
+	public void processFiles(File[] files) {
+		if(files.length > 0) {
 			parser.setPlayers(new ArrayList<Player>());
-			parser.parseFile(file);
-			gui.getStatusPanel().setBackground(Color.GREEN);
-			String status = gui.getStatusLabel().getText();
-			status += "\n --> Filen er prosessert";
-			gui.getStatusLabel().setText(status);
-			gui.getOutputPane().setText(parser.getSize() + " spillere er tilgjengelig");
-			gui.getOutputPane().setBorder(new TitledBorder(""));
-		} catch (NumberFormatException ex) {
-			System.out.println(ex.getMessage());
-			gui.showMessage(ex.getMessage());
-			gui.getStatusLabel().setText("Det var en feil med formateringen av filen");
-			gui.getStatusLabel().setBackground(Color.RED);
-			gui.getStatusPanel().setBackground(Color.RED);
-			gui.getOutputPane().setText(0 + " spillere er tilgjengelig");
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			for(File file : files) {
+				try {
+					parser.parseFile(file);
+				} catch (NumberFormatException ex) {
+					System.out.println(ex.getMessage());
+					showFileProcessError(ex);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			showFileProcessInfo();
 		}
+	}
+
+	private void showFileProcessError(NumberFormatException ex) {
+		gui.showMessage(ex.getMessage());
+		gui.getStatusLabel().setText("Det var en feil med formateringen av filen");
+		gui.getStatusLabel().setBackground(Color.RED);
+		gui.getStatusPanel().setBackground(Color.RED);
+		gui.getOutputPane().setText(0 + " spillere er tilgjengelig");
+	}
+
+	private void showFileProcessInfo() {
+		gui.getStatusPanel().setBackground(Color.GREEN);
+		String status = gui.getStatusLabel().getText();
+		status += "\n --> Filen(e) er prosessert";
+		gui.getStatusLabel().setText(status);
+		gui.getOutputPane().setText(parser.getSize() + " spillere er tilgjengelig");
+		gui.getOutputPane().setBorder(new TitledBorder(""));
 	}
 
 
@@ -178,6 +198,7 @@ public class Main {
 					} else {
 						gui.showMessage("Du prøver å vise flere spillere enn det finnes\n Du prøvde: " + numberOfPlayers + ". Det er bare " + players.size() + " spillere tilgjengelig");
 						gui.getOutputPane().setBorder(new TitledBorder("Viser " + 0 + " av " + parser.getSize() + " tilgjengelige spillere"));
+						gui.getNumberOfPlayersArea().setText("5");
 					}
 			} 
 		} 

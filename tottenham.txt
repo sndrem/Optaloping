@@ -1,0 +1,14 @@
+1	Hugo Lloris	5.23	10	3.28	28.62
+2	Kyle Walker	10.87	75	6.83	31.80
+4	Toby Alderweireld	9.73	38	6.11	30.10
+5	Jan Vertonghen	8.80	19	5.53	30.93
+7	Son Heung-Min	3.12	26	7.62	28.05
+10	Harry Kane	11.43	49	7.17	28.83
+11	Erik Lamela	11.13	60	7.42	29.90
+15	Eric Dier	10.80	32	6.78	27.24
+20	Dele Alli	11.16	64	7.87	29.37
+22	Nacer Chadli	1.43	7	8.18	25.69
+23	Christian Eriksen	9.09	39	7.69	29.97
+25	Josh Onomah	0.80	8	8.69	29.82
+28	Tom Carroll	12.51	46	7.86	32.68
+33	Ben Davies	10.82	52	6.80	30.20
