@@ -43,6 +43,7 @@ public class Gui extends JFrame {
 	private JButton copyButton;
 	private JMenuItem openOptaItem;
 	private JCheckBox removeFirstNameCheckBox;
+	private JMenuItem exitItem;
 	
 	private Gui() {
 		setupGui();
@@ -74,6 +75,9 @@ public class Gui extends JFrame {
 		setOpenOptaItem(new JMenuItem("Åpne kamper i Firefox"));
 		getOpenOptaItem().setToolTipText("Åpner en tab for hver kamp i Firefox. Dette kan ta litt tid");
 		menu.add(getOpenOptaItem());
+		
+		setExitItem(new JMenuItem("Lukk"));
+		menu.add(getExitItem());
 		
 		this.setJMenuBar(menuBar);
 
@@ -324,6 +328,20 @@ public class Gui extends JFrame {
 	 */
 	public void setRemoveFirstNameCheckBox(JCheckBox removeFirstNameCheckBox) {
 		this.removeFirstNameCheckBox = removeFirstNameCheckBox;
+	}
+
+	/**
+	 * @return the exitItem
+	 */
+	public JMenuItem getExitItem() {
+		return exitItem;
+	}
+
+	/**
+	 * @param exitItem the exitItem to set
+	 */
+	public void setExitItem(JMenuItem exitItem) {
+		this.exitItem = exitItem;
 	}
 
 }

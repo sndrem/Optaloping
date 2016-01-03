@@ -140,7 +140,7 @@ public class Player implements Comparator<Player>, Comparable<Player> {
 				restOfName += " " + wholeName[i];
 			}
 		}
-		return restOfName;
+		return restOfName.trim();
 	}
 
 	/**
@@ -169,7 +169,7 @@ public class Player implements Comparator<Player>, Comparable<Player> {
 		if(!deleteFirstName) {
 			return df.format(this.distance) + " km. - " + this.name;
 		} else {
-			return df.format(this.distance) + "km. - " + removeFirstName(this.name);
+			return df.format(this.distance) + " km. - " + removeFirstName(this.name);
 		}
 	}
 	

@@ -66,6 +66,7 @@ public class Main {
 		gui.getRunButton().addActionListener(e);
 		gui.getCopyButton().addActionListener(e);
 		gui.getOpenOptaItem().addActionListener(e);
+		gui.getExitItem().addActionListener(e);
 	}
 	
 	/*
@@ -126,15 +127,14 @@ public class Main {
 			Collections.reverse(players);
 		}
 		
-		boolean trimName = gui.getRemoveFirstNameCheckBox().isSelected();
+		
+		boolean removeName = gui.getRemoveFirstNameCheckBox().isSelected();
 		
 	
 		if(numberOfPlayers < 0) {
 			gui.showMessage("Vennligst fyll inn et positivt tall");
 			gui.getNumberOfPlayersArea().setText("5");
 		} else {
-		
-				
 				if(numberOfPlayers <= players.size() && players.size() > 0) {
 					gui.getOutputPane().setBorder(new TitledBorder("Viser " + numberOfPlayers + " av " + parser.getSize() + " tilgjengelige spillere"));	
 						switch (category) {
@@ -159,16 +159,16 @@ public class Main {
 							String output = gui.getOutputPane().getText();
 							switch (category) {
 							case 0:
-								gui.getOutputPane().setText(output + "\n" + players.get(i).toString(trimName).trim());
+								gui.getOutputPane().setText(output + "\n" + players.get(i).toString(removeName).trim());
 								break;
 							case 1:
-								gui.getOutputPane().setText(output + "\n" + players.get(i).printSprints(trimName).trim());
+								gui.getOutputPane().setText(output + "\n" + players.get(i).printSprints(removeName).trim());
 								break;
 							case 2:
-								gui.getOutputPane().setText(output + "\n" + players.get(i).printAvgSpeed(trimName).trim());
+								gui.getOutputPane().setText(output + "\n" + players.get(i).printAvgSpeed(removeName).trim());
 								break;
 							case 3:
-								gui.getOutputPane().setText(output + "\n" + players.get(i).printTopSpeed(trimName).trim());
+								gui.getOutputPane().setText(output + "\n" + players.get(i).printTopSpeed(removeName).trim());
 								break;
 							default:
 								break;
@@ -237,6 +237,8 @@ public class Main {
 			} else if(e.getSource() == gui.getOpenOptaItem()) {
 				gui.getStatusLabel().setText(gui.getStatusLabel().getText() + " Åpner en tab for hver kamp i Firefox. Dette kan ta litt tid");
 				optaWebDriver.openOptaTabs();
+			} else if(e.getSource() == gui.getExitItem()) {
+				System.exit(0);
 			}
 		}
 		
