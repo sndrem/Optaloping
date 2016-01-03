@@ -82,9 +82,9 @@ public class Main {
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
 			File[] files = fileChooser.getSelectedFiles();
 			if(files.length == 1) {
-				gui.getStatusLabel().setText("Åpnet: " + files[0].getName());
+				gui.getStatusTextArea().setText("Åpnet: " + files[0].getName());
 			} else {
-				gui.getStatusLabel().setText("Åpnet flere filer");
+				gui.getStatusTextArea().setText("Åpnet flere filer");
 			}
 			processFiles(files);
 		} 
@@ -97,46 +97,46 @@ public class Main {
 	 * number name distance sprints avgSpeed topSpeed - all separated by tab (\t)
 	 */
 	public void processFiles(File[] files) {
-		boolean problemWithFile = false;
 		if(files.length > 0) {
 			parser.setPlayers(new ArrayList<Player>());
 			gui.getStatusPanel().setBackground(Color.GREEN);
+			gui.getStatusTextArea().setBackground(Color.GREEN);
 			for(File file : files) {
 				try {
 					parser.parseFile(file);
+					showFileProcessInfo(file.getName());
 				} catch (NumberFormatException ex) {
 					System.out.println(ex.getMessage());
-					showFileProcessError(ex, file.getName());
-					problemWithFile = true;
-					break;
+					if(files.length == 1) {
+						showFileProcessError(ex, file.getName(), Color.RED);
+					} else {
+						showFileProcessError(ex, file.getName(), Color.YELLOW);
+					}
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
-			showFileProcessInfo(problemWithFile);
+			gui.getOutputPane().setText(parser.getSize() + " spillere er tilgjengelig");
+			gui.getOutputPane().setBorder(new TitledBorder(""));
 		}
 	}
 
-	private void showFileProcessError(NumberFormatException ex, String fileName) {
+	private void showFileProcessError(NumberFormatException ex, String fileName, Color color) {
 		if(ex != null) {
 			gui.showMessage(ex.getMessage());
 		}
-		gui.getStatusLabel().setText("Det var en feil med formateringen av fil: " + fileName);
-		gui.getStatusLabel().setBackground(Color.RED);
-		gui.getStatusPanel().setBackground(Color.RED);
+		String status = gui.getStatusTextArea().getText();
+		gui.getStatusTextArea().setText("Det var en feil med formateringen av fil: " + fileName + "\n\n" + status);
+		gui.getStatusTextArea().setBackground(color);
+		gui.getStatusPanel().setBackground(color);
 		gui.getOutputPane().setText(0 + " spillere er tilgjengelig");
 	}
 
-	private void showFileProcessInfo(boolean problemWithFile) {
-		if(!problemWithFile) {
-			String status = gui.getStatusLabel().getText();
-			status += "\n --> Filen(e) er prosessert";
-			gui.getStatusLabel().setText(status);
-			gui.getOutputPane().setText(parser.getSize() + " spillere er tilgjengelig");
-			gui.getOutputPane().setBorder(new TitledBorder(""));
-		} 
-		
+	private void showFileProcessInfo(String fileName) {
+		String status = gui.getStatusTextArea().getText();
+		status += " \n--> " + fileName + " er prosessert";
+		gui.getStatusTextArea().setText(status);
 	}
 
 
@@ -264,7 +264,7 @@ public class Main {
 			} else if(e.getSource() == gui.getCopyButton()) {
 				copyContent();
 			} else if(e.getSource() == gui.getOpenOptaItem()) {
-				gui.getStatusLabel().setText(gui.getStatusLabel().getText() + " Åpner en tab for hver kamp i Firefox. Dette kan ta litt tid");
+				gui.getStatusTextArea().setText(gui.getStatusTextArea().getText() + " Åpner en tab for hver kamp i Firefox. Dette kan ta litt tid");
 				optaWebDriver.openOptaTabs();
 			} else if(e.getSource() == gui.getExitItem()) {
 				System.exit(0);

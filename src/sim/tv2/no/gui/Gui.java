@@ -11,7 +11,6 @@ import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -36,7 +35,7 @@ public class Gui extends JFrame {
 	private JTextArea numberOfPlayersArea;
 	private static Gui instance = null;
 	private final JFileChooser fileChooser = new JFileChooser(".");
-	private JLabel statusLabel;
+	private JTextArea statusTextArea;
 	private JComboBox<String> categoryDropdow;
 	private JPanel statusPanel;
 	private JCheckBox orderCheckBox;
@@ -137,8 +136,8 @@ public class Gui extends JFrame {
 		
 		
 		setStatusPanel(new JPanel());
-		statusLabel = new JLabel("Status:");
-		getStatusPanel().add(statusLabel);
+		setStatusTextArea(new JTextArea("Status:"));
+		getStatusPanel().add(getStatusTextArea());
 		
 		this.add(getStatusPanel(), BorderLayout.SOUTH);
 		
@@ -224,26 +223,13 @@ public class Gui extends JFrame {
 		return fileChooser;
 	}
 
-	/**
-	 * @return the statusLabel
-	 */
-	public JLabel getStatusLabel() {
-		return statusLabel;
-	}
-
-	/**
-	 * @param statusLabel the statusLabel to set
-	 */
-	public void setStatusLabel(JLabel statusLabel) {
-		this.statusLabel = statusLabel;
-	}
 	
 	/*
 	 * Method to show a dialog box
 	 * @params info the info you want to display
 	 */
 	public void showMessage(String info) {
-		JOptionPane.showMessageDialog(this, info);
+		JOptionPane.showMessageDialog(this, info, "Obs", JOptionPane.ERROR_MESSAGE);
 	}
 
 	/**
@@ -342,6 +328,20 @@ public class Gui extends JFrame {
 	 */
 	public void setExitItem(JMenuItem exitItem) {
 		this.exitItem = exitItem;
+	}
+
+	/**
+	 * @return the statusTextArea
+	 */
+	public JTextArea getStatusTextArea() {
+		return statusTextArea;
+	}
+
+	/**
+	 * @param statusTextArea the statusTextArea to set
+	 */
+	public void setStatusTextArea(JTextArea statusTextArea) {
+		this.statusTextArea = statusTextArea;
 	}
 
 }
