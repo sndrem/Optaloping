@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.SwingWorker;
+
 import sim.tv2.no.player.Player;
 
 /*
@@ -15,7 +17,7 @@ import sim.tv2.no.player.Player;
  * @version 0.1
  */
 
-public class Parser {
+public class Parser{
 	
 	private List<Player> players;
 
@@ -84,7 +86,5 @@ public class Parser {
 			return players.size();
 		} else return 0;
 	}
-	
-	
 
 }

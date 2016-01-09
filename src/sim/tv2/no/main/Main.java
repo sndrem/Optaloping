@@ -6,13 +6,18 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import javax.swing.AbstractAction;
+import javax.swing.JComponent;
 import javax.swing.JFileChooser;
+import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -68,6 +73,14 @@ public class Main {
 		gui.getCopyButton().addActionListener(e);
 		gui.getOpenOptaItem().addActionListener(e);
 		gui.getExitItem().addActionListener(e);
+		gui.getRemoveFirstNameCheckBox().addActionListener(e);
+		gui.getOrderCheckBox().addActionListener(e);
+		gui.getCategoryDropdow().addActionListener(e);
+		
+		// Key events
+		gui.getOpenFileBtn().getActionMap().put("openFile", new OpenFileAction());
+		gui.getOpenFileBtn().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("control O"), "openFile");
+		
 	}
 	
 	/*
@@ -87,6 +100,11 @@ public class Main {
 				gui.getStatusTextArea().setText("Åpnet flere filer");
 			}
 			processFiles(files);
+			gui.getRunButton().setEnabled(true);
+			gui.getCategoryDropdow().setEnabled(true);
+			gui.getRemoveFirstNameCheckBox().setEnabled(true);
+			gui.getOrderCheckBox().setEnabled(true);
+			gui.getRunButton().requestFocus();
 		} 
 	}
 	
@@ -144,11 +162,10 @@ public class Main {
 	 * Method to output the desired numbers of players to the gui
 	 * @params numberOfPlayers		the number of players the user wants output of
 	 */
-	public void calculate(int numberOfPlayers) {
+	public void calculate(int numberOfPlayers, int category) {
 		gui.getOutputPane().setText("");
 		List<Player> players = parser.getPlayers();	
 		
-		int category = gui.getCategoryDropdow().getSelectedIndex();
 		sortPlayers(players, category);
 		
 		if(gui.getOrderCheckBox().isSelected()) {
@@ -251,12 +268,11 @@ public class Main {
 			if(e.getSource() == gui.getOpenFileBtn()) {
 				// Open file
 				openFile();
-				gui.getRunButton().setEnabled(true);
 			} else if (e.getSource() == gui.getRunButton()) {
 				// Calculate the data
 				try {
 					int range = Integer.parseInt(gui.getNumberOfPlayersArea().getText().trim());				
-					calculate(range);
+					calculate(range, gui.getCategoryDropdow().getSelectedIndex());
 				} catch(NumberFormatException ex) {
 					gui.showMessage("Vennligst fyll inn et tall");
 					System.out.println(ex.getMessage());
@@ -268,9 +284,57 @@ public class Main {
 				optaWebDriver.openOptaTabs();
 			} else if(e.getSource() == gui.getExitItem()) {
 				System.exit(0);
+			} else if(e.getSource() == gui.getRemoveFirstNameCheckBox()) {
+				// Calculate the data
+				try {
+					int range = Integer.parseInt(gui.getNumberOfPlayersArea().getText().trim());				
+					calculate(range, gui.getCategoryDropdow().getSelectedIndex());
+				} catch(NumberFormatException ex) {
+					gui.showMessage("Vennligst fyll inn et tall");
+					System.out.println(ex.getMessage());
+				}
+			} else if(e.getSource() == gui.getOrderCheckBox()){
+				// Calculate the data
+				try {
+					int range = Integer.parseInt(gui.getNumberOfPlayersArea().getText().trim());				
+					calculate(range, gui.getCategoryDropdow().getSelectedIndex());
+				} catch(NumberFormatException ex) {
+					gui.showMessage("Vennligst fyll inn et tall");
+					System.out.println(ex.getMessage());
+				}
+			} else if(e.getSource() == gui.getCategoryDropdow()) {
+				int selected = gui.getCategoryDropdow().getSelectedIndex();
+				try {
+					int range = Integer.parseInt(gui.getNumberOfPlayersArea().getText().trim());				
+					calculate(range, selected);
+				} catch(NumberFormatException ex) {
+					gui.showMessage("Vennligst fyll inn et tall");
+					System.out.println(ex.getMessage());
+				}
 			}
 		}
 		
 	}
+	
+	/**
+	 * Private class for key listeners
+	 * @author Sindre Moldeklev
+	 */
+	private class OpenFileAction extends AbstractAction {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 2528328845681249227L;
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			openFile();
+		}	
+
+	}
+
+
+		
 
 }
