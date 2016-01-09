@@ -6,7 +6,6 @@ import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
@@ -69,18 +68,21 @@ public class Main {
 	private void setupActionListeners() {
 		Events e = new Events();
 		gui.getOpenFileBtn().addActionListener(e);
-		gui.getRunButton().addActionListener(e);
+		gui.getRunButton().setAction(new RunAction("Kjør"));
 		gui.getCopyButton().addActionListener(e);
 		gui.getOpenOptaItem().addActionListener(e);
 		gui.getExitItem().addActionListener(e);
-		gui.getRemoveFirstNameCheckBox().addActionListener(e);
-		gui.getOrderCheckBox().addActionListener(e);
+		gui.getRemoveFirstNameCheckBox().setAction(new RunAction("Fjern fornavn"));
+		gui.getOrderCheckBox().setAction(new RunAction("Reverse"));
 		gui.getCategoryDropdow().addActionListener(e);
 		
 		// Key events
 		gui.getOpenFileBtn().getActionMap().put("openFile", new OpenFileAction());
 		gui.getOpenFileBtn().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("control O"), "openFile");
+		gui.getOpenFileBtn().getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke((char) KeyEvent.VK_ENTER), "openFile");
 		
+		gui.getRunButton().getActionMap().put("runCalculations", new RunAction());
+		gui.getRunButton().getInputMap().put(KeyStroke.getKeyStroke((char) KeyEvent.VK_ENTER), "runCalculations");
 	}
 	
 	/*
@@ -284,24 +286,6 @@ public class Main {
 				optaWebDriver.openOptaTabs();
 			} else if(e.getSource() == gui.getExitItem()) {
 				System.exit(0);
-			} else if(e.getSource() == gui.getRemoveFirstNameCheckBox()) {
-				// Calculate the data
-				try {
-					int range = Integer.parseInt(gui.getNumberOfPlayersArea().getText().trim());				
-					calculate(range, gui.getCategoryDropdow().getSelectedIndex());
-				} catch(NumberFormatException ex) {
-					gui.showMessage("Vennligst fyll inn et tall");
-					System.out.println(ex.getMessage());
-				}
-			} else if(e.getSource() == gui.getOrderCheckBox()){
-				// Calculate the data
-				try {
-					int range = Integer.parseInt(gui.getNumberOfPlayersArea().getText().trim());				
-					calculate(range, gui.getCategoryDropdow().getSelectedIndex());
-				} catch(NumberFormatException ex) {
-					gui.showMessage("Vennligst fyll inn et tall");
-					System.out.println(ex.getMessage());
-				}
 			} else if(e.getSource() == gui.getCategoryDropdow()) {
 				int selected = gui.getCategoryDropdow().getSelectedIndex();
 				try {
@@ -332,6 +316,36 @@ public class Main {
 			openFile();
 		}	
 
+	}
+	
+	private class RunAction extends AbstractAction {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -2699857934124111118L;
+
+		public RunAction() {
+			
+		}
+		
+		public RunAction(String name) {
+			super(name);
+		}
+		
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			try {
+				int range = Integer.parseInt(gui.getNumberOfPlayersArea().getText().trim());				
+				calculate(range, gui.getCategoryDropdow().getSelectedIndex());
+			} catch(NumberFormatException ex) {
+				gui.showMessage("Vennligst fyll inn et tall");
+				System.out.println(ex.getMessage());
+			}
+			
+		}
+		
 	}
 
 

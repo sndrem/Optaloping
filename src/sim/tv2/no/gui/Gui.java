@@ -8,7 +8,6 @@ import java.awt.Rectangle;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
-import javax.swing.JComponent;
 import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
@@ -19,7 +18,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
-import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.TitledBorder;
 
@@ -93,6 +91,7 @@ public class Gui extends JFrame {
 		
 		openFileBtn = new JButton("Åpne tekstfil");
 		openFileBtn.setToolTipText("Åpne en tab-separert tekstfil med løpedata");
+		openFileBtn.requestFocus(true);
 		
 		String[] categories = {"Distanse", "Sprinter", "Gjennomsnittsfart", "Toppfart"};
 		
@@ -111,8 +110,6 @@ public class Gui extends JFrame {
 		numberOfPlayersArea = new JTextArea("5");
 		numberOfPlayersArea.setToolTipText("Velg antall spillere du ønsker kalkulert");	
 		numberOfPlayersArea.setBorder(new TitledBorder("Velg antall spillere"));
-		numberOfPlayersArea.setFocusable(false);
-		
 		
 		runButton = new JButton("Kjør");
 		runButton.setEnabled(false);
