@@ -33,7 +33,7 @@ public class Gui extends JFrame {
 	private static final long serialVersionUID = -7443633601733752828L;
 	private JButton openFileBtn, runButton;
 	private JEditorPane inputPane, outputPane;
-	private JTextArea numberOfPlayersArea;
+	private JComboBox<Integer> numberOfPlayersArea;
 	private static Gui instance = null;
 	private final JFileChooser fileChooser = new JFileChooser(".");
 	private JTextArea statusTextArea;
@@ -107,9 +107,10 @@ public class Gui extends JFrame {
 		getRemoveFirstNameCheckBox().setEnabled(false);
 		getRemoveFirstNameCheckBox().setFocusable(true);
 		
-		numberOfPlayersArea = new JTextArea("5");
+		numberOfPlayersArea = new JComboBox<Integer>();
 		numberOfPlayersArea.setToolTipText("Velg antall spillere du ønsker kalkulert");	
 		numberOfPlayersArea.setBorder(new TitledBorder("Velg antall spillere"));
+		//TODO Endre fra TextArea til JComboBox for antall spillere basert på antall spillere lastet inn
 		
 		runButton = new JButton("Kjør");
 		runButton.setEnabled(false);
@@ -215,14 +216,14 @@ public class Gui extends JFrame {
 	/**
 	 * @return the numberOfPlayersArea
 	 */
-	public JTextArea getNumberOfPlayersArea() {
+	public JComboBox<Integer> getNumberOfPlayersArea() {
 		return numberOfPlayersArea;
 	}
 
 	/**
 	 * @param numberOfPlayersArea the numberOfPlayersArea to set
 	 */
-	public void setNumberOfPlayersArea(JTextArea numberOfPlayersArea) {
+	public void setNumberOfPlayersArea(JComboBox<Integer> numberOfPlayersArea) {
 		this.numberOfPlayersArea = numberOfPlayersArea;
 	}
 

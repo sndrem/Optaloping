@@ -124,7 +124,7 @@ public class Main {
 			for(File file : files) {
 				try {
 					parser.parseFile(file);
-					showFileProcessInfo(file.getName());
+					showFileProcessInfo(file.getName());					
 				} catch (NumberFormatException ex) {
 					System.out.println(ex.getMessage());
 					if(files.length == 1) {
@@ -139,7 +139,18 @@ public class Main {
 			}
 			gui.getOutputPane().setText(parser.getSize() + " spillere er tilgjengelig");
 			gui.getOutputPane().setBorder(new TitledBorder(""));
+			populateNumbersArea(parser.getSize());
 		}
+	}
+
+	private void populateNumbersArea(int size) {
+		// Clear items if we load a new file
+		gui.getNumberOfPlayersArea().removeAllItems();
+		
+		for(int i = 1; i <= size; i++) {
+			gui.getNumberOfPlayersArea().addItem(i);
+		}
+		
 	}
 
 	private void showFileProcessError(NumberFormatException ex, String fileName, Color color) {
@@ -165,6 +176,7 @@ public class Main {
 	 * @params numberOfPlayers		the number of players the user wants output of
 	 */
 	public void calculate(int numberOfPlayers, int category) {
+		numberOfPlayers++;
 		gui.getOutputPane().setText("");
 		List<Player> players = parser.getPlayers();	
 		
@@ -180,7 +192,7 @@ public class Main {
 	
 		if(numberOfPlayers < 0) {
 			gui.showMessage("Vennligst fyll inn et positivt tall");
-			gui.getNumberOfPlayersArea().setText("5");
+			gui.getNumberOfPlayersArea().setSelectedIndex(4);
 		} else {
 				if(numberOfPlayers <= players.size() && players.size() > 0) {
 					gui.getOutputPane().setBorder(new TitledBorder("Viser " + numberOfPlayers + " av " + parser.getSize() + " tilgjengelige spillere"));	
@@ -225,7 +237,7 @@ public class Main {
 					} else {
 						gui.showMessage("Du prøver å vise flere spillere enn det finnes\n Du prøvde: " + numberOfPlayers + ". Det er bare " + players.size() + " spillere tilgjengelig");
 						gui.getOutputPane().setBorder(new TitledBorder("Viser " + 0 + " av " + parser.getSize() + " tilgjengelige spillere"));
-						gui.getNumberOfPlayersArea().setText("5");
+						gui.getNumberOfPlayersArea().setSelectedIndex(4);
 					}
 			} 
 		} 
@@ -273,8 +285,7 @@ public class Main {
 			} else if (e.getSource() == gui.getRunButton()) {
 				// Calculate the data
 				try {
-					int range = Integer.parseInt(gui.getNumberOfPlayersArea().getText().trim());				
-					calculate(range, gui.getCategoryDropdow().getSelectedIndex());
+					calculate(gui.getNumberOfPlayersArea().getSelectedIndex(), gui.getCategoryDropdow().getSelectedIndex());
 				} catch(NumberFormatException ex) {
 					gui.showMessage("Vennligst fyll inn et tall");
 					System.out.println(ex.getMessage());
@@ -289,8 +300,7 @@ public class Main {
 			} else if(e.getSource() == gui.getCategoryDropdow()) {
 				int selected = gui.getCategoryDropdow().getSelectedIndex();
 				try {
-					int range = Integer.parseInt(gui.getNumberOfPlayersArea().getText().trim());				
-					calculate(range, selected);
+					calculate(gui.getNumberOfPlayersArea().getSelectedIndex(), selected);
 				} catch(NumberFormatException ex) {
 					gui.showMessage("Vennligst fyll inn et tall");
 					System.out.println(ex.getMessage());
@@ -337,8 +347,7 @@ public class Main {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				int range = Integer.parseInt(gui.getNumberOfPlayersArea().getText().trim());				
-				calculate(range, gui.getCategoryDropdow().getSelectedIndex());
+				calculate(gui.getNumberOfPlayersArea().getSelectedIndex(), gui.getCategoryDropdow().getSelectedIndex());
 			} catch(NumberFormatException ex) {
 				gui.showMessage("Vennligst fyll inn et tall");
 				System.out.println(ex.getMessage());
