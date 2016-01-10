@@ -18,6 +18,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.TitledBorder;
 
@@ -44,6 +45,7 @@ public class Gui extends JFrame {
 	private JMenuItem openOptaItem;
 	private JCheckBox removeFirstNameCheckBox;
 	private JMenuItem exitItem;
+	private JMenuItem openFileMenuItem;
 	
 	private Gui() {
 		setupGui();
@@ -71,11 +73,17 @@ public class Gui extends JFrame {
 		
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menu = new JMenu("Meny");
+		JMenu toolsMenu = new JMenu("Verktøy");
 		menuBar.add(menu);
+		menuBar.add(toolsMenu);
 		
 		setOpenOptaItem(new JMenuItem("Åpne kamper i Firefox"));
 		getOpenOptaItem().setToolTipText("Åpner en tab for hver kamp i Firefox. Dette kan ta litt tid");
-		menu.add(getOpenOptaItem());
+		toolsMenu.add(getOpenOptaItem());
+		
+		setOpenFileMenuItem(new JMenuItem("Åpne tekstfil"));
+		getOpenFileMenuItem().setAccelerator(KeyStroke.getKeyStroke("ctrl O"));
+		menu.add(getOpenFileMenuItem());
 		
 		setExitItem(new JMenuItem("Lukk"));
 		menu.add(getExitItem());
@@ -98,14 +106,15 @@ public class Gui extends JFrame {
 		setCategoryDropdow(new JComboBox<String>(categories));
 		getCategoryDropdow().setEnabled(false);
 		getCategoryDropdow().setFocusable(true);
+		getCategoryDropdow().setBorder(new TitledBorder("Velg en kategori"));
 		
 		setOrderCheckBox(new JCheckBox("Reverse"));
-		getOrderCheckBox().setEnabled(false);
 		getOrderCheckBox().setFocusable(true);
+		getOrderCheckBox().setEnabled(false);
 		
 		setRemoveFirstNameCheckBox(new JCheckBox("Fjern fornavn"));
-		getRemoveFirstNameCheckBox().setEnabled(false);
 		getRemoveFirstNameCheckBox().setFocusable(true);
+		getRemoveFirstNameCheckBox().setEnabled(false);
 		
 		numberOfPlayersArea = new JComboBox<Integer>();
 		numberOfPlayersArea.setToolTipText("Velg antall spillere du ønsker kalkulert");	
@@ -120,11 +129,11 @@ public class Gui extends JFrame {
 		
 		northPanel.add(openFileBtn);
 		northPanel.add(getCategoryDropdow());
+		northPanel.add(numberOfPlayersArea);
 		northPanel.add(getOrderCheckBox());
 		northPanel.add(getRemoveFirstNameCheckBox());
 
-		northPanel.add(numberOfPlayersArea);
-		northPanel.add(runButton);
+//		northPanel.add(runButton);
 		northPanel.add(getCopyButton());
 		this.add(northPanel, BorderLayout.NORTH);
 		
@@ -143,8 +152,7 @@ public class Gui extends JFrame {
 		
 		this.add(centerPanel, BorderLayout.CENTER);
 		
-		
-		
+	
 		setStatusPanel(new JPanel());
 		setStatusTextArea(new JTextArea("Status:"));
 		getStatusPanel().add(getStatusTextArea());
@@ -353,6 +361,20 @@ public class Gui extends JFrame {
 	 */
 	public void setStatusTextArea(JTextArea statusTextArea) {
 		this.statusTextArea = statusTextArea;
+	}
+
+	/**
+	 * @return the openFileMenuItem
+	 */
+	public JMenuItem getOpenFileMenuItem() {
+		return openFileMenuItem;
+	}
+
+	/**
+	 * @param openFileMenuItem the openFileMenuItem to set
+	 */
+	public void setOpenFileMenuItem(JMenuItem openFileMenuItem) {
+		this.openFileMenuItem = openFileMenuItem;
 	}
 
 }

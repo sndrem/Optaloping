@@ -15,9 +15,14 @@ import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
+import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
+import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -53,7 +58,7 @@ public class Main {
 	public Main() {
 		// TODO Auto-generated constructor stub
 		SwingUtilities.invokeLater(new Runnable() {
-			public void run() {
+			public void run() {			
 				gui = Gui.getInstance();
 				setupActionListeners();
 			}
@@ -67,22 +72,32 @@ public class Main {
 	 */
 	private void setupActionListeners() {
 		Events e = new Events();
-		gui.getOpenFileBtn().addActionListener(e);
+		gui.getOpenFileBtn().setAction(new OpenFileAction("Åpne tekstfil"));
+		gui.getOpenFileMenuItem().setAction(new OpenFileAction("Åpne tekstfil"));
+		gui.getOpenFileMenuItem().setAccelerator(KeyStroke.getKeyStroke("ctrl O"));
 		gui.getRunButton().setAction(new RunAction("Kjør"));
-		gui.getCopyButton().addActionListener(e);
+		gui.getCopyButton().setAction(new CopyAction("Kopier til clipboard"));
 		gui.getOpenOptaItem().addActionListener(e);
-		gui.getExitItem().addActionListener(e);
+		gui.getExitItem().setAction(new ExitAction("Lukk"));
+		gui.getExitItem().setAccelerator(KeyStroke.getKeyStroke("ctrl Q"));
 		gui.getRemoveFirstNameCheckBox().setAction(new RunAction("Fjern fornavn"));
 		gui.getOrderCheckBox().setAction(new RunAction("Reverse"));
 		gui.getCategoryDropdow().addActionListener(e);
+		gui.getNumberOfPlayersArea().addActionListener(new RunAction());
 		
 		// Key events
 		gui.getOpenFileBtn().getActionMap().put("openFile", new OpenFileAction());
 		gui.getOpenFileBtn().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("control O"), "openFile");
-		gui.getOpenFileBtn().getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke((char) KeyEvent.VK_ENTER), "openFile");
+		gui.getOpenFileBtn().getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.CTRL_MASK), "openFile");
 		
 		gui.getRunButton().getActionMap().put("runCalculations", new RunAction());
 		gui.getRunButton().getInputMap().put(KeyStroke.getKeyStroke((char) KeyEvent.VK_ENTER), "runCalculations");
+		
+		gui.getCopyButton().getActionMap().put("copyContent", new CopyAction());
+		gui.getCopyButton().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_DOWN_MASK), "copyContent");
+		
+		gui.getExitItem().getActionMap().put("exitAction", new ExitAction());
+		gui.getExitItem().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ctrl Q"), "exitAction");
 	}
 	
 	/*
@@ -151,6 +166,10 @@ public class Main {
 			gui.getNumberOfPlayersArea().addItem(i);
 		}
 		
+		if(size >= 5) {
+			gui.getNumberOfPlayersArea().setSelectedIndex(4);
+		}
+		
 	}
 
 	private void showFileProcessError(NumberFormatException ex, String fileName, Color color) {
@@ -176,6 +195,7 @@ public class Main {
 	 * @params numberOfPlayers		the number of players the user wants output of
 	 */
 	public void calculate(int numberOfPlayers, int category) {
+		// øk antall spillere med "en" fordi JComboBox teller fra 0 og det kan forvirre sluttbrukeren.
 		numberOfPlayers++;
 		gui.getOutputPane().setText("");
 		List<Player> players = parser.getPlayers();	
@@ -279,36 +299,19 @@ public class Main {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(e.getSource() == gui.getOpenFileBtn()) {
-				// Open file
-				openFile();
-			} else if (e.getSource() == gui.getRunButton()) {
+			if (e.getSource() == gui.getRunButton()) {
 				// Calculate the data
-				try {
-					calculate(gui.getNumberOfPlayersArea().getSelectedIndex(), gui.getCategoryDropdow().getSelectedIndex());
-				} catch(NumberFormatException ex) {
-					gui.showMessage("Vennligst fyll inn et tall");
-					System.out.println(ex.getMessage());
-				}
-			} else if(e.getSource() == gui.getCopyButton()) {
-				copyContent();
+				calculate(gui.getNumberOfPlayersArea().getSelectedIndex(), gui.getCategoryDropdow().getSelectedIndex());
 			} else if(e.getSource() == gui.getOpenOptaItem()) {
 				gui.getStatusTextArea().setText(gui.getStatusTextArea().getText() + " Åpner en tab for hver kamp i Firefox. Dette kan ta litt tid");
 				optaWebDriver.openOptaTabs();
-			} else if(e.getSource() == gui.getExitItem()) {
-				System.exit(0);
 			} else if(e.getSource() == gui.getCategoryDropdow()) {
-				int selected = gui.getCategoryDropdow().getSelectedIndex();
-				try {
-					calculate(gui.getNumberOfPlayersArea().getSelectedIndex(), selected);
-				} catch(NumberFormatException ex) {
-					gui.showMessage("Vennligst fyll inn et tall");
-					System.out.println(ex.getMessage());
-				}
+				calculate(gui.getNumberOfPlayersArea().getSelectedIndex(), gui.getCategoryDropdow().getSelectedIndex());
 			}
 		}
 		
 	}
+	
 	
 	/**
 	 * Private class for key listeners
@@ -320,6 +323,14 @@ public class Main {
 		 * 
 		 */
 		private static final long serialVersionUID = 2528328845681249227L;
+		
+		public OpenFileAction() {
+			
+		}
+		
+		public OpenFileAction(String name) {
+			super(name);
+		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -348,13 +359,56 @@ public class Main {
 		public void actionPerformed(ActionEvent e) {
 			try {
 				calculate(gui.getNumberOfPlayersArea().getSelectedIndex(), gui.getCategoryDropdow().getSelectedIndex());
-			} catch(NumberFormatException ex) {
-				gui.showMessage("Vennligst fyll inn et tall");
+			} catch(IllegalArgumentException ex) {
+				System.out.println("Du har ikke lest inn en fil enda");
 				System.out.println(ex.getMessage());
 			}
+		}
+		
+	}
+	
+	private class CopyAction extends AbstractAction {
+		
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -1143123678277652149L;
+
+		public CopyAction() {
 			
 		}
 		
+		public CopyAction(String name) {
+			super(name);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			copyContent();
+		}
+		
+	}
+	
+	private class ExitAction extends AbstractAction {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 3910572228923061194L;
+
+		public ExitAction() {
+			
+		}
+		
+		public ExitAction(String name) {
+			super(name);
+		}
+		
+		public void actionPerformed(ActionEvent e) {
+			int choice = JOptionPane.showConfirmDialog(gui, "Er du sikker på at du vil stenge programmet", "Stenge programmet?", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+			if(choice == 0) {
+				System.exit(0);
+			}
+		}
 	}
 
 

@@ -1,0 +1,5 @@
+3	Leighton Baines	10.44	53	6.55	29.48
+5	John Stones	9.80	37	6.15	31.08
+9	Arouna Koné	7.05	42	6.90	30.63
+10	Romelu Lukaku	8.39	34	5.27	33.37
+1	Sindre Moldeklev	15.0	78	19.4	12.9

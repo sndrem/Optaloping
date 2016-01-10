@@ -34,7 +34,7 @@ public class Parser{
 	public List<Player> parseFile(File file) throws IOException, NumberFormatException {
 		BufferedReader br = new BufferedReader(new FileReader(file));
 		
-		int lineNumber = 0;
+		int lineNumber = 1;
 		try {
 			String line;
 			while((line = br.readLine()) != null) {
