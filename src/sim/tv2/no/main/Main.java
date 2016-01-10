@@ -155,6 +155,7 @@ public class Main {
 			gui.getOutputPane().setText(parser.getSize() + " spillere er tilgjengelig");
 			gui.getOutputPane().setBorder(new TitledBorder(""));
 			populateNumbersArea(parser.getSize());
+			gui.getNumberOfPlayersArea().requestFocus();
 		}
 	}
 
@@ -272,7 +273,12 @@ public class Main {
 		clipBoard.setContents(selection, null);
 	}
 
-		
+	
+	/**
+	 * Method to sort the players
+	 * @param players the players to sort
+	 * @param category the category to sort based on
+	 */
 	private void sortPlayers(List<Player> players, int category) {
 		switch (category) {
 		case 0:
