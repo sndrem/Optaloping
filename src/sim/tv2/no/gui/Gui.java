@@ -46,6 +46,7 @@ public class Gui extends JFrame {
 	private JCheckBox removeFirstNameCheckBox;
 	private JMenuItem exitItem;
 	private JMenuItem openFileMenuItem;
+	private JCheckBox showCategoryCheckBox;
 	
 	private Gui() {
 		setupGui();
@@ -97,7 +98,7 @@ public class Gui extends JFrame {
 		this.setLayout(new BorderLayout());
 		
 		// Create the top-panel. This panel holds the open button, input field for the range of players and the run button
-		JPanel northPanel = new JPanel(new GridLayout(2,4));
+		JPanel northPanel = new JPanel(new GridLayout(2,2));
 		
 		openFileBtn = new JButton("Åpne tekstfil");
 		openFileBtn.setToolTipText("Åpne en tab-separert tekstfil med løpedata");
@@ -112,11 +113,14 @@ public class Gui extends JFrame {
 		
 		setOrderCheckBox(new JCheckBox("Reverse"));
 		getOrderCheckBox().setFocusable(true);
-		getOrderCheckBox().setEnabled(false);
 		
 		setRemoveFirstNameCheckBox(new JCheckBox("Fjern fornavn"));
 		getRemoveFirstNameCheckBox().setFocusable(true);
-		getRemoveFirstNameCheckBox().setEnabled(false);
+		getRemoveFirstNameCheckBox().setSelected(true);
+		
+		setShowCategoryCheckBox(new JCheckBox("Vis kategori"));
+		getShowCategoryCheckBox().setFocusable(true);
+		
 		
 		numberOfPlayersArea = new JComboBox<Integer>();
 		numberOfPlayersArea.setToolTipText("Velg antall spillere du ønsker kalkulert");	
@@ -129,14 +133,15 @@ public class Gui extends JFrame {
 		
 		setCopyButton(new JButton("Kopier til clipboard"));
 		
-		northPanel.add(openFileBtn);
+//		northPanel.add(openFileBtn);
 		northPanel.add(getCategoryDropdow());
 		northPanel.add(numberOfPlayersArea);
 		northPanel.add(getOrderCheckBox());
 		northPanel.add(getRemoveFirstNameCheckBox());
+		northPanel.add(getShowCategoryCheckBox());
 
 //		northPanel.add(runButton);
-		northPanel.add(getCopyButton());
+//		northPanel.add(getCopyButton());
 		this.add(northPanel, BorderLayout.NORTH);
 		
 		Dimension minimumSize = new Dimension(100,100);
@@ -377,6 +382,20 @@ public class Gui extends JFrame {
 	 */
 	public void setOpenFileMenuItem(JMenuItem openFileMenuItem) {
 		this.openFileMenuItem = openFileMenuItem;
+	}
+
+	/**
+	 * @return the showCategoryCheckBox
+	 */
+	public JCheckBox getShowCategoryCheckBox() {
+		return showCategoryCheckBox;
+	}
+
+	/**
+	 * @param showCategoryCheckBox the showCategoryCheckBox to set
+	 */
+	public void setShowCategoryCheckBox(JCheckBox showCategoryCheckBox) {
+		this.showCategoryCheckBox = showCategoryCheckBox;
 	}
 
 }
