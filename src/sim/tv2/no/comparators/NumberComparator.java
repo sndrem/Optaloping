@@ -1,6 +1,8 @@
-package sim.tv2.no.player;
+package sim.tv2.no.comparators;
 
 import java.util.Comparator;
+
+import sim.tv2.no.player.Player;
 
 public class NumberComparator implements Comparator<Player> {
 

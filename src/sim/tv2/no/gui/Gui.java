@@ -2,7 +2,6 @@ package sim.tv2.no.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import java.awt.Rectangle;
 
 import javax.swing.JButton;
@@ -18,6 +17,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.TitledBorder;
@@ -47,6 +47,7 @@ public class Gui extends JFrame {
 	private JMenuItem exitItem;
 	private JMenuItem openFileMenuItem;
 	private JCheckBox showCategoryCheckBox;
+	private JCheckBox selectTextCheckBox;
 	
 	private Gui() {
 		setupGui();
@@ -75,10 +76,8 @@ public class Gui extends JFrame {
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menu = new JMenu("Meny");
 		JMenu toolsMenu = new JMenu("Verktøy");
-		JMenu helpMenu = new JMenu("Hjelp");
 		menuBar.add(menu);
 		menuBar.add(toolsMenu);
-		menuBar.add(helpMenu);
 		
 		setOpenOptaItem(new JMenuItem("Åpne kamper i Firefox"));
 		getOpenOptaItem().setToolTipText("Åpner en tab for hver kamp i Firefox. Dette kan ta litt tid");
@@ -98,7 +97,7 @@ public class Gui extends JFrame {
 		this.setLayout(new BorderLayout());
 		
 		// Create the top-panel. This panel holds the open button, input field for the range of players and the run button
-		JPanel northPanel = new JPanel(new GridLayout(2,2));
+		JPanel northPanel = new JPanel(new BorderLayout());
 		
 		openFileBtn = new JButton("Åpne tekstfil");
 		openFileBtn.setToolTipText("Åpne en tab-separert tekstfil med løpedata");
@@ -121,6 +120,9 @@ public class Gui extends JFrame {
 		setShowCategoryCheckBox(new JCheckBox("Vis kategori"));
 		getShowCategoryCheckBox().setFocusable(true);
 		
+		setSelectTextCheckBox(new JCheckBox("Marker tekst"));
+		getSelectTextCheckBox().setFocusable(true);
+		
 		
 		numberOfPlayersArea = new JComboBox<Integer>();
 		numberOfPlayersArea.setToolTipText("Velg antall spillere du ønsker kalkulert");	
@@ -133,15 +135,21 @@ public class Gui extends JFrame {
 		
 		setCopyButton(new JButton("Kopier til clipboard"));
 		
-//		northPanel.add(openFileBtn);
-		northPanel.add(getCategoryDropdow());
-		northPanel.add(numberOfPlayersArea);
-		northPanel.add(getOrderCheckBox());
-		northPanel.add(getRemoveFirstNameCheckBox());
-		northPanel.add(getShowCategoryCheckBox());
+		
+		JToolBar dropDownToolBar = new JToolBar();
+		dropDownToolBar.add(getCategoryDropdow());
+		dropDownToolBar.add(getNumberOfPlayersArea());
+		
+		JToolBar checkBoxToolBar = new JToolBar();
+		checkBoxToolBar.add(getOrderCheckBox());
+		checkBoxToolBar.add(getRemoveFirstNameCheckBox());
+		checkBoxToolBar.add(getShowCategoryCheckBox());
+		checkBoxToolBar.add(getSelectTextCheckBox());
+		
 
-//		northPanel.add(runButton);
-//		northPanel.add(getCopyButton());
+		northPanel.add(dropDownToolBar, BorderLayout.NORTH);
+		northPanel.add(checkBoxToolBar, BorderLayout.SOUTH);
+
 		this.add(northPanel, BorderLayout.NORTH);
 		
 		Dimension minimumSize = new Dimension(100,100);
@@ -396,6 +404,20 @@ public class Gui extends JFrame {
 	 */
 	public void setShowCategoryCheckBox(JCheckBox showCategoryCheckBox) {
 		this.showCategoryCheckBox = showCategoryCheckBox;
+	}
+
+	/**
+	 * @return the selectTextCheckBox
+	 */
+	public JCheckBox getSelectTextCheckBox() {
+		return selectTextCheckBox;
+	}
+
+	/**
+	 * @param selectTextCheckBox the selectTextCheckBox to set
+	 */
+	public void setSelectTextCheckBox(JCheckBox selectTextCheckBox) {
+		this.selectTextCheckBox = selectTextCheckBox;
 	}
 
 }

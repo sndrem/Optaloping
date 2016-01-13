@@ -22,13 +22,13 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import sim.tv2.no.comparators.AvgSpeedComparator;
+import sim.tv2.no.comparators.DistanceComparator;
+import sim.tv2.no.comparators.SprintComparator;
+import sim.tv2.no.comparators.TopSpeedComparator;
 import sim.tv2.no.gui.Gui;
 import sim.tv2.no.parser.Parser;
-import sim.tv2.no.player.AvgSpeedComparator;
-import sim.tv2.no.player.DistanceComparator;
 import sim.tv2.no.player.Player;
-import sim.tv2.no.player.SprintComparator;
-import sim.tv2.no.player.TopSpeedComparator;
 import sim.tv2.no.webDriver.OpenOpta;
 
 /*
@@ -81,6 +81,7 @@ public class Main {
 		gui.getCategoryDropdow().setAction(new RunAction());
 		gui.getNumberOfPlayersArea().addActionListener(new RunAction());
 		gui.getShowCategoryCheckBox().setAction(new RunAction("Vis kategorinavn"));
+		gui.getSelectTextCheckBox().addActionListener(e);
 		
 		// Key events
 		gui.getOpenFileBtn().getActionMap().put("openFile", new OpenFileAction());
@@ -206,8 +207,7 @@ public class Main {
 		}
 		
 		
-		boolean removeName = gui.getRemoveFirstNameCheckBox().isSelected();
-		
+		boolean removeName = gui.getRemoveFirstNameCheckBox().isSelected();		
 	
 		if(numberOfPlayers < 0) {
 			gui.showMessage("Vennligst fyll inn et positivt tall");
@@ -255,13 +255,28 @@ public class Main {
 							}
 						}
 						
+						selectAllText(gui.getSelectTextCheckBox().isSelected());
+						
 					} else {
 						gui.showMessage("Du prøver å vise flere spillere enn det finnes\n Du prøvde: " + numberOfPlayers + ". Det er bare " + players.size() + " spillere tilgjengelig");
 						gui.getOutputPane().setBorder(new TitledBorder("Viser " + 0 + " av " + parser.getSize() + " tilgjengelige spillere"));
 						gui.getNumberOfPlayersArea().setSelectedIndex(4);
-					}
+				}
 			} 
 		} 
+	
+	/**
+	 * Method select all the text in the gui
+	 * @param checked checks wether the user wants to select all text.
+	 */
+	private void selectAllText(boolean checked) {
+		if(checked) {
+			gui.getOutputPane().requestFocusInWindow();
+			gui.getOutputPane().selectAll();
+		} else {
+			gui.getNumberOfPlayersArea().requestFocus();
+		}
+	}
 
 	/**
 	 * Method to copy the content of the outputPane to the system clipboard
@@ -310,6 +325,8 @@ public class Main {
 				optaWebDriver.openOptaTabs();
 			} else if(e.getSource() == gui.getCategoryDropdow()) {
 				calculate(gui.getNumberOfPlayersArea().getSelectedIndex(), gui.getCategoryDropdow().getSelectedIndex());
+			} else if (e.getSource() == gui.getSelectTextCheckBox()) {
+				selectAllText(gui.getSelectTextCheckBox().isSelected());
 			}
 		}
 		
