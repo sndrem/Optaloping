@@ -74,8 +74,10 @@ public class Gui extends JFrame {
 		JMenuBar menuBar = new JMenuBar();
 		JMenu menu = new JMenu("Meny");
 		JMenu toolsMenu = new JMenu("Verktøy");
+		JMenu helpMenu = new JMenu("Hjelp");
 		menuBar.add(menu);
 		menuBar.add(toolsMenu);
+		menuBar.add(helpMenu);
 		
 		setOpenOptaItem(new JMenuItem("Åpne kamper i Firefox"));
 		getOpenOptaItem().setToolTipText("Åpner en tab for hver kamp i Firefox. Dette kan ta litt tid");

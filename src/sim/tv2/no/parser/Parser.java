@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.SwingWorker;
-
 import sim.tv2.no.player.Player;
 
 /*
