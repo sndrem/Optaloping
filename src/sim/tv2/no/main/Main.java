@@ -15,14 +15,10 @@ import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
-import javax.swing.UIManager.LookAndFeelInfo;
-import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -82,8 +78,9 @@ public class Main {
 		gui.getExitItem().setAccelerator(KeyStroke.getKeyStroke("ctrl Q"));
 		gui.getRemoveFirstNameCheckBox().setAction(new RunAction("Fjern fornavn"));
 		gui.getOrderCheckBox().setAction(new RunAction("Reverse"));
-		gui.getCategoryDropdow().addActionListener(e);
+		gui.getCategoryDropdow().setAction(new RunAction());
 		gui.getNumberOfPlayersArea().addActionListener(new RunAction());
+		gui.getShowCategoryCheckBox().setAction(new RunAction("Vis kategorinavn"));
 		
 		// Key events
 		gui.getOpenFileBtn().getActionMap().put("openFile", new OpenFileAction());
@@ -167,6 +164,7 @@ public class Main {
 			gui.getNumberOfPlayersArea().addItem(i);
 		}
 		
+		// If number of players >= 5, then we default show top 5
 		if(size >= 5) {
 			gui.getNumberOfPlayersArea().setSelectedIndex(4);
 		}
@@ -217,21 +215,23 @@ public class Main {
 		} else {
 				if(numberOfPlayers <= players.size() && players.size() > 0) {
 					gui.getOutputPane().setBorder(new TitledBorder("Viser " + numberOfPlayers + " av " + parser.getSize() + " tilgjengelige spillere"));	
+					if(gui.getShowCategoryCheckBox().isSelected()) {
 						switch (category) {
-						case 0:
-							gui.getOutputPane().setText("\nDistanse løpt\n");
-							break;
-						case 1:
-							gui.getOutputPane().setText("\nAntall sprinter\n");
-							break;
-						case 2:
-							gui.getOutputPane().setText("\nGjennomsnittsfart\n");
-							break;
-						case 3:
-							gui.getOutputPane().setText("\nToppfart\n");
-							break;
-						default:
-							break;
+							case 0:
+								gui.getOutputPane().setText("\nDistanse løpt\n");
+								break;
+							case 1:
+								gui.getOutputPane().setText("\nAntall sprinter\n");
+								break;
+							case 2:
+								gui.getOutputPane().setText("\nGjennomsnittsfart\n");
+								break;
+							case 3:
+								gui.getOutputPane().setText("\nToppfart\n");
+								break;
+							default:
+								break;
+							}
 						}
 					
 				
@@ -305,10 +305,7 @@ public class Main {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (e.getSource() == gui.getRunButton()) {
-				// Calculate the data
-				calculate(gui.getNumberOfPlayersArea().getSelectedIndex(), gui.getCategoryDropdow().getSelectedIndex());
-			} else if(e.getSource() == gui.getOpenOptaItem()) {
+			if(e.getSource() == gui.getOpenOptaItem()) {
 				gui.getStatusTextArea().setText(gui.getStatusTextArea().getText() + " Åpner en tab for hver kamp i Firefox. Dette kan ta litt tid");
 				optaWebDriver.openOptaTabs();
 			} else if(e.getSource() == gui.getCategoryDropdow()) {
