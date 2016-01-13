@@ -130,7 +130,7 @@ public class Player implements Comparator<Player>, Comparable<Player> {
 		}
 	}
 	
-	private String removeFirstName(String name) {
+	public String removeFirstName(String name) {
 		String[] wholeName = name.split(" ");
 		String restOfName = "";
 		if(wholeName.length == 1) {
