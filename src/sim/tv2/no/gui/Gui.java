@@ -2,7 +2,10 @@ package sim.tv2.no.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.awt.Rectangle;
+import java.io.IOException;
+import java.net.URL;
 
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -16,6 +19,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
@@ -48,6 +52,12 @@ public class Gui extends JFrame {
 	private JMenuItem openFileMenuItem;
 	private JCheckBox showCategoryCheckBox;
 	private JCheckBox selectTextCheckBox;
+	private JTabbedPane tabbedPane;
+	private JPanel optaRunningPanel;
+	private JPanel head2headPanel;
+	private JTextArea outputH2HArea;
+	private JComboBox<String> teamNames;
+	private JComboBox<String> playerNames;
 	
 	private Gui() {
 		setupGui();
@@ -73,29 +83,58 @@ public class Gui extends JFrame {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setFocusable(true);
 		
-		JMenuBar menuBar = new JMenuBar();
-		JMenu menu = new JMenu("Meny");
-		JMenu toolsMenu = new JMenu("Verktøy");
-		menuBar.add(menu);
-		menuBar.add(toolsMenu);
+		createMenuBar();
 		
-		setOpenOptaItem(new JMenuItem("Åpne kamper i Firefox"));
-		getOpenOptaItem().setToolTipText("Åpner en tab for hver kamp i Firefox. Dette kan ta litt tid");
-		toolsMenu.add(getOpenOptaItem());
 		
-		setOpenFileMenuItem(new JMenuItem("Åpne tekstfil"));
-		getOpenFileMenuItem().setAccelerator(KeyStroke.getKeyStroke("ctrl O"));
-		menu.add(getOpenFileMenuItem());
+		setOptaRunningPanel(new JPanel(new BorderLayout()));
 		
-		setExitItem(new JMenuItem("Lukk"));
-		menu.add(getExitItem());
+		createOptaRunningPanel();
+		createHead2HeadPanel();
 		
-		this.setJMenuBar(menuBar);
+		tabbedPane = new JTabbedPane();
+		tabbedPane.add("Løping", getOptaRunningPanel());
+		tabbedPane.add("H2H", getHead2headPanel());
+		
+		
+		this.add(tabbedPane);
+		
+		this.setVisible(true);
+		
+	}
+	
+	private void createHead2HeadPanel() {
+		head2headPanel = new JPanel(new BorderLayout());
+		
+		JPanel homeTeamPanel = new JPanel(new BorderLayout());
+		homeTeamPanel.add(createTeamDropBoxes(), BorderLayout.NORTH);
+		JPanel centerPanel = new JPanel();
+		JPanel awayTeamPanel = new JPanel();
+		awayTeamPanel.add(createTeamDropBoxes(), BorderLayout.NORTH);
+		
+		setOutputH2HArea(new JTextArea());
+		
+		centerPanel.add(getOutputH2HArea());
+		
+		head2headPanel.add(homeTeamPanel, BorderLayout.WEST);
+		head2headPanel.add(centerPanel, BorderLayout.CENTER);
+		head2headPanel.add(awayTeamPanel, BorderLayout.EAST);
+		
+		
+	}
 
-				
-		// Set layout for the gui
-		this.setLayout(new BorderLayout());
-		
+	private JPanel createTeamDropBoxes() {
+
+		setTeamNames(new JComboBox<String>());
+		setPlayerNames(new JComboBox<String>());
+		getTeamNames().setBorder(new TitledBorder("Velg lag"));
+		getPlayerNames().setBorder(new TitledBorder("Velg spiller"));
+		JPanel dropBoxPanel = new JPanel(new GridLayout(2,1));
+		dropBoxPanel.add(getTeamNames());
+		dropBoxPanel.add(getPlayerNames());
+		return dropBoxPanel;
+	}
+
+	private void createOptaRunningPanel() {
 		// Create the top-panel. This panel holds the open button, input field for the range of players and the run button
 		JPanel northPanel = new JPanel(new BorderLayout());
 		
@@ -150,7 +189,7 @@ public class Gui extends JFrame {
 		northPanel.add(dropDownToolBar, BorderLayout.NORTH);
 		northPanel.add(checkBoxToolBar, BorderLayout.SOUTH);
 
-		this.add(northPanel, BorderLayout.NORTH);
+		
 		
 		Dimension minimumSize = new Dimension(100,100);
 		
@@ -165,19 +204,35 @@ public class Gui extends JFrame {
 		JPanel centerPanel = new JPanel(new BorderLayout());
 		centerPanel.add(outputScrollPane, BorderLayout.CENTER);
 		
-		this.add(centerPanel, BorderLayout.CENTER);
-		
-	
 		setStatusPanel(new JPanel());
 		setStatusTextArea(new JTextArea("Status:"));
 		getStatusPanel().add(getStatusTextArea());
 		getStatusTextArea().setEditable(false);
 		
-		this.add(getStatusPanel(), BorderLayout.SOUTH);
+		getOptaRunningPanel().add(northPanel, BorderLayout.NORTH);
+		getOptaRunningPanel().add(centerPanel, BorderLayout.CENTER);
+		getOptaRunningPanel().add(getStatusPanel(), BorderLayout.SOUTH);
+	}
+
+	private void createMenuBar() {
+		JMenuBar menuBar = new JMenuBar();
+		JMenu menu = new JMenu("Meny");
+		JMenu toolsMenu = new JMenu("Verktøy");
+		menuBar.add(menu);
+		menuBar.add(toolsMenu);
 		
+		setOpenOptaItem(new JMenuItem("Åpne kamper i Firefox"));
+		getOpenOptaItem().setToolTipText("Åpner en tab for hver kamp i Firefox. Dette kan ta litt tid");
+		toolsMenu.add(getOpenOptaItem());
 		
-		this.setVisible(true);
+		setOpenFileMenuItem(new JMenuItem("Åpne tekstfil"));
+		getOpenFileMenuItem().setAccelerator(KeyStroke.getKeyStroke("ctrl O"));
+		menu.add(getOpenFileMenuItem());
 		
+		setExitItem(new JMenuItem("Lukk"));
+		menu.add(getExitItem());
+		
+		this.setJMenuBar(menuBar);
 	}
 
 	/**
@@ -418,6 +473,76 @@ public class Gui extends JFrame {
 	 */
 	public void setSelectTextCheckBox(JCheckBox selectTextCheckBox) {
 		this.selectTextCheckBox = selectTextCheckBox;
+	}
+
+	/**
+	 * @return the optaRunningPanel
+	 */
+	public JPanel getOptaRunningPanel() {
+		return optaRunningPanel;
+	}
+
+	/**
+	 * @param optaRunningPanel the optaRunningPanel to set
+	 */
+	public void setOptaRunningPanel(JPanel optaRunningPanel) {
+		this.optaRunningPanel = optaRunningPanel;
+	}
+
+	/**
+	 * @return the head2headPanel
+	 */
+	public JPanel getHead2headPanel() {
+		return head2headPanel;
+	}
+
+	/**
+	 * @param head2headPanel the head2headPanel to set
+	 */
+	public void setHead2headPanel(JPanel head2headPanel) {
+		this.head2headPanel = head2headPanel;
+	}
+
+	/**
+	 * @return the outputH2HArea
+	 */
+	public JTextArea getOutputH2HArea() {
+		return outputH2HArea;
+	}
+
+	/**
+	 * @param outputH2HArea the outputH2HArea to set
+	 */
+	public void setOutputH2HArea(JTextArea outputH2HArea) {
+		this.outputH2HArea = outputH2HArea;
+	}
+
+	/**
+	 * @return the teamNames
+	 */
+	public JComboBox<String> getTeamNames() {
+		return teamNames;
+	}
+
+	/**
+	 * @param teamNames the teamNames to set
+	 */
+	public void setTeamNames(JComboBox<String> teamNames) {
+		this.teamNames = teamNames;
+	}
+
+	/**
+	 * @return the playerNames
+	 */
+	public JComboBox<String> getPlayerNames() {
+		return playerNames;
+	}
+
+	/**
+	 * @param playerNames the playerNames to set
+	 */
+	public void setPlayerNames(JComboBox<String> playerNames) {
+		this.playerNames = playerNames;
 	}
 
 }
