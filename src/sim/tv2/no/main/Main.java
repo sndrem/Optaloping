@@ -105,15 +105,13 @@ public class Main {
 			homePlayers = parser.fetchPlayers(teamId);
 			gui.getHomeTeamModel().removeAllElements();
 			for(String player : homePlayers.keySet()) {
-				System.out.println(player);
 				gui.getHomeTeamModel().addElement(player);
 			}
 			break;
 		case 1:
 			awayPlayers = parser.fetchPlayers(teamId);
 			gui.getAwayTeamModel().removeAllElements();
-			for(String player : homePlayers.keySet()) {
-				System.out.println(player);
+			for(String player : awayPlayers.keySet()) {
 				gui.getAwayTeamModel().addElement(player);
 			}
 			break;
@@ -169,7 +167,7 @@ public class Main {
 			// Create a new player
 			if(isHomePlayer) {
 				homePlayer = new H2HPlayer(playerName, age, appearances, careerGoals, yellowCards, redCards, height, weight, gamesThisSeason, assists, playerNumber, seasonalGoals);
-			} else {
+			} else if(!isHomePlayer) {
 				awayPlayer = new H2HPlayer(playerName, age, appearances, careerGoals, yellowCards, redCards, height, weight, gamesThisSeason, assists, playerNumber, seasonalGoals);
 			}
 			
@@ -178,11 +176,14 @@ public class Main {
 			e.printStackTrace();
 		}
 		
-		showPlayerInfo(homePlayer, awayPlayer);
 	}
 	
 	private void showPlayerInfo(Player homePlayer, Player awayPlayer) {
-		gui.getOutputH2HArea().setText("Her skal det komme et script for iNews\nSjekk showPlayerInfo-metoden");
+//		gui.getOutputH2HArea().setText("Her skal det komme et script for iNews\nSjekk showPlayerInfo-metoden");
+		String info = "Hjemme\n\n" + homePlayer.toString();
+		info += "\n\nBorte\n\n" + awayPlayer.toString();
+		gui.getOutputH2HArea().setText(info);
+		
 	}
 	
 	
@@ -209,8 +210,7 @@ public class Main {
 		
 		gui.getHomeTeamNames().addActionListener(e);
 		gui.getAwayTeamNames().addActionListener(e);
-		gui.getHomePlayerNames().addActionListener(e);
-		gui.getAwayPlayerNames().addActionListener(e);
+		gui.getH2hButton().addActionListener(e);
 		
 		// Key events
 		gui.getOpenFileBtn().getActionMap().put("openFile", new OpenFileAction());
@@ -456,6 +456,21 @@ public class Main {
 				calculate(gui.getNumberOfPlayersArea().getSelectedIndex(), gui.getCategoryDropdow().getSelectedIndex());
 			} else if (e.getSource() == gui.getSelectTextCheckBox()) {
 				selectAllText(gui.getSelectTextCheckBox().isSelected());
+			} else if (e.getSource() == gui.getH2hButton()) {
+				String homePlayerUrl = homePlayers.get((String) gui.getHomePlayerNames().getSelectedItem());
+				String awayPlayerUrl = awayPlayers.get((String) gui.getAwayPlayerNames().getSelectedItem());
+
+				if(homePlayerUrl != null) {
+					processPlayerUrl(homePlayerUrl, true);
+				}
+				
+				if(awayPlayerUrl != null) {
+					processPlayerUrl(awayPlayerUrl, false);
+				}
+				
+				showPlayerInfo(homePlayer, awayPlayer);
+				
+				
 			} else if(e.getSource() == gui.getHomeTeamNames()) {
 				String teamName = (String) gui.getHomeTeamNames().getSelectedItem();
 				parser.fetchPlayers(teams.get(teamName));
@@ -464,18 +479,6 @@ public class Main {
 				String teamName = (String) gui.getAwayTeamNames().getSelectedItem();
 				parser.fetchPlayers(teams.get(teamName));
 				setupPlayers(teams.get(teamName), 1);
-			} else if(e.getSource() == gui.getHomePlayerNames()) {
-				String homePlayerUrl = homePlayers.get((String) gui.getHomePlayerNames().getSelectedItem());
-				System.out.println(homePlayerUrl);
-				if(homePlayerUrl != null) {
-					processPlayerUrl(homePlayerUrl, true);
-				}
-			} else if (e.getSource() == gui.getAwayPlayerNames()) {
-				String awayPlayerUrl = awayPlayers.get((String) gui.getHomePlayerNames().getSelectedItem());
-				System.out.println(awayPlayerUrl);
-				if(awayPlayerUrl != null) {
-					processPlayerUrl(awayPlayerUrl, true);
-				}
 			}
 		}
 		

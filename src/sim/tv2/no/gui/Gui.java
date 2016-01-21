@@ -61,6 +61,7 @@ public class Gui extends JFrame {
 	private JComboBox<String> awayTeamDropBox;
 	private JComboBox<String> awayTeamNames;
 	private DefaultComboBoxModel<String> homeTeamModel, awayTeamModel;
+	private JButton h2hButton;
 	
 	private Gui() {
 		setupGui();
@@ -112,16 +113,19 @@ public class Gui extends JFrame {
 
 		JPanel homeTeamPanel = new JPanel(new BorderLayout());
 		homeTeamPanel.add(createHomeTeamDropBoxes(), BorderLayout.NORTH);
-		JPanel centerPanel = new JPanel();
+		JPanel centerPanel = new JPanel(new BorderLayout());
 		JPanel awayTeamPanel = new JPanel();
 		awayTeamPanel.add(createAwayTeamDropBoxes(), BorderLayout.NORTH);
+		
+		setH2hButton(new JButton("Hent spillere"));
+		centerPanel.add(getH2hButton(), BorderLayout.NORTH);
 		
 		setOutputH2HArea(new JTextArea(50,20));
 		getOutputH2HArea().setWrapStyleWord(true);
 		getOutputH2HArea().setLineWrap(true);
 		
 		
-		centerPanel.add(getOutputH2HArea());
+		centerPanel.add(getOutputH2HArea(), BorderLayout.CENTER);
 		
 		head2headPanel.add(homeTeamPanel, BorderLayout.WEST);
 		head2headPanel.add(centerPanel, BorderLayout.CENTER);
@@ -619,5 +623,19 @@ public class Gui extends JFrame {
 	 */
 	public void setAwayTeamModel(DefaultComboBoxModel<String> awayTeamModel) {
 		this.awayTeamModel = awayTeamModel;
+	}
+
+	/**
+	 * @return the h2hButton
+	 */
+	public JButton getH2hButton() {
+		return h2hButton;
+	}
+
+	/**
+	 * @param h2hButton the h2hButton to set
+	 */
+	public void setH2hButton(JButton h2hButton) {
+		this.h2hButton = h2hButton;
 	}
 }
