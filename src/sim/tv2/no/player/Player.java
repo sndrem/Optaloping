@@ -34,6 +34,10 @@ public class Player implements Comparator<Player>, Comparable<Player> {
 		this.topSpeed = topSpeed;
 		df = new DecimalFormat("##.##");
 	}
+	
+	public Player(String name) {
+		this.name = name;
+	}
 
 	/**
 	 * @return the name

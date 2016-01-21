@@ -26,6 +26,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import sim.tv2.no.comparators.AvgSpeedComparator;
 import sim.tv2.no.comparators.DistanceComparator;
@@ -121,11 +123,28 @@ public class Main {
 		Document doc = null;
 		try {
 			doc = Jsoup.connect(Parser.PREMIER_LEAGUE + url).get();
+			Elements heroName = doc.getElementsByClass("hero-name");
+			Elements liElements = heroName.select("ul");
+			
+			int playerNumber = Integer.parseInt(liElements.select("li").get(0).text());
+			String playerName = liElements.select("li").get(1).text();
+			
+				
+			Elements playerOverviewSection = doc.getElementsByClass("playerprofileoverview");
+			Elements tableRows = playerOverviewSection.select("tr");
+			double height = Double.parseDouble(tableRows.get(1).select("td").get(3).text().split(" ")[0]);
+			int age = Integer.parseInt(tableRows.get(2).select("td").get(1).text());
+			double weight = Double.parseDouble(tableRows.get(2).select("td").get(3).text().split(" ")[0]);
+			int appearances = Integer.parseInt(tableRows.get(6).select("td").get(1).text());
+			int goals = Integer.parseInt(tableRows.get(7).select("td").get(1).text());
+			int yellowCards = Integer.parseInt(tableRows.get(8).select("td").get(1).text());
+			int redCards = Integer.parseInt(tableRows.get(9).select("td").get(1).text());
+			System.out.println(appearances);
+//			System.out.println(playerOverviewSection.html());
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		System.out.println(doc.title());
 	}
 	
 	
