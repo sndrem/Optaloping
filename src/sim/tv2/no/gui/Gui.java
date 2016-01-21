@@ -116,7 +116,9 @@ public class Gui extends JFrame {
 		JPanel awayTeamPanel = new JPanel();
 		awayTeamPanel.add(createAwayTeamDropBoxes(), BorderLayout.NORTH);
 		
-		setOutputH2HArea(new JTextArea());
+		setOutputH2HArea(new JTextArea(50,20));
+		getOutputH2HArea().setWrapStyleWord(true);
+		getOutputH2HArea().setLineWrap(true);
 		
 		
 		centerPanel.add(getOutputH2HArea());

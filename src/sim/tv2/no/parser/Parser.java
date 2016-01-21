@@ -26,10 +26,10 @@ import sim.tv2.no.player.Player;
 public class Parser{
 	
 	private List<Player> players;
-	private static final String PROFILE_PAGE = "http://www.premierleague.com/en-gb/players/profile.html/";
-	private static final String CAREER_PAGE = "http://www.premierleague.com/en-gb/players/profile.career-history.html/";
-	private static final String STATS_PAGE = "http://www.premierleague.com/en-gb/players/profile.statistics.html/";
-	private static final String TEAM_PAGE = "http://www.premierleague.com/en-gb/players/index.html?paramSearchType=BY_CLUB&paramSeason=squad&paramClubId=";
+	public static final String PROFILE_PAGE = "http://www.premierleague.com/en-gb/players/profile.html/";
+	public static final String CAREER_PAGE = "http://www.premierleague.com/en-gb/players/profile.career-history.html/";
+	public static final String STATS_PAGE = "http://www.premierleague.com/en-gb/players/profile.statistics.html/";
+	public static final String TEAM_PAGE = "http://www.premierleague.com/en-gb/players/index.html?paramSearchType=BY_CLUB&paramSeason=squad&paramClubId=";
 	public static final String PREMIER_LEAGUE = "http://www.premierleague.com/";
 
 	public Parser() {

@@ -4,29 +4,31 @@ public class H2HPlayer extends Player {
 
 	private int age;
 	private int appearances;
-	private int goals;
+	private int careerGoals;
 	private int yellowCards;
 	private int redCards;
 	private double height;
 	private double weight;
-	private String gamesInThisSeason;
+	private String gamesThisSeason;
 	private int assists;
 	private int number;
+	private int seasonalGoals;
 	
 	public H2HPlayer(String name, int age, int appearances,
-			int goals, int yellowCards, int redCards, double height,
-			double weight, String gamesInThisSeason, int assists, int number) {
+			int careerGoals, int yellowCards, int redCards, double height,
+			double weight, String gamesInThisSeason, int assists, int number, int seasonalGoals) {
 		super(name);
 		this.age = age;
 		this.appearances = appearances;
-		this.goals = goals;
+		this.careerGoals = careerGoals;
 		this.yellowCards = yellowCards;
 		this.redCards = redCards;
 		this.height = height;
 		this.weight = weight;
-		this.gamesInThisSeason = gamesInThisSeason;
+		this.gamesThisSeason = gamesInThisSeason;
 		this.assists = assists;
 		this.number = number;
+		this.setSeasonalGoals(seasonalGoals);
 	}
 
 	/**
@@ -61,14 +63,14 @@ public class H2HPlayer extends Player {
 	 * @return the goals
 	 */
 	public int getGoals() {
-		return goals;
+		return careerGoals;
 	}
 
 	/**
 	 * @param goals the goals to set
 	 */
 	public void setGoals(int goals) {
-		this.goals = goals;
+		this.careerGoals = goals;
 	}
 
 	/**
@@ -131,14 +133,14 @@ public class H2HPlayer extends Player {
 	 * @return the gamesInThisSeason
 	 */
 	public String getGamesInThisSeason() {
-		return gamesInThisSeason;
+		return gamesThisSeason;
 	}
 
 	/**
 	 * @param gamesInThisSeason the gamesInThisSeason to set
 	 */
 	public void setGamesInThisSeason(String gamesInThisSeason) {
-		this.gamesInThisSeason = gamesInThisSeason;
+		this.gamesThisSeason = gamesInThisSeason;
 	}
 
 	/**
@@ -167,6 +169,27 @@ public class H2HPlayer extends Player {
 	 */
 	public void setNumber(int number) {
 		this.number = number;
+	}
+
+	/**
+	 * @return the seasonalGoals
+	 */
+	public int getSeasonalGoals() {
+		return seasonalGoals;
+	}
+
+	/**
+	 * @param seasonalGoals the seasonalGoals to set
+	 */
+	public void setSeasonalGoals(int seasonalGoals) {
+		this.seasonalGoals = seasonalGoals;
+	}
+	
+	public String toString() {
+		return this.getName() + " har spilt " + this.getAppearances() + " kamper i Premier League. Han har scoret " + this.getGoals() + " mål i PL. I år har han scoret " + this.getSeasonalGoals() + " mål og gitt assists"
+				+ " " + this.getAssists() + " ganger.";
+		
+
 	}
 	
 	

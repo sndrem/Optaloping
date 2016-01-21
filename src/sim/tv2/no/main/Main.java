@@ -35,6 +35,7 @@ import sim.tv2.no.comparators.SprintComparator;
 import sim.tv2.no.comparators.TopSpeedComparator;
 import sim.tv2.no.gui.Gui;
 import sim.tv2.no.parser.Parser;
+import sim.tv2.no.player.H2HPlayer;
 import sim.tv2.no.player.Player;
 import sim.tv2.no.webDriver.OpenOpta;
 
@@ -53,6 +54,8 @@ public class Main {
 	private Map<String, String> homePlayers;
 	private Map<String, String> awayPlayers;
 	
+	private Player homePlayer;
+	private Player awayPlayer;
 	
 	public static void main(String[] args) {
 		new Main();
@@ -119,9 +122,15 @@ public class Main {
 		}
 	}
 	
-	private void processPlayerUrl(String url) {
+	/**
+	 * Method to crawl the Premier League pages for information about a given player
+	 * @param url - the player url
+	 */
+	private void processPlayerUrl(String url, boolean isHomePlayer) {
 		Document doc = null;
 		try {
+			
+			// Get the number and name of the player
 			doc = Jsoup.connect(Parser.PREMIER_LEAGUE + url).get();
 			Elements heroName = doc.getElementsByClass("hero-name");
 			Elements liElements = heroName.select("ul");
@@ -129,22 +138,51 @@ public class Main {
 			int playerNumber = Integer.parseInt(liElements.select("li").get(0).text());
 			String playerName = liElements.select("li").get(1).text();
 			
-				
+			// Get the data from the overview page
 			Elements playerOverviewSection = doc.getElementsByClass("playerprofileoverview");
 			Elements tableRows = playerOverviewSection.select("tr");
 			double height = Double.parseDouble(tableRows.get(1).select("td").get(3).text().split(" ")[0]);
 			int age = Integer.parseInt(tableRows.get(2).select("td").get(1).text());
 			double weight = Double.parseDouble(tableRows.get(2).select("td").get(3).text().split(" ")[0]);
 			int appearances = Integer.parseInt(tableRows.get(6).select("td").get(1).text());
-			int goals = Integer.parseInt(tableRows.get(7).select("td").get(1).text());
+			int careerGoals = Integer.parseInt(tableRows.get(7).select("td").get(1).text());
 			int yellowCards = Integer.parseInt(tableRows.get(8).select("td").get(1).text());
 			int redCards = Integer.parseInt(tableRows.get(9).select("td").get(1).text());
-			System.out.println(appearances);
-//			System.out.println(playerOverviewSection.html());
+			
+			// Get the data from the history page
+			// Need to get hold of the urlname for the player, the format is name-name-name
+			String[] splitUrl = url.split("/");
+			String urlPlayerName = splitUrl[splitUrl.length - 1];
+			
+			doc = Jsoup.connect(Parser.CAREER_PAGE + urlPlayerName).get();
+			Elements historyTable = doc.getElementsByClass("playerInfoPod");
+			Elements historyTableRows = historyTable.select("tr");
+			String gamesThisSeason = historyTableRows.get(1).select("td").get(1).text();
+
+			// Get the data from the stats page
+			doc = Jsoup.connect(Parser.STATS_PAGE + urlPlayerName).get();
+			Element statsElement = doc.getElementById("clubsTabsAttacking");
+			Elements ulStatsElements = statsElement.select("ul");
+			int seasonalGoals = Integer.parseInt(ulStatsElements.get(1).select("div").get(1).text());
+			int assists = Integer.parseInt(ulStatsElements.get(1).select("div").get(7).text());
+			
+			// Create a new player
+			if(isHomePlayer) {
+				homePlayer = new H2HPlayer(playerName, age, appearances, careerGoals, yellowCards, redCards, height, weight, gamesThisSeason, assists, playerNumber, seasonalGoals);
+			} else {
+				awayPlayer = new H2HPlayer(playerName, age, appearances, careerGoals, yellowCards, redCards, height, weight, gamesThisSeason, assists, playerNumber, seasonalGoals);
+			}
+			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
+		showPlayerInfo(homePlayer, awayPlayer);
+	}
+	
+	private void showPlayerInfo(Player homePlayer, Player awayPlayer) {
+		gui.getOutputH2HArea().setText("Her skal det komme et script for iNews\nSjekk showPlayerInfo-metoden");
 	}
 	
 	
@@ -430,10 +468,14 @@ public class Main {
 				String homePlayerUrl = homePlayers.get((String) gui.getHomePlayerNames().getSelectedItem());
 				System.out.println(homePlayerUrl);
 				if(homePlayerUrl != null) {
-					processPlayerUrl(homePlayerUrl);
+					processPlayerUrl(homePlayerUrl, true);
 				}
 			} else if (e.getSource() == gui.getAwayPlayerNames()) {
-				System.out.println("bortelag yeeah");
+				String awayPlayerUrl = awayPlayers.get((String) gui.getHomePlayerNames().getSelectedItem());
+				System.out.println(awayPlayerUrl);
+				if(awayPlayerUrl != null) {
+					processPlayerUrl(awayPlayerUrl, true);
+				}
 			}
 		}
 		
