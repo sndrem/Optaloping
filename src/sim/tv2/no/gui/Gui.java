@@ -4,9 +4,9 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
-import java.io.IOException;
-import java.net.URL;
 
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -60,6 +60,7 @@ public class Gui extends JFrame {
 	private JComboBox<String> homePlayerNames;
 	private JComboBox<String> awayTeamDropBox;
 	private JComboBox<String> awayTeamNames;
+	private DefaultComboBoxModel<String> homeTeamModel, awayTeamModel;
 	
 	private Gui() {
 		setupGui();
@@ -85,8 +86,7 @@ public class Gui extends JFrame {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setFocusable(true);
 		
-		createMenuBar();
-		
+		createMenuBar();	
 		
 		setOptaRunningPanel(new JPanel(new BorderLayout()));
 		
@@ -107,6 +107,9 @@ public class Gui extends JFrame {
 	private void createHead2HeadPanel() {
 		head2headPanel = new JPanel(new BorderLayout());
 		
+		setHomeTeamModel(new DefaultComboBoxModel<String>());
+		setAwayTeamModel(new DefaultComboBoxModel<String>());
+
 		JPanel homeTeamPanel = new JPanel(new BorderLayout());
 		homeTeamPanel.add(createHomeTeamDropBoxes(), BorderLayout.NORTH);
 		JPanel centerPanel = new JPanel();
@@ -114,6 +117,7 @@ public class Gui extends JFrame {
 		awayTeamPanel.add(createAwayTeamDropBoxes(), BorderLayout.NORTH);
 		
 		setOutputH2HArea(new JTextArea());
+		
 		
 		centerPanel.add(getOutputH2HArea());
 		
@@ -127,6 +131,7 @@ public class Gui extends JFrame {
 	private JPanel createHomeTeamDropBoxes() {
 		setHomeTeamDropBoxes(new JComboBox<String>());
 		setHomePlayerNames(new JComboBox<String>());
+		getHomePlayerNames().setModel(homeTeamModel);
 		getHomeTeamNames().setBorder(new TitledBorder("Velg lag"));
 		getHomePlayerNames().setBorder(new TitledBorder("Velg spiller"));
 		JPanel homeDropBoxPanel = new JPanel(new GridLayout(2,1));
@@ -138,6 +143,7 @@ public class Gui extends JFrame {
 	private JPanel createAwayTeamDropBoxes() {
 		setAwayTeamNames(new JComboBox<String>());
 		setAwayPlayerNames(new JComboBox<String>());
+		getAwayPlayerNames().setModel(awayTeamModel);
 		getAwayPlayerNames().setBorder(new TitledBorder("Velg lag"));
 		getAwayTeamNames().setBorder(new TitledBorder("Velg spiller"));
 		JPanel awayDropBoxPanel = new JPanel(new GridLayout(2,1));
@@ -585,4 +591,31 @@ public class Gui extends JFrame {
 		this.awayTeamNames = awayTeamNames;
 	}
 
+	/**
+	 * @return the homeTeamModel
+	 */
+	public DefaultComboBoxModel<String> getHomeTeamModel() {
+		return homeTeamModel;
+	}
+
+	/**
+	 * @param homeTeamModel the homeTeamModel to set
+	 */
+	public void setHomeTeamModel(DefaultComboBoxModel<String> homeTeamModel) {
+		this.homeTeamModel = homeTeamModel;
+	}
+
+	/**
+	 * @return the awayTeamModel
+	 */
+	public DefaultComboBoxModel<String> getAwayTeamModel() {
+		return awayTeamModel;
+	}
+
+	/**
+	 * @param awayTeamModel the awayTeamModel to set
+	 */
+	public void setAwayTeamModel(DefaultComboBoxModel<String> awayTeamModel) {
+		this.awayTeamModel = awayTeamModel;
+	}
 }

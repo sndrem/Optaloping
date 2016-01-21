@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.AbstractAction;
-import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -24,6 +23,9 @@ import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
+
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import sim.tv2.no.comparators.AvgSpeedComparator;
 import sim.tv2.no.comparators.DistanceComparator;
@@ -46,6 +48,9 @@ public class Main {
 	private Parser parser;
 	private OpenOpta optaWebDriver = new OpenOpta();
 	private Map<String, Integer> teams = new HashMap<String, Integer>();
+	private Map<String, String> homePlayers;
+	private Map<String, String> awayPlayers;
+	
 	
 	public static void main(String[] args) {
 		new Main();
@@ -60,9 +65,9 @@ public class Main {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {			
 				gui = Gui.getInstance();
-				setupActionListeners();
 				parser = new Parser();
 				setupTeams();
+				setupActionListeners();
 			}
 		});
 	}
@@ -76,10 +81,53 @@ public class Main {
 			gui.getHomeTeamNames().addItem(teamName);
 		}
 		
+		setupPlayers(teams.get(gui.getHomeTeamNames().getItemAt(0)), 0);
+		
 		for(String teamName : teams.keySet()) {
 			gui.getAwayTeamNames().addItem(teamName);
 		}
+		
+		setupPlayers(teams.get(gui.getAwayTeamNames().getItemAt(0)), 1);
 	}
+	
+	/**
+	 * Method to load the players into the gui
+	 */
+	private void setupPlayers(int teamId, int typeOfTeam) {
+		
+		switch (typeOfTeam) {
+		case 0:
+			homePlayers = parser.fetchPlayers(teamId);
+			gui.getHomeTeamModel().removeAllElements();
+			for(String player : homePlayers.keySet()) {
+				System.out.println(player);
+				gui.getHomeTeamModel().addElement(player);
+			}
+			break;
+		case 1:
+			awayPlayers = parser.fetchPlayers(teamId);
+			gui.getAwayTeamModel().removeAllElements();
+			for(String player : homePlayers.keySet()) {
+				System.out.println(player);
+				gui.getAwayTeamModel().addElement(player);
+			}
+			break;
+		default:
+			break;
+		}
+	}
+	
+	private void processPlayerUrl(String url) {
+		Document doc = null;
+		try {
+			doc = Jsoup.connect(Parser.PREMIER_LEAGUE + url).get();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println(doc.title());
+	}
+	
 	
 	
 	/*
@@ -102,8 +150,10 @@ public class Main {
 		gui.getShowCategoryCheckBox().setAction(new RunAction("Vis kategorinavn"));
 		gui.getSelectTextCheckBox().addActionListener(e);
 		
-		gui.getHomeTeamNames().setAction(new Head2HeadAction());
-		gui.getAwayTeamNames().setAction(new Head2HeadAction());
+		gui.getHomeTeamNames().addActionListener(e);
+		gui.getAwayTeamNames().addActionListener(e);
+		gui.getHomePlayerNames().addActionListener(e);
+		gui.getAwayPlayerNames().addActionListener(e);
 		
 		// Key events
 		gui.getOpenFileBtn().getActionMap().put("openFile", new OpenFileAction());
@@ -349,6 +399,22 @@ public class Main {
 				calculate(gui.getNumberOfPlayersArea().getSelectedIndex(), gui.getCategoryDropdow().getSelectedIndex());
 			} else if (e.getSource() == gui.getSelectTextCheckBox()) {
 				selectAllText(gui.getSelectTextCheckBox().isSelected());
+			} else if(e.getSource() == gui.getHomeTeamNames()) {
+				String teamName = (String) gui.getHomeTeamNames().getSelectedItem();
+				parser.fetchPlayers(teams.get(teamName));
+				setupPlayers(teams.get(teamName), 0);
+			} else if (e.getSource() == gui.getAwayTeamNames()) {
+				String teamName = (String) gui.getAwayTeamNames().getSelectedItem();
+				parser.fetchPlayers(teams.get(teamName));
+				setupPlayers(teams.get(teamName), 1);
+			} else if(e.getSource() == gui.getHomePlayerNames()) {
+				String homePlayerUrl = homePlayers.get((String) gui.getHomePlayerNames().getSelectedItem());
+				System.out.println(homePlayerUrl);
+				if(homePlayerUrl != null) {
+					processPlayerUrl(homePlayerUrl);
+				}
+			} else if (e.getSource() == gui.getAwayPlayerNames()) {
+				System.out.println("bortelag yeeah");
 			}
 		}
 		
@@ -452,25 +518,4 @@ public class Main {
 			}
 		}
 	}
-	
-	private class Head2HeadAction extends AbstractAction {
-
-		/**
-		 * 
-		 */
-		private static final long serialVersionUID = 8888242080052413343L;
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			JComboBox<String> comboBox = (JComboBox<String>) e.getSource();
-			String teamName = (String) comboBox.getSelectedItem();
-			parser.fetchPlayers(teams.get(teamName));
-			
-		}
-		
-	}
-
-
-		
-
 }

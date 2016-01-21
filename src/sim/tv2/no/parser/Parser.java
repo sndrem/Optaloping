@@ -30,6 +30,7 @@ public class Parser{
 	private static final String CAREER_PAGE = "http://www.premierleague.com/en-gb/players/profile.career-history.html/";
 	private static final String STATS_PAGE = "http://www.premierleague.com/en-gb/players/profile.statistics.html/";
 	private static final String TEAM_PAGE = "http://www.premierleague.com/en-gb/players/index.html?paramSearchType=BY_CLUB&paramSeason=squad&paramClubId=";
+	public static final String PREMIER_LEAGUE = "http://www.premierleague.com/";
 
 	public Parser() {
 		setPlayers(new ArrayList<Player>());
@@ -79,20 +80,26 @@ public class Parser{
 	 */
 	public Map<String, String> fetchPlayers(int id) {
 		Map<String, String> players = new HashMap<String, String>();
+		System.out.println(Parser.TEAM_PAGE + id + "&page=2");
 		try {
-			Document teamPage = Jsoup.connect(this.TEAM_PAGE + id).get();
-			Elements playersTable = teamPage.getElementsByClass("players-table");
-			Elements tablePlayers = playersTable.select("tbody tr");
-			int index = 0;
-			for(Element elem : tablePlayers) {
-				System.out.println(elem.text());
-				index++;
+			for(int pageIndicator = 2; pageIndicator <= 2; pageIndicator++) {
+					
+				Document teamPage = Jsoup.connect(Parser.TEAM_PAGE + id + "&page=" + pageIndicator).get();
+				Elements playersTable = teamPage.getElementsByClass("players-table");
+				Elements tablePlayers = playersTable.select("tbody tr");
+				for(Element tableRow : tablePlayers) {
+					Elements tableData = tableRow.select("td");
+					String playerName = tableData.get(0).text();
+					String playerUrl = tableData.get(0).select("a").attr("href");
+					players.put(playerName, playerUrl);
+					System.out.println(playerName + " : " + playerUrl);
+				}
 			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		return null;
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		return players;
 	}
 	
 	/**
