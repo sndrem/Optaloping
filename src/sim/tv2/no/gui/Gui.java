@@ -56,8 +56,10 @@ public class Gui extends JFrame {
 	private JPanel optaRunningPanel;
 	private JPanel head2headPanel;
 	private JTextArea outputH2HArea;
-	private JComboBox<String> teamNames;
-	private JComboBox<String> playerNames;
+	private JComboBox<String> homeTeamNames;
+	private JComboBox<String> homePlayerNames;
+	private JComboBox<String> awayTeamDropBox;
+	private JComboBox<String> awayTeamNames;
 	
 	private Gui() {
 		setupGui();
@@ -106,10 +108,10 @@ public class Gui extends JFrame {
 		head2headPanel = new JPanel(new BorderLayout());
 		
 		JPanel homeTeamPanel = new JPanel(new BorderLayout());
-		homeTeamPanel.add(createTeamDropBoxes(), BorderLayout.NORTH);
+		homeTeamPanel.add(createHomeTeamDropBoxes(), BorderLayout.NORTH);
 		JPanel centerPanel = new JPanel();
 		JPanel awayTeamPanel = new JPanel();
-		awayTeamPanel.add(createTeamDropBoxes(), BorderLayout.NORTH);
+		awayTeamPanel.add(createAwayTeamDropBoxes(), BorderLayout.NORTH);
 		
 		setOutputH2HArea(new JTextArea());
 		
@@ -122,16 +124,26 @@ public class Gui extends JFrame {
 		
 	}
 
-	private JPanel createTeamDropBoxes() {
-
-		setTeamNames(new JComboBox<String>());
-		setPlayerNames(new JComboBox<String>());
-		getTeamNames().setBorder(new TitledBorder("Velg lag"));
-		getPlayerNames().setBorder(new TitledBorder("Velg spiller"));
-		JPanel dropBoxPanel = new JPanel(new GridLayout(2,1));
-		dropBoxPanel.add(getTeamNames());
-		dropBoxPanel.add(getPlayerNames());
-		return dropBoxPanel;
+	private JPanel createHomeTeamDropBoxes() {
+		setHomeTeamDropBoxes(new JComboBox<String>());
+		setHomePlayerNames(new JComboBox<String>());
+		getHomeTeamNames().setBorder(new TitledBorder("Velg lag"));
+		getHomePlayerNames().setBorder(new TitledBorder("Velg spiller"));
+		JPanel homeDropBoxPanel = new JPanel(new GridLayout(2,1));
+		homeDropBoxPanel.add(getHomeTeamNames());
+		homeDropBoxPanel.add(getHomePlayerNames());
+		return homeDropBoxPanel;
+	}
+	
+	private JPanel createAwayTeamDropBoxes() {
+		setAwayTeamNames(new JComboBox<String>());
+		setAwayPlayerNames(new JComboBox<String>());
+		getAwayPlayerNames().setBorder(new TitledBorder("Velg lag"));
+		getAwayTeamNames().setBorder(new TitledBorder("Velg spiller"));
+		JPanel awayDropBoxPanel = new JPanel(new GridLayout(2,1));
+		awayDropBoxPanel.add(getAwayTeamNames());
+		awayDropBoxPanel.add(getAwayPlayerNames());
+		return awayDropBoxPanel;
 	}
 
 	private void createOptaRunningPanel() {
@@ -520,29 +532,57 @@ public class Gui extends JFrame {
 	/**
 	 * @return the teamNames
 	 */
-	public JComboBox<String> getTeamNames() {
-		return teamNames;
+	public JComboBox<String> getHomeTeamNames() {
+		return homeTeamNames;
 	}
 
 	/**
 	 * @param teamNames the teamNames to set
 	 */
-	public void setTeamNames(JComboBox<String> teamNames) {
-		this.teamNames = teamNames;
+	public void setHomeTeamDropBoxes(JComboBox<String> teamNames) {
+		this.homeTeamNames = teamNames;
 	}
 
 	/**
 	 * @return the playerNames
 	 */
-	public JComboBox<String> getPlayerNames() {
-		return playerNames;
+	public JComboBox<String> getHomePlayerNames() {
+		return homePlayerNames;
 	}
 
 	/**
 	 * @param playerNames the playerNames to set
 	 */
-	public void setPlayerNames(JComboBox<String> playerNames) {
-		this.playerNames = playerNames;
+	public void setHomePlayerNames(JComboBox<String> playerNames) {
+		this.homePlayerNames = playerNames;
+	}
+
+	/**
+	 * @return the awayTeamDropBox
+	 */
+	public JComboBox<String> getAwayPlayerNames() {
+		return awayTeamDropBox;
+	}
+
+	/**
+	 * @param awayTeamDropBox the awayTeamDropBox to set
+	 */
+	public void setAwayPlayerNames(JComboBox<String> awayTeamDropBox) {
+		this.awayTeamDropBox = awayTeamDropBox;
+	}
+
+	/**
+	 * @return the awayTeamNames
+	 */
+	public JComboBox<String> getAwayTeamNames() {
+		return awayTeamNames;
+	}
+
+	/**
+	 * @param awayTeamNames the awayTeamNames to set
+	 */
+	public void setAwayTeamNames(JComboBox<String> awayTeamNames) {
+		this.awayTeamNames = awayTeamNames;
 	}
 
 }

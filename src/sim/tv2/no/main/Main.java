@@ -11,9 +11,12 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.AbstractAction;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -42,6 +45,7 @@ public class Main {
 	private Gui gui;
 	private Parser parser;
 	private OpenOpta optaWebDriver = new OpenOpta();
+	private Map<String, Integer> teams = new HashMap<String, Integer>();
 	
 	public static void main(String[] args) {
 		new Main();
@@ -57,9 +61,24 @@ public class Main {
 			public void run() {			
 				gui = Gui.getInstance();
 				setupActionListeners();
+				parser = new Parser();
+				setupTeams();
 			}
 		});
-		parser = new Parser();
+	}
+	
+	/**
+	 * Method to initialize the teams used for H2H
+	 */
+	private void setupTeams() {
+		teams = parser.loadTeamNames(".teamNames.txt");
+		for(String teamName : teams.keySet()) {
+			gui.getHomeTeamNames().addItem(teamName);
+		}
+		
+		for(String teamName : teams.keySet()) {
+			gui.getAwayTeamNames().addItem(teamName);
+		}
 	}
 	
 	
@@ -82,6 +101,9 @@ public class Main {
 		gui.getNumberOfPlayersArea().addActionListener(new RunAction());
 		gui.getShowCategoryCheckBox().setAction(new RunAction("Vis kategorinavn"));
 		gui.getSelectTextCheckBox().addActionListener(e);
+		
+		gui.getHomeTeamNames().setAction(new Head2HeadAction());
+		gui.getAwayTeamNames().setAction(new Head2HeadAction());
 		
 		// Key events
 		gui.getOpenFileBtn().getActionMap().put("openFile", new OpenFileAction());
@@ -429,6 +451,23 @@ public class Main {
 				System.exit(0);
 			}
 		}
+	}
+	
+	private class Head2HeadAction extends AbstractAction {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 8888242080052413343L;
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JComboBox<String> comboBox = (JComboBox<String>) e.getSource();
+			String teamName = (String) comboBox.getSelectedItem();
+			parser.fetchPlayers(teams.get(teamName));
+			
+		}
+		
 	}
 
 
