@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch4jConfig>
+  <dontWrapJar>false</dontWrapJar>
+  <headerType>gui</headerType>
+  <jar>/Users/Sindre/Documents/Optaloping-java/optaloping.jar</jar>
+  <outfile>/Users/Sindre/Documents/Optaloping-java/optaloping.exe</outfile>
+  <errTitle></errTitle>
+  <cmdLine></cmdLine>
+  <chdir>.</chdir>
+  <priority>normal</priority>
+  <downloadUrl>http://java.com/download</downloadUrl>
+  <supportUrl></supportUrl>
+  <stayAlive>false</stayAlive>
+  <restartOnCrash>false</restartOnCrash>
+  <manifest></manifest>
+  <icon>/Users/Sindre/Documents/Optaloping-java/sindreMIkon.ico</icon>
+  <jre>
+    <path></path>
+    <bundledJre64Bit>false</bundledJre64Bit>
+    <bundledJreAsFallback>false</bundledJreAsFallback>
+    <minVersion>1.1.1</minVersion>
+    <maxVersion></maxVersion>
+    <jdkPreference>preferJre</jdkPreference>
+    <runtimeBits>64/32</runtimeBits>
+  </jre>
+  <versionInfo>
+    <fileVersion>1.1.1.1</fileVersion>
+    <txtFileVersion>Yes</txtFileVersion>
+    <fileDescription>Program for å jobbe med statistikk</fileDescription>
+    <copyright>Sindre Moldeklev</copyright>
+    <productVersion>1.1.1.1</productVersion>
+    <txtProductVersion>Yes</txtProductVersion>
+    <productName>Optaløping</productName>
+    <companyName></companyName>
+    <internalName>optaloping</internalName>
+    <originalFilename>optaloping.exe</originalFilename>
+  </versionInfo>
+</launch4jConfig>

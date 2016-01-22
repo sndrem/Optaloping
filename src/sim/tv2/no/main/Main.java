@@ -191,25 +191,32 @@ public class Main {
 		Team homeTeam = teams.get(gui.getHomeTeamNames().getSelectedItem());
 		Team awayTeam = teams.get(gui.getAwayTeamNames().getSelectedItem());
 		
-		String info = homePlayer.getName() + "\n"
-				+ "vs\n"
+		String info = "*SUPER S16 " + homePlayer.getName() + "\n"
+				+ "VS\n"
 				+ awayPlayer.getName() + "\n"
-				+ "path/to/badges/" + homeTeam.getTeamAbbreviation() + "_v.jpeg\n"
-				+ "path/to/badges/" + awayTeam.getTeamAbbreviation() + "_h.jpeg\n"
+				+ "*K:\\Sporten\\Grafikk\\Engelsk fotball\\01 Premier League\\Laglogoer\\Vinkla\\" + homeTeam.getTeamAbbreviation().toUpperCase() + "_v.png\n"
+				+ "*K:\\Sporten\\Grafikk\\Engelsk fotball\\01 Premier League\\Laglogoer\\Vinkla\\" + awayTeam.getTeamAbbreviation().toUpperCase() + "_h.png\n"
+				+"Alder\n"
 				+ homePlayer.getAge() + " år\n"
 				+ awayPlayer.getAge() + " år\n"
+				+"Høyde\n"
 				+ convertHeight(homePlayer.getHeight()) + "\n"
 				+ convertHeight(awayPlayer.getHeight()) + "\n"
-				+ homePlayer.getAppearances() + " kamper i PL\n"
-				+ awayPlayer.getAppearances() + " kamper i PL\n"
-				+ homePlayer.getGoals() + " mål i PL\n"
-				+ awayPlayer.getGoals() + " mål i PL\n"
-				+ homePlayer.getGamesInThisSeason() + " kamper i 15/16\n"
-				+ awayPlayer.getGamesInThisSeason() + " kamper i 15/16\n"
-				+ homePlayer.getSeasonalGoals() + " mål i 15/16\n"
-				+ awayPlayer.getSeasonalGoals() + " mål i 15/16\n"
-				+ homePlayer.getAssists() + " assists i 15/16\n"
-				+ awayPlayer.getAssists() + " assists i 15/16 < 00:00";
+				+"PL-kamper totalt\n"
+				+ homePlayer.getAppearances() + "\n"
+				+ awayPlayer.getAppearances() + "\n"
+				+ "Mål totalt\n"
+				+ homePlayer.getGoals() + "\n"
+				+ awayPlayer.getGoals() + "\n"
+				+ "PL-kamper 15/16\n"
+				+ homePlayer.getGamesInThisSeason() + "\n"
+				+ awayPlayer.getGamesInThisSeason() + "\n"
+				+ "Mål 15/16\n"
+				+ homePlayer.getSeasonalGoals() + "\n"
+				+ awayPlayer.getSeasonalGoals() + "\n"
+				+ "Assists 15/16\n"
+				+ homePlayer.getAssists() + "\n"
+				+ awayPlayer.getAssists() + " <00:01.10";
 		gui.getOutputH2HArea().setText(info);
 		
 	}
