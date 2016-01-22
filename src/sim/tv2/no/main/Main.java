@@ -37,6 +37,7 @@ import sim.tv2.no.gui.Gui;
 import sim.tv2.no.parser.Parser;
 import sim.tv2.no.player.H2HPlayer;
 import sim.tv2.no.player.Player;
+import sim.tv2.no.team.Team;
 import sim.tv2.no.webDriver.OpenOpta;
 
 /*
@@ -52,7 +53,7 @@ public class Main {
 	private Gui gui;
 	private Parser parser;
 	private OpenOpta optaWebDriver = new OpenOpta();
-	private Map<String, Integer> teams = new HashMap<String, Integer>();
+	private Map<String, Team> teams = new HashMap<String, Team>();
 	private Map<String, String> homePlayers;
 	private Map<String, String> awayPlayers;
 	
@@ -88,13 +89,13 @@ public class Main {
 			gui.getHomeTeamNames().addItem(teamName);
 		}
 		
-		setupPlayers(teams.get(gui.getHomeTeamNames().getItemAt(0)), 0);
+		setupPlayers(teams.get(gui.getHomeTeamNames().getItemAt(0)).getTeamId(), 0);
 		
 		for(String teamName : teams.keySet()) {
 			gui.getAwayTeamNames().addItem(teamName);
 		}
 		
-		setupPlayers(teams.get(gui.getAwayTeamNames().getItemAt(0)), 1);
+		setupPlayers(teams.get(gui.getAwayTeamNames().getItemAt(0)).getTeamId(), 1);
 	}
 	
 	/**
@@ -125,6 +126,7 @@ public class Main {
 	/**
 	 * Method to crawl the Premier League pages for information about a given player
 	 * @param url - the player url
+	 * @param isHomePlayer - a boolean representing wheter or not the player is playing for the home team or away team
 	 */
 	private void processPlayerUrl(String url, boolean isHomePlayer) {
 		Document doc = null;
@@ -180,16 +182,23 @@ public class Main {
 		
 	}
 	
+	/**
+	 * Method to show the player information for both players
+	 * @param homePlayer
+	 * @param awayPlayer
+	 */
 	private void showPlayerInfo(H2HPlayer homePlayer, H2HPlayer awayPlayer) {
 //		gui.getOutputH2HArea().setText("Her skal det komme et script for iNews\nSjekk showPlayerInfo-metoden");
 //		String info = "Hjemme\n\n" + homePlayer.toString();
 //		info += "\n\nBorte\n\n" + awayPlayer.toString();
+		Team homeTeam = teams.get(gui.getHomeTeamNames().getSelectedItem());
+		Team awayTeam = teams.get(gui.getAwayTeamNames().getSelectedItem());
 		
 		String info = homePlayer.getName() + "\n"
 				+ "vs\n"
 				+ awayPlayer.getName() + "\n"
-				+ "path/to/badges\n"
-				+ "path/to/badges\n"
+				+ "path/to/badges/" + homeTeam.getTeamAbbreviation() + "_v.jpeg\n"
+				+ "path/to/badges/" + awayTeam.getTeamAbbreviation() + "_h.jpeg\n"
 				+ homePlayer.getAge() + " år\n"
 				+ awayPlayer.getAge() + " år\n"
 				+ convertHeight(homePlayer.getHeight()) + "\n"
@@ -208,6 +217,11 @@ public class Main {
 		
 	}
 	
+	/**
+	 * Method to convert a double for height, into an integer
+	 * @param height
+	 * @return an integer representing the height
+	 */
 	private int convertHeight(Double height) {
 		String temp = "";
 		temp += height;
@@ -499,12 +513,12 @@ public class Main {
 				
 			} else if(e.getSource() == gui.getHomeTeamNames()) {
 				String teamName = (String) gui.getHomeTeamNames().getSelectedItem();
-				parser.fetchPlayers(teams.get(teamName));
-				setupPlayers(teams.get(teamName), 0);
+				parser.fetchPlayers(teams.get(teamName).getTeamId());
+				setupPlayers(teams.get(teamName).getTeamId(), 0);
 			} else if (e.getSource() == gui.getAwayTeamNames()) {
 				String teamName = (String) gui.getAwayTeamNames().getSelectedItem();
-				parser.fetchPlayers(teams.get(teamName));
-				setupPlayers(teams.get(teamName), 1);
+				parser.fetchPlayers(teams.get(teamName).getTeamId());
+				setupPlayers(teams.get(teamName).getTeamId(), 1);
 			}
 		}
 		

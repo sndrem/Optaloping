@@ -1,20 +1,20 @@
-Arsenal;3
-Aston Villa;7
-Bournemouth;91
-Chelsea;8
-Crystal P.;31
-Everton;11
-Leicester;13
-Liverpool;14
-Man.City;43
-Man. United;1
-Newcastle;4
-Norwich;45
-Southampton;20
-Stoke;110
-Sunderland;56
-Swansea;80
-Tottenham;6
-Watford;57
-West Bromwich;35
-West Ham;21
+Arsenal;3;ARS
+Aston Villa;7;AVI
+Bournemouth;91;BOU
+Chelsea;8;CHE
+Crystal P.;31;CRY
+Everton;11;EVE;
+Leicester;13;LEI
+Liverpool;14;LIV
+Man.City;43;MAC
+Man. United;1;MAU
+Newcastle;4;NEW
+Norwich;45;NOR
+Southampton;20;NOR
+Stoke;110;STO
+Sunderland;56;SUN
+Swansea;80;SWA
+Tottenham;6;TOT
+Watford;57;WAT
+West Bromwich;35;WBA
+West Ham;21;WHA

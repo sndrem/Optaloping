@@ -16,6 +16,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import sim.tv2.no.player.Player;
+import sim.tv2.no.team.Team;
 
 /*
  * Class for the parser
@@ -102,8 +103,8 @@ public class Parser{
 	 * Method to read the team names and return a hashmap
 	 * 
 	 */
-	public Map<String, Integer> loadTeamNames(String fileName) {
-		Map<String, Integer> teams = new HashMap<String, Integer>();
+	public Map<String, Team> loadTeamNames(String fileName) {
+		Map<String, Team> teams = new HashMap<String, Team>();
 		File file = new File(fileName);
 		BufferedReader br = null;
 		try {
@@ -113,7 +114,9 @@ public class Parser{
 				String[] teamInfo = line.split(";");
 				String teamName = teamInfo[0];
 				Integer teamIndex = Integer.parseInt(teamInfo[1]);
-				teams.put(teamName, teamIndex);
+				String abbreviation = teamInfo[2];
+				Team team = new Team(teamName, abbreviation, teamIndex);
+				teams.put(teamName, team);
 			}
 		} catch (FileNotFoundException e1) {
 			// TODO Auto-generated catch block
