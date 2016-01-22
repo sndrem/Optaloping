@@ -56,8 +56,8 @@ public class Main {
 	private Map<String, String> homePlayers;
 	private Map<String, String> awayPlayers;
 	
-	private Player homePlayer;
-	private Player awayPlayer;
+	private H2HPlayer homePlayer;
+	private H2HPlayer awayPlayer;
 	
 	public static void main(String[] args) {
 		new Main();
@@ -180,15 +180,39 @@ public class Main {
 		
 	}
 	
-	private void showPlayerInfo(Player homePlayer, Player awayPlayer) {
+	private void showPlayerInfo(H2HPlayer homePlayer, H2HPlayer awayPlayer) {
 //		gui.getOutputH2HArea().setText("Her skal det komme et script for iNews\nSjekk showPlayerInfo-metoden");
-		String info = "Hjemme\n\n" + homePlayer.toString();
-		info += "\n\nBorte\n\n" + awayPlayer.toString();
+//		String info = "Hjemme\n\n" + homePlayer.toString();
+//		info += "\n\nBorte\n\n" + awayPlayer.toString();
+		
+		String info = homePlayer.getName() + "\n"
+				+ "vs\n"
+				+ awayPlayer.getName() + "\n"
+				+ "path/to/badges\n"
+				+ "path/to/badges\n"
+				+ homePlayer.getAge() + " år\n"
+				+ awayPlayer.getAge() + " år\n"
+				+ convertHeight(homePlayer.getHeight()) + "\n"
+				+ convertHeight(awayPlayer.getHeight()) + "\n"
+				+ homePlayer.getAppearances() + " kamper i PL\n"
+				+ awayPlayer.getAppearances() + " kamper i PL\n"
+				+ homePlayer.getGoals() + " mål i PL\n"
+				+ awayPlayer.getGoals() + " mål i PL\n"
+				+ homePlayer.getGamesInThisSeason() + " kamper i 15/16\n"
+				+ awayPlayer.getGamesInThisSeason() + " kamper i 15/16\n"
+				+ homePlayer.getSeasonalGoals() + " mål i 15/16\n"
+				+ awayPlayer.getSeasonalGoals() + " mål i 15/16\n"
+				+ homePlayer.getAssists() + " assists i 15/16\n"
+				+ awayPlayer.getAssists() + " assists i 15/16 < 00:00";
 		gui.getOutputH2HArea().setText(info);
 		
 	}
 	
-	
+	private int convertHeight(Double height) {
+		String temp = "";
+		temp += height;
+		return Integer.parseInt(temp.replace(".", ""));
+	}
 	
 	/*
 	 * Method to assign actionlisteners to the buttons
