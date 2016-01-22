@@ -197,6 +197,7 @@ public class Main {
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
+			gui.showMessage("Ingen spillere med navn " + url + " tilgjengelig\nPrøv et nytt navn");
 			e.printStackTrace();
 		}
 		
@@ -250,6 +251,12 @@ public class Main {
 	private int convertHeight(Double height) {
 		String temp = "";
 		temp += height;
+		temp = temp.replace(".", "");
+		// Hvis vi får en spiller som er feks 190 høy, så kommer det fra PL som 1.9, da må vi sjekke lengden og 
+		// legge til en ekstra null for padding
+		if(temp.length() <= 2) {
+			temp += 0;
+		}
 		return Integer.parseInt(temp.replace(".", ""));
 	}
 	
