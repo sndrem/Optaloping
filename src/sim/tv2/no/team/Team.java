@@ -1,10 +1,16 @@
 package sim.tv2.no.team;
 
+/**
+ * This class represents a team for the H2H-comparison. It saves the name, the team abbreviation (for image paths) and the teamId
+ * @author Sindre
+ *
+ */
 public class Team {
 	
 	private String teamName;
 	private String teamAbbreviation;
 	private int teamId;
+	
 	/**
 	 * @param teamName
 	 * @param teamAbbreviation

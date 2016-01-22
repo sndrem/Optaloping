@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
 
-import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -82,7 +81,7 @@ public class Gui extends JFrame {
 		 * Set bounds, title, place the program in the center of the screen and set default close operation
 		 */
 		this.setBounds(new Rectangle(800,800));
-		this.setTitle("Løpestats fra Opta");
+		this.setTitle("Statistikk og H2H");
 		this.setLocationRelativeTo(null);
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setFocusable(true);

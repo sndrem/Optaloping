@@ -1,5 +1,10 @@
 package sim.tv2.no.player;
 
+/**
+ * This class represents a H2H-player
+ * @author Sindre
+ *
+ */
 public class H2HPlayer extends Player {
 
 	private int age;

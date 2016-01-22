@@ -188,9 +188,6 @@ public class Main {
 	 * @param awayPlayer
 	 */
 	private void showPlayerInfo(H2HPlayer homePlayer, H2HPlayer awayPlayer) {
-//		gui.getOutputH2HArea().setText("Her skal det komme et script for iNews\nSjekk showPlayerInfo-metoden");
-//		String info = "Hjemme\n\n" + homePlayer.toString();
-//		info += "\n\nBorte\n\n" + awayPlayer.toString();
 		Team homeTeam = teams.get(gui.getHomeTeamNames().getSelectedItem());
 		Team awayTeam = teams.get(gui.getAwayTeamNames().getSelectedItem());
 		

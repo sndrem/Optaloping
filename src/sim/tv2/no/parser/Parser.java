@@ -84,6 +84,8 @@ public class Parser{
 		try {
 					
 				Document teamPage = Jsoup.connect(Parser.TEAM_PAGE + id).get();
+				Element numberOfPlayersElement = teamPage.getElementById("paramItemsPerPage");
+				System.out.println(numberOfPlayersElement.html());
 				Elements playersTable = teamPage.getElementsByClass("players-table");
 				Elements tablePlayers = playersTable.select("tbody tr");
 				for(Element tableRow : tablePlayers) {
@@ -101,6 +103,7 @@ public class Parser{
 	
 	/**
 	 * Method to read the team names and return a hashmap
+	 * @param fileName the fileName of the file
 	 * 
 	 */
 	public Map<String, Team> loadTeamNames(String fileName) {
