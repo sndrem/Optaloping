@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
 
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -17,7 +19,9 @@ import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.TitledBorder;
@@ -47,6 +51,17 @@ public class Gui extends JFrame {
 	private JMenuItem exitItem;
 	private JMenuItem openFileMenuItem;
 	private JCheckBox showCategoryCheckBox;
+	private JCheckBox selectTextCheckBox;
+	private JTabbedPane tabbedPane;
+	private JPanel optaRunningPanel;
+	private JPanel head2headPanel;
+	private JTextArea outputH2HArea;
+	private JComboBox<String> homeTeamNames;
+	private JComboBox<String> homePlayerNames;
+	private JComboBox<String> awayTeamDropBox;
+	private JComboBox<String> awayTeamNames;
+	private DefaultComboBoxModel<String> homeTeamModel, awayTeamModel;
+	private JButton h2hButton;
 	
 	private Gui() {
 		setupGui();
@@ -72,31 +87,80 @@ public class Gui extends JFrame {
 		this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.setFocusable(true);
 		
-		JMenuBar menuBar = new JMenuBar();
-		JMenu menu = new JMenu("Meny");
-		JMenu toolsMenu = new JMenu("Verktøy");
-		menuBar.add(menu);
-		menuBar.add(toolsMenu);
+		createMenuBar();	
 		
-		setOpenOptaItem(new JMenuItem("Åpne kamper i Firefox"));
-		getOpenOptaItem().setToolTipText("Åpner en tab for hver kamp i Firefox. Dette kan ta litt tid");
-		toolsMenu.add(getOpenOptaItem());
+		setOptaRunningPanel(new JPanel(new BorderLayout()));
 		
-		setOpenFileMenuItem(new JMenuItem("Åpne tekstfil"));
-		getOpenFileMenuItem().setAccelerator(KeyStroke.getKeyStroke("ctrl O"));
-		menu.add(getOpenFileMenuItem());
+		createOptaRunningPanel();
+		createHead2HeadPanel();
 		
-		setExitItem(new JMenuItem("Lukk"));
-		menu.add(getExitItem());
+		tabbedPane = new JTabbedPane();
+		tabbedPane.add("Løping", getOptaRunningPanel());
+		tabbedPane.add("H2H", getHead2headPanel());
 		
-		this.setJMenuBar(menuBar);
+		
+		this.add(tabbedPane);
+		
+		this.setVisible(true);
+		
+	}
+	
+	private void createHead2HeadPanel() {
+		head2headPanel = new JPanel(new BorderLayout());
+		
+		setHomeTeamModel(new DefaultComboBoxModel<String>());
+		setAwayTeamModel(new DefaultComboBoxModel<String>());
 
-				
-		// Set layout for the gui
-		this.setLayout(new BorderLayout());
+		JPanel homeTeamPanel = new JPanel(new BorderLayout());
+		homeTeamPanel.add(createHomeTeamDropBoxes(), BorderLayout.NORTH);
+		JPanel centerPanel = new JPanel(new BorderLayout());
+		JPanel awayTeamPanel = new JPanel();
+		awayTeamPanel.add(createAwayTeamDropBoxes(), BorderLayout.NORTH);
 		
+		setH2hButton(new JButton("Hent spillere"));
+		centerPanel.add(getH2hButton(), BorderLayout.NORTH);
+		
+		setOutputH2HArea(new JTextArea(50,20));
+		getOutputH2HArea().setWrapStyleWord(true);
+		getOutputH2HArea().setLineWrap(true);
+		
+		
+		centerPanel.add(getOutputH2HArea(), BorderLayout.CENTER);
+		
+		head2headPanel.add(homeTeamPanel, BorderLayout.WEST);
+		head2headPanel.add(centerPanel, BorderLayout.CENTER);
+		head2headPanel.add(awayTeamPanel, BorderLayout.EAST);
+		
+		
+	}
+
+	private JPanel createHomeTeamDropBoxes() {
+		setHomeTeamDropBoxes(new JComboBox<String>());
+		setHomePlayerNames(new JComboBox<String>());
+		getHomePlayerNames().setModel(homeTeamModel);
+		getHomeTeamNames().setBorder(new TitledBorder("Velg lag"));
+		getHomePlayerNames().setBorder(new TitledBorder("Velg spiller"));
+		JPanel homeDropBoxPanel = new JPanel(new GridLayout(2,1));
+		homeDropBoxPanel.add(getHomeTeamNames());
+		homeDropBoxPanel.add(getHomePlayerNames());
+		return homeDropBoxPanel;
+	}
+	
+	private JPanel createAwayTeamDropBoxes() {
+		setAwayTeamNames(new JComboBox<String>());
+		setAwayPlayerNames(new JComboBox<String>());
+		getAwayPlayerNames().setModel(awayTeamModel);
+		getAwayPlayerNames().setBorder(new TitledBorder("Velg lag"));
+		getAwayTeamNames().setBorder(new TitledBorder("Velg spiller"));
+		JPanel awayDropBoxPanel = new JPanel(new GridLayout(2,1));
+		awayDropBoxPanel.add(getAwayTeamNames());
+		awayDropBoxPanel.add(getAwayPlayerNames());
+		return awayDropBoxPanel;
+	}
+
+	private void createOptaRunningPanel() {
 		// Create the top-panel. This panel holds the open button, input field for the range of players and the run button
-		JPanel northPanel = new JPanel(new GridLayout(2,2));
+		JPanel northPanel = new JPanel(new BorderLayout());
 		
 		openFileBtn = new JButton("Åpne tekstfil");
 		openFileBtn.setToolTipText("Åpne en tab-separert tekstfil med løpedata");
@@ -119,6 +183,9 @@ public class Gui extends JFrame {
 		setShowCategoryCheckBox(new JCheckBox("Vis kategori"));
 		getShowCategoryCheckBox().setFocusable(true);
 		
+		setSelectTextCheckBox(new JCheckBox("Marker tekst"));
+		getSelectTextCheckBox().setFocusable(true);
+		
 		
 		numberOfPlayersArea = new JComboBox<Integer>();
 		numberOfPlayersArea.setToolTipText("Velg antall spillere du ønsker kalkulert");	
@@ -131,16 +198,22 @@ public class Gui extends JFrame {
 		
 		setCopyButton(new JButton("Kopier til clipboard"));
 		
-//		northPanel.add(openFileBtn);
-		northPanel.add(getCategoryDropdow());
-		northPanel.add(numberOfPlayersArea);
-		northPanel.add(getOrderCheckBox());
-		northPanel.add(getRemoveFirstNameCheckBox());
-		northPanel.add(getShowCategoryCheckBox());
+		
+		JToolBar dropDownToolBar = new JToolBar();
+		dropDownToolBar.add(getCategoryDropdow());
+		dropDownToolBar.add(getNumberOfPlayersArea());
+		
+		JToolBar checkBoxToolBar = new JToolBar();
+		checkBoxToolBar.add(getOrderCheckBox());
+		checkBoxToolBar.add(getRemoveFirstNameCheckBox());
+		checkBoxToolBar.add(getShowCategoryCheckBox());
+		checkBoxToolBar.add(getSelectTextCheckBox());
+		
 
-//		northPanel.add(runButton);
-//		northPanel.add(getCopyButton());
-		this.add(northPanel, BorderLayout.NORTH);
+		northPanel.add(dropDownToolBar, BorderLayout.NORTH);
+		northPanel.add(checkBoxToolBar, BorderLayout.SOUTH);
+
+		
 		
 		Dimension minimumSize = new Dimension(100,100);
 		
@@ -155,19 +228,35 @@ public class Gui extends JFrame {
 		JPanel centerPanel = new JPanel(new BorderLayout());
 		centerPanel.add(outputScrollPane, BorderLayout.CENTER);
 		
-		this.add(centerPanel, BorderLayout.CENTER);
-		
-	
 		setStatusPanel(new JPanel());
 		setStatusTextArea(new JTextArea("Status:"));
 		getStatusPanel().add(getStatusTextArea());
 		getStatusTextArea().setEditable(false);
 		
-		this.add(getStatusPanel(), BorderLayout.SOUTH);
+		getOptaRunningPanel().add(northPanel, BorderLayout.NORTH);
+		getOptaRunningPanel().add(centerPanel, BorderLayout.CENTER);
+		getOptaRunningPanel().add(getStatusPanel(), BorderLayout.SOUTH);
+	}
+
+	private void createMenuBar() {
+		JMenuBar menuBar = new JMenuBar();
+		JMenu menu = new JMenu("Meny");
+		JMenu toolsMenu = new JMenu("Verktøy");
+		menuBar.add(menu);
+		menuBar.add(toolsMenu);
 		
+		setOpenOptaItem(new JMenuItem("Åpne kamper i Firefox"));
+		getOpenOptaItem().setToolTipText("Åpner en tab for hver kamp i Firefox. Dette kan ta litt tid");
+		toolsMenu.add(getOpenOptaItem());
 		
-		this.setVisible(true);
+		setOpenFileMenuItem(new JMenuItem("Åpne tekstfil"));
+		getOpenFileMenuItem().setAccelerator(KeyStroke.getKeyStroke("ctrl O"));
+		menu.add(getOpenFileMenuItem());
 		
+		setExitItem(new JMenuItem("Lukk"));
+		menu.add(getExitItem());
+		
+		this.setJMenuBar(menuBar);
 	}
 
 	/**
@@ -396,4 +485,157 @@ public class Gui extends JFrame {
 		this.showCategoryCheckBox = showCategoryCheckBox;
 	}
 
+	/**
+	 * @return the selectTextCheckBox
+	 */
+	public JCheckBox getSelectTextCheckBox() {
+		return selectTextCheckBox;
+	}
+
+	/**
+	 * @param selectTextCheckBox the selectTextCheckBox to set
+	 */
+	public void setSelectTextCheckBox(JCheckBox selectTextCheckBox) {
+		this.selectTextCheckBox = selectTextCheckBox;
+	}
+
+	/**
+	 * @return the optaRunningPanel
+	 */
+	public JPanel getOptaRunningPanel() {
+		return optaRunningPanel;
+	}
+
+	/**
+	 * @param optaRunningPanel the optaRunningPanel to set
+	 */
+	public void setOptaRunningPanel(JPanel optaRunningPanel) {
+		this.optaRunningPanel = optaRunningPanel;
+	}
+
+	/**
+	 * @return the head2headPanel
+	 */
+	public JPanel getHead2headPanel() {
+		return head2headPanel;
+	}
+
+	/**
+	 * @param head2headPanel the head2headPanel to set
+	 */
+	public void setHead2headPanel(JPanel head2headPanel) {
+		this.head2headPanel = head2headPanel;
+	}
+
+	/**
+	 * @return the outputH2HArea
+	 */
+	public JTextArea getOutputH2HArea() {
+		return outputH2HArea;
+	}
+
+	/**
+	 * @param outputH2HArea the outputH2HArea to set
+	 */
+	public void setOutputH2HArea(JTextArea outputH2HArea) {
+		this.outputH2HArea = outputH2HArea;
+	}
+
+	/**
+	 * @return the teamNames
+	 */
+	public JComboBox<String> getHomeTeamNames() {
+		return homeTeamNames;
+	}
+
+	/**
+	 * @param teamNames the teamNames to set
+	 */
+	public void setHomeTeamDropBoxes(JComboBox<String> teamNames) {
+		this.homeTeamNames = teamNames;
+	}
+
+	/**
+	 * @return the playerNames
+	 */
+	public JComboBox<String> getHomePlayerNames() {
+		return homePlayerNames;
+	}
+
+	/**
+	 * @param playerNames the playerNames to set
+	 */
+	public void setHomePlayerNames(JComboBox<String> playerNames) {
+		this.homePlayerNames = playerNames;
+	}
+
+	/**
+	 * @return the awayTeamDropBox
+	 */
+	public JComboBox<String> getAwayPlayerNames() {
+		return awayTeamDropBox;
+	}
+
+	/**
+	 * @param awayTeamDropBox the awayTeamDropBox to set
+	 */
+	public void setAwayPlayerNames(JComboBox<String> awayTeamDropBox) {
+		this.awayTeamDropBox = awayTeamDropBox;
+	}
+
+	/**
+	 * @return the awayTeamNames
+	 */
+	public JComboBox<String> getAwayTeamNames() {
+		return awayTeamNames;
+	}
+
+	/**
+	 * @param awayTeamNames the awayTeamNames to set
+	 */
+	public void setAwayTeamNames(JComboBox<String> awayTeamNames) {
+		this.awayTeamNames = awayTeamNames;
+	}
+
+	/**
+	 * @return the homeTeamModel
+	 */
+	public DefaultComboBoxModel<String> getHomeTeamModel() {
+		return homeTeamModel;
+	}
+
+	/**
+	 * @param homeTeamModel the homeTeamModel to set
+	 */
+	public void setHomeTeamModel(DefaultComboBoxModel<String> homeTeamModel) {
+		this.homeTeamModel = homeTeamModel;
+	}
+
+	/**
+	 * @return the awayTeamModel
+	 */
+	public DefaultComboBoxModel<String> getAwayTeamModel() {
+		return awayTeamModel;
+	}
+
+	/**
+	 * @param awayTeamModel the awayTeamModel to set
+	 */
+	public void setAwayTeamModel(DefaultComboBoxModel<String> awayTeamModel) {
+		this.awayTeamModel = awayTeamModel;
+	}
+
+	/**
+	 * @return the h2hButton
+	 */
+	public JButton getH2hButton() {
+		return h2hButton;
+	}
+
+	/**
+	 * @param h2hButton the h2hButton to set
+	 */
+	public void setH2hButton(JButton h2hButton) {
+		this.h2hButton = h2hButton;
+	}
 }

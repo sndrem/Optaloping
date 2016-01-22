@@ -11,7 +11,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
@@ -22,13 +24,19 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import sim.tv2.no.comparators.AvgSpeedComparator;
+import sim.tv2.no.comparators.DistanceComparator;
+import sim.tv2.no.comparators.SprintComparator;
+import sim.tv2.no.comparators.TopSpeedComparator;
 import sim.tv2.no.gui.Gui;
 import sim.tv2.no.parser.Parser;
-import sim.tv2.no.player.AvgSpeedComparator;
-import sim.tv2.no.player.DistanceComparator;
+import sim.tv2.no.player.H2HPlayer;
 import sim.tv2.no.player.Player;
-import sim.tv2.no.player.SprintComparator;
-import sim.tv2.no.player.TopSpeedComparator;
 import sim.tv2.no.webDriver.OpenOpta;
 
 /*
@@ -44,6 +52,12 @@ public class Main {
 	private Gui gui;
 	private Parser parser;
 	private OpenOpta optaWebDriver = new OpenOpta();
+	private Map<String, Integer> teams = new HashMap<String, Integer>();
+	private Map<String, String> homePlayers;
+	private Map<String, String> awayPlayers;
+	
+	private Player homePlayer;
+	private Player awayPlayer;
 	
 	public static void main(String[] args) {
 		new Main();
@@ -58,11 +72,122 @@ public class Main {
 		SwingUtilities.invokeLater(new Runnable() {
 			public void run() {			
 				gui = Gui.getInstance();
+				parser = new Parser();
+				setupTeams();
 				setupActionListeners();
 			}
 		});
-		parser = new Parser();
 	}
+	
+	/**
+	 * Method to initialize the teams used for H2H
+	 */
+	private void setupTeams() {
+		teams = parser.loadTeamNames(".teamNames.txt");
+		for(String teamName : teams.keySet()) {
+			gui.getHomeTeamNames().addItem(teamName);
+		}
+		
+		setupPlayers(teams.get(gui.getHomeTeamNames().getItemAt(0)), 0);
+		
+		for(String teamName : teams.keySet()) {
+			gui.getAwayTeamNames().addItem(teamName);
+		}
+		
+		setupPlayers(teams.get(gui.getAwayTeamNames().getItemAt(0)), 1);
+	}
+	
+	/**
+	 * Method to load the players into the gui
+	 */
+	private void setupPlayers(int teamId, int typeOfTeam) {
+		
+		switch (typeOfTeam) {
+		case 0:
+			homePlayers = parser.fetchPlayers(teamId);
+			gui.getHomeTeamModel().removeAllElements();
+			for(String player : homePlayers.keySet()) {
+				gui.getHomeTeamModel().addElement(player);
+			}
+			break;
+		case 1:
+			awayPlayers = parser.fetchPlayers(teamId);
+			gui.getAwayTeamModel().removeAllElements();
+			for(String player : awayPlayers.keySet()) {
+				gui.getAwayTeamModel().addElement(player);
+			}
+			break;
+		default:
+			break;
+		}
+	}
+	
+	/**
+	 * Method to crawl the Premier League pages for information about a given player
+	 * @param url - the player url
+	 */
+	private void processPlayerUrl(String url, boolean isHomePlayer) {
+		Document doc = null;
+		try {
+			
+			// Get the number and name of the player
+			doc = Jsoup.connect(Parser.PREMIER_LEAGUE + url).get();
+			Elements heroName = doc.getElementsByClass("hero-name");
+			Elements liElements = heroName.select("ul");
+			
+			int playerNumber = Integer.parseInt(liElements.select("li").get(0).text());
+			String playerName = liElements.select("li").get(1).text();
+			
+			// Get the data from the overview page
+			Elements playerOverviewSection = doc.getElementsByClass("playerprofileoverview");
+			Elements tableRows = playerOverviewSection.select("tr");
+			double height = Double.parseDouble(tableRows.get(1).select("td").get(3).text().split(" ")[0]);
+			int age = Integer.parseInt(tableRows.get(2).select("td").get(1).text());
+			double weight = Double.parseDouble(tableRows.get(2).select("td").get(3).text().split(" ")[0]);
+			int appearances = Integer.parseInt(tableRows.get(6).select("td").get(1).text());
+			int careerGoals = Integer.parseInt(tableRows.get(7).select("td").get(1).text());
+			int yellowCards = Integer.parseInt(tableRows.get(8).select("td").get(1).text());
+			int redCards = Integer.parseInt(tableRows.get(9).select("td").get(1).text());
+			
+			// Get the data from the history page
+			// Need to get hold of the urlname for the player, the format is name-name-name
+			String[] splitUrl = url.split("/");
+			String urlPlayerName = splitUrl[splitUrl.length - 1];
+			
+			doc = Jsoup.connect(Parser.CAREER_PAGE + urlPlayerName).get();
+			Elements historyTable = doc.getElementsByClass("playerInfoPod");
+			Elements historyTableRows = historyTable.select("tr");
+			String gamesThisSeason = historyTableRows.get(1).select("td").get(1).text();
+
+			// Get the data from the stats page
+			doc = Jsoup.connect(Parser.STATS_PAGE + urlPlayerName).get();
+			Element statsElement = doc.getElementById("clubsTabsAttacking");
+			Elements ulStatsElements = statsElement.select("ul");
+			int seasonalGoals = Integer.parseInt(ulStatsElements.get(1).select("div").get(1).text());
+			int assists = Integer.parseInt(ulStatsElements.get(1).select("div").get(7).text());
+			
+			// Create a new player
+			if(isHomePlayer) {
+				homePlayer = new H2HPlayer(playerName, age, appearances, careerGoals, yellowCards, redCards, height, weight, gamesThisSeason, assists, playerNumber, seasonalGoals);
+			} else if(!isHomePlayer) {
+				awayPlayer = new H2HPlayer(playerName, age, appearances, careerGoals, yellowCards, redCards, height, weight, gamesThisSeason, assists, playerNumber, seasonalGoals);
+			}
+			
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	private void showPlayerInfo(Player homePlayer, Player awayPlayer) {
+//		gui.getOutputH2HArea().setText("Her skal det komme et script for iNews\nSjekk showPlayerInfo-metoden");
+		String info = "Hjemme\n\n" + homePlayer.toString();
+		info += "\n\nBorte\n\n" + awayPlayer.toString();
+		gui.getOutputH2HArea().setText(info);
+		
+	}
+	
 	
 	
 	/*
@@ -83,6 +208,11 @@ public class Main {
 		gui.getCategoryDropdow().setAction(new RunAction());
 		gui.getNumberOfPlayersArea().addActionListener(new RunAction());
 		gui.getShowCategoryCheckBox().setAction(new RunAction("Vis kategorinavn"));
+		gui.getSelectTextCheckBox().addActionListener(e);
+		
+		gui.getHomeTeamNames().addActionListener(e);
+		gui.getAwayTeamNames().addActionListener(e);
+		gui.getH2hButton().addActionListener(e);
 		
 		// Key events
 		gui.getOpenFileBtn().getActionMap().put("openFile", new OpenFileAction());
@@ -208,8 +338,7 @@ public class Main {
 		}
 		
 		
-		boolean removeName = gui.getRemoveFirstNameCheckBox().isSelected();
-		
+		boolean removeName = gui.getRemoveFirstNameCheckBox().isSelected();		
 	
 		if(numberOfPlayers < 0) {
 			gui.showMessage("Vennligst fyll inn et positivt tall");
@@ -257,13 +386,28 @@ public class Main {
 							}
 						}
 						
+						selectAllText(gui.getSelectTextCheckBox().isSelected());
+						
 					} else {
 						gui.showMessage("Du prøver å vise flere spillere enn det finnes\n Du prøvde: " + numberOfPlayers + ". Det er bare " + players.size() + " spillere tilgjengelig");
 						gui.getOutputPane().setBorder(new TitledBorder("Viser " + 0 + " av " + parser.getSize() + " tilgjengelige spillere"));
 						gui.getNumberOfPlayersArea().setSelectedIndex(4);
-					}
+				}
 			} 
 		} 
+	
+	/**
+	 * Method select all the text in the gui
+	 * @param checked checks wether the user wants to select all text.
+	 */
+	private void selectAllText(boolean checked) {
+		if(checked) {
+			gui.getOutputPane().requestFocusInWindow();
+			gui.getOutputPane().selectAll();
+		} else {
+			gui.getNumberOfPlayersArea().requestFocus();
+		}
+	}
 
 	/**
 	 * Method to copy the content of the outputPane to the system clipboard
@@ -312,6 +456,31 @@ public class Main {
 				optaWebDriver.openOptaTabs();
 			} else if(e.getSource() == gui.getCategoryDropdow()) {
 				calculate(gui.getNumberOfPlayersArea().getSelectedIndex(), gui.getCategoryDropdow().getSelectedIndex());
+			} else if (e.getSource() == gui.getSelectTextCheckBox()) {
+				selectAllText(gui.getSelectTextCheckBox().isSelected());
+			} else if (e.getSource() == gui.getH2hButton()) {
+				String homePlayerUrl = homePlayers.get((String) gui.getHomePlayerNames().getSelectedItem());
+				String awayPlayerUrl = awayPlayers.get((String) gui.getAwayPlayerNames().getSelectedItem());
+
+				if(homePlayerUrl != null) {
+					processPlayerUrl(homePlayerUrl, true);
+				}
+				
+				if(awayPlayerUrl != null) {
+					processPlayerUrl(awayPlayerUrl, false);
+				}
+				
+				showPlayerInfo(homePlayer, awayPlayer);
+				
+				
+			} else if(e.getSource() == gui.getHomeTeamNames()) {
+				String teamName = (String) gui.getHomeTeamNames().getSelectedItem();
+				parser.fetchPlayers(teams.get(teamName));
+				setupPlayers(teams.get(teamName), 0);
+			} else if (e.getSource() == gui.getAwayTeamNames()) {
+				String teamName = (String) gui.getAwayTeamNames().getSelectedItem();
+				parser.fetchPlayers(teams.get(teamName));
+				setupPlayers(teams.get(teamName), 1);
 			}
 		}
 		
@@ -415,8 +584,4 @@ public class Main {
 			}
 		}
 	}
-
-
-		
-
 }
