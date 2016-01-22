@@ -5,6 +5,7 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
 
+import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -61,6 +62,10 @@ public class Gui extends JFrame {
 	private JComboBox<String> awayTeamNames;
 	private DefaultComboBoxModel<String> homeTeamModel, awayTeamModel;
 	private JButton h2hButton;
+	private JTextArea homeTeamSearch;
+	private JCheckBox textSearchCheckBox;
+	private JCheckBox awayTexSearchCheckBox;
+	private JTextArea awayTeamSearch;
 	
 	private Gui() {
 		setupGui();
@@ -113,16 +118,34 @@ public class Gui extends JFrame {
 		JPanel homeTeamPanel = new JPanel(new BorderLayout());
 		homeTeamPanel.add(createHomeTeamDropBoxes(), BorderLayout.NORTH);
 		JPanel centerPanel = new JPanel(new BorderLayout());
-		JPanel awayTeamPanel = new JPanel();
+		JPanel awayTeamPanel = new JPanel(new BorderLayout());
 		awayTeamPanel.add(createAwayTeamDropBoxes(), BorderLayout.NORTH);
 		
+		JPanel buttonPanel = new JPanel();
 		setH2hButton(new JButton("Hent spillere"));
-		centerPanel.add(getH2hButton(), BorderLayout.NORTH);
+		homeTextSearchCheckBox(new JCheckBox("Hjemmelag"));
+		buttonPanel.add(getHomeTextSearchBox());
+		buttonPanel.add(getH2hButton());
+		setAwayTexSearchCheckBox(new JCheckBox("Bortelag"));
+		buttonPanel.add(getAwayTexSearchCheckBox());
+		centerPanel.add(buttonPanel, BorderLayout.NORTH);
 		
-		setOutputH2HArea(new JTextArea(50,20));
+		setOutputH2HArea(new JTextArea(30,10));
+		getOutputH2HArea().setBorder(BorderFactory.createTitledBorder("iNews-script"));
 		getOutputH2HArea().setWrapStyleWord(true);
 		getOutputH2HArea().setLineWrap(true);
 		
+		setHomeTeamSearch(new JTextArea());
+		getHomeTeamSearch().setWrapStyleWord(true);
+		getHomeTeamSearch().setLineWrap(true);
+		getHomeTeamSearch().setBorder(BorderFactory.createTitledBorder("Søk med tekst"));
+		homeTeamPanel.add(getHomeTeamSearch(), BorderLayout.CENTER);
+		
+		setAwayTeamSearch(new JTextArea());
+		getAwayTeamSearch().setWrapStyleWord(true);
+		getAwayTeamSearch().setLineWrap(true);
+		getAwayTeamSearch().setBorder(BorderFactory.createTitledBorder("Søk med tekst"));
+		awayTeamPanel.add(getAwayTeamSearch(), BorderLayout.CENTER);
 		
 		centerPanel.add(getOutputH2HArea(), BorderLayout.CENTER);
 		
@@ -636,5 +659,61 @@ public class Gui extends JFrame {
 	 */
 	public void setH2hButton(JButton h2hButton) {
 		this.h2hButton = h2hButton;
+	}
+
+	/**
+	 * @return the textSearchCheckBox
+	 */
+	public JCheckBox getHomeTextSearchBox() {
+		return textSearchCheckBox;
+	}
+
+	/**
+	 * @param textSearchCheckBox the textSearchCheckBox to set
+	 */
+	public void homeTextSearchCheckBox(JCheckBox textSearchCheckBox) {
+		this.textSearchCheckBox = textSearchCheckBox;
+	}
+
+	/**
+	 * @return the awayTexSearchCheckBox
+	 */
+	public JCheckBox getAwayTexSearchCheckBox() {
+		return awayTexSearchCheckBox;
+	}
+
+	/**
+	 * @param awayTexSearchCheckBox the awayTexSearchCheckBox to set
+	 */
+	public void setAwayTexSearchCheckBox(JCheckBox awayTexSearchCheckBox) {
+		this.awayTexSearchCheckBox = awayTexSearchCheckBox;
+	}
+
+	/**
+	 * @return the homeTeamSearch
+	 */
+	public JTextArea getHomeTeamSearch() {
+		return homeTeamSearch;
+	}
+
+	/**
+	 * @param homeTeamSearch the homeTeamSearch to set
+	 */
+	public void setHomeTeamSearch(JTextArea homeTeamSearch) {
+		this.homeTeamSearch = homeTeamSearch;
+	}
+
+	/**
+	 * @return the awayTeamSearch
+	 */
+	public JTextArea getAwayTeamSearch() {
+		return awayTeamSearch;
+	}
+
+	/**
+	 * @param awayTeamSearch the awayTeamSearch to set
+	 */
+	public void setAwayTeamSearch(JTextArea awayTeamSearch) {
+		this.awayTeamSearch = awayTeamSearch;
 	}
 }

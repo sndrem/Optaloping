@@ -133,7 +133,7 @@ public class Main {
 		try {
 			
 			// Get the number and name of the player
-			doc = Jsoup.connect(Parser.PREMIER_LEAGUE + url).get();
+			doc = Jsoup.connect(Parser.PROFILE_PAGE + url).get();
 			Elements heroName = doc.getElementsByClass("hero-name");
 			Elements liElements = heroName.select("ul");
 			
@@ -443,6 +443,10 @@ public class Main {
 			gui.getNumberOfPlayersArea().requestFocus();
 		}
 	}
+	
+	private String convertToPlayerUrl(String name) {
+		return name.replace(" ", "-").toLowerCase();
+	}
 
 	/**
 	 * Method to copy the content of the outputPane to the system clipboard
@@ -494,17 +498,49 @@ public class Main {
 			} else if (e.getSource() == gui.getSelectTextCheckBox()) {
 				selectAllText(gui.getSelectTextCheckBox().isSelected());
 			} else if (e.getSource() == gui.getH2hButton()) {
-				String homePlayerUrl = homePlayers.get((String) gui.getHomePlayerNames().getSelectedItem());
-				String awayPlayerUrl = awayPlayers.get((String) gui.getAwayPlayerNames().getSelectedItem());
-
-				if(homePlayerUrl != null) {
-					processPlayerUrl(homePlayerUrl, true);
-				}
+				// Hvis brukeren ikke skriver i noen av tekstfeltene
+				if(!gui.getHomeTextSearchBox().isSelected() && !gui.getAwayTexSearchCheckBox().isSelected()) {
+					
+					String homePlayerUrl = homePlayers.get((String) gui.getHomePlayerNames().getSelectedItem());
+					if(homePlayerUrl != null) {
+						processPlayerUrl(homePlayerUrl, true);
+					}
+					
+					String awayPlayerUrl = awayPlayers.get((String) gui.getAwayPlayerNames().getSelectedItem());
+					
+					if(awayPlayerUrl != null) {
+						processPlayerUrl(awayPlayerUrl, false);
+					}
+				// Hvis brukeren skriver i hjemmelaget sitt tekstfelt, men ikke bortelaget
+				} else if (gui.getHomeTextSearchBox().isSelected() && !gui.getAwayTexSearchCheckBox().isSelected()) {
+					String playerUrlName = convertToPlayerUrl(gui.getHomeTeamSearch().getText());
+					System.out.println(playerUrlName);
+					processPlayerUrl(playerUrlName, true);
+					
+					String awayPlayerUrl = awayPlayers.get((String) gui.getAwayPlayerNames().getSelectedItem());
+					
+					if(awayPlayerUrl != null) {
+						processPlayerUrl(awayPlayerUrl, false);
+					}
 				
-				if(awayPlayerUrl != null) {
+				// Hvis brukeren skriver i bortelaget sitt tekstfelt, men ikke i hjemmelaget
+				} else if(!gui.getHomeTextSearchBox().isSelected() && gui.getAwayTexSearchCheckBox().isSelected()) {
+					String playerUrlName = convertToPlayerUrl(gui.getAwayTeamSearch().getText());
+					System.out.println(playerUrlName);
+					processPlayerUrl(playerUrlName, false);
+					
+					String homePlayerUrl = homePlayers.get((String) gui.getHomePlayerNames().getSelectedItem());
+					
+					if(homePlayerUrl != null) {
+						processPlayerUrl(homePlayerUrl, true);
+					}
+				// Hvis brukeren skriver i både hjemmelaget og bortelaget sitt felt
+				} else if (gui.getHomeTextSearchBox().isSelected() && gui.getAwayTexSearchCheckBox().isSelected()) {
+					String homePlayerUrl = convertToPlayerUrl(gui.getHomeTeamSearch().getText());
+					String awayPlayerUrl = convertToPlayerUrl(gui.getAwayTeamSearch().getText());
+					processPlayerUrl(homePlayerUrl, true);
 					processPlayerUrl(awayPlayerUrl, false);
 				}
-				
 				showPlayerInfo(homePlayer, awayPlayer);
 				
 				
