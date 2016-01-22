@@ -84,7 +84,27 @@ public class Main {
 	 * Method to initialize the teams used for H2H
 	 */
 	private void setupTeams() {
-		teams = parser.loadTeamNames(".teamNames.txt");
+//		teams = parser.loadTeamNames("lagnavn/teamNames.txt");
+		 teams.put("Arsenal", new Team("Arsenal", "ARS", 3));
+		 teams.put("Aston Villa", new Team("Aston Villa", "AVI", 7));
+		 teams.put("Bournemouth", new Team("Bournemouth", "BOU", 91));
+		 teams.put("Chelsea", new Team("Chelsea", "CHE", 8));
+		 teams.put("Crystal Palace", new Team("Crystal Palace", "CRY", 31));
+		 teams.put("Everton", new Team("Everton", "EVE", 11));
+		 teams.put("Leicester", new Team("Leicester", "LEI", 13));
+		 teams.put("Liverpool", new Team("Liverpool", "LIV", 14));
+		 teams.put("Man. City", new Team("Man. City", "MAC", 43));
+		 teams.put("Man. United", new Team("Man. United", "MAU", 1));
+		 teams.put("Newcastle", new Team("Newcastle", "NEW", 4));
+		 teams.put("Norwich", new Team("Norwich", "NOR", 45));
+		 teams.put("Southampton", new Team("Southampton", "SOU", 20));
+		 teams.put("Stoke", new Team("Stoke", "STO", 110));
+		 teams.put("Sunderland", new Team("Sunderland", "SUN", 56));
+		 teams.put("Swansea", new Team("Swansea", "SWA", 80));
+		 teams.put("Tottenham", new Team("Tottenham", "TOT", 6));
+		 teams.put("Watford", new Team("Watford", "WAT", 57));
+		 teams.put("West Bromwich", new Team("West Bromwich", "WBA", 35));
+		 teams.put("West Ham", new Team("West Ham", "WHA", 21));
 		for(String teamName : teams.keySet()) {
 			gui.getHomeTeamNames().addItem(teamName);
 		}
@@ -225,6 +245,7 @@ public class Main {
 	 * Method to convert a double for height, into an integer
 	 * @param height
 	 * @return an integer representing the height
+	 * TODO Fikse denne metoden
 	 */
 	private int convertHeight(Double height) {
 		String temp = "";
