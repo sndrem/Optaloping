@@ -35,6 +35,8 @@ import sim.tv2.no.webDriver.OpenOpta;
  * Main class for the application
  * @author Sindre Moldeklev
  * @version 0.1
+ * 
+ * .replaceAll("(?<=\\d)(rd|st|nd|th)\\b", ""); kan bli brukt for å fjerne ordinals fra datoene på Physioroom
  */
 
 public class Main {
