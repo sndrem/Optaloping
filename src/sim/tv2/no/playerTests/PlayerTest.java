@@ -21,8 +21,8 @@ public class PlayerTest {
 	@Before
 	public void setUp() throws Exception {
 		players = new ArrayList<Player>();
-		player1 = new Player("Sindre Moldeklev", 11, 45, 12.05, 15.06, 35.7);
-		player2 = new Player("Christiano Ronaldo", 7, 69, 23.5, 16.05 ,34.7);
+		player1 = new Player("Sindre Moldeklev", 11, 45, 12.05, 15.06, 35.7, "Everton", true);
+		player2 = new Player("Christiano Ronaldo", 7, 69, 23.5, 16.05 ,34.7, "Tottenham", false);
 		players.add(player1);
 		players.add(player2);
 	}

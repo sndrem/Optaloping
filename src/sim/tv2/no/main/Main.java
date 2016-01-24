@@ -332,7 +332,7 @@ public class Main {
 	 */
 	public void processFiles(File[] files) {
 		if(files.length > 0) {
-			parser.setPlayers(new ArrayList<Player>());
+			parser.setTeams(new ArrayList<Team>());
 			gui.getStatusPanel().setBackground(Color.GREEN);
 			gui.getStatusTextArea().setBackground(Color.GREEN);
 			for(File file : files) {
@@ -399,7 +399,7 @@ public class Main {
 		// øk antall spillere med "en" fordi JComboBox teller fra 0 og det kan forvirre sluttbrukeren.
 		numberOfPlayers++;
 		gui.getOutputPane().setText("");
-		List<Player> players = parser.getPlayers();	
+		List<Team> players = parser.getPlayers();	
 		
 		sortPlayers(players, category);
 		

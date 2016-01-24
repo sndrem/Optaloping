@@ -26,7 +26,7 @@ import sim.tv2.no.team.Team;
 
 public class Parser{
 	
-	private List<Player> players;
+	private List<Team> teams;
 	public static final String PROFILE_PAGE = "http://www.premierleague.com/en-gb/players/profile.html/";
 	public static final String CAREER_PAGE = "http://www.premierleague.com/en-gb/players/profile.career-history.html/";
 	public static final String STATS_PAGE = "http://www.premierleague.com/en-gb/players/profile.statistics.html/";
@@ -34,7 +34,7 @@ public class Parser{
 	public static final String PREMIER_LEAGUE = "http://www.premierleague.com/";
 
 	public Parser() {
-		setPlayers(new ArrayList<Player>());
+		setTeams(new ArrayList<Team>());
 	}
 		
 	
@@ -43,13 +43,25 @@ public class Parser{
 	 * @params file the file to parse
 	 * @return List<Player> the list of players
 	 */
-	public List<Player> parseFile(File file) throws IOException, NumberFormatException {
+	public List<Team> parseFile(File file) throws IOException, NumberFormatException {
 		BufferedReader br = new BufferedReader(new FileReader(file));
-		
 		int lineNumber = 1;
+		List<Player> teamPlayers = new ArrayList<Player>();
+		boolean homeOrAway = false;
 		try {
 			String line;
+			String teamName = "";
 			while((line = br.readLine()) != null) {
+				if(line.toLowerCase().startsWith("home")) {
+					teamName = line.split(":")[1];
+					homeOrAway = true;
+					continue;
+				} else if(line.toLowerCase().startsWith("away")) {
+					teamName = line.split(":")[1];
+					homeOrAway = false;
+					continue;
+				}
+				
 				String[] columns = line.split("\t");
 				int number = Integer.parseInt(columns[0]);
 				String name = columns[1];
@@ -58,8 +70,8 @@ public class Parser{
 				float avgSpeed = Float.parseFloat(columns[4]);
 				float topSpeed = Float.parseFloat(columns[5]);
 				
-				Player player = new Player(name, number, sprints, distance, avgSpeed, topSpeed);
-				players.add(player);
+				Player player = new Player(name, number, sprints, distance, avgSpeed, topSpeed, teamName, homeOrAway);
+				teamPlayers.add(player);
 				lineNumber++;
 			}
 			
@@ -71,7 +83,30 @@ public class Parser{
 			System.out.println(e.getMessage());
 		}
 		br.close();
-		return players;
+		
+		dividePlayers(teamPlayers);
+		
+		return getTeams();
+	}
+	
+	private List<Team> dividePlayers(List<Player> players) {
+		List<Player> homeTeamPlayers = new ArrayList<Player>();
+		List<Player> awayTeamPlayers = new ArrayList<Player>();
+		for(Player pl : players) {
+			if(pl.isHomePlayer()) {
+				homeTeamPlayers.add(pl);
+			} else if(!pl.isHomePlayer()) {
+				awayTeamPlayers.add(pl);
+			}
+		}
+		Team homeTeam = new Team(homeTeamPlayers.get(0).getTeam());
+		Team awayTeam = new Team(awayTeamPlayers.get(0).getTeam());
+		
+		homeTeam.getPlayers().addAll(homeTeamPlayers);
+		awayTeam.getPlayers().addAll(awayTeamPlayers);
+		getTeams().add(homeTeam);
+		getTeams().add(awayTeam);
+		return getTeams();
 	}
 	
 	/**
@@ -136,29 +171,32 @@ public class Parser{
 		return teams;
 	}
 	
-	/**
-	 * @return the players
-	 */
-	public List<Player> getPlayers() {
-		return players;
-	}
-
-
-	/**
-	 * @param players the players to set
-	 */
-	public void setPlayers(List<Player> players) {
-		this.players = players;
-	}
-	
-	/*
-	 * Method to get the size of the list of players
-	 * @return int the size of the list of players
-	 */
 	public int getSize() {
-		if(players != null) {
-			return players.size();
-		} else return 0;
+		if(this.teams != null) {
+			int size = 0;
+			for(Team t : teams) {
+				for(Player p : t.getPlayers()) {
+					size++;
+				}
+			}
+			return size;
+		}
+		return 0;
 	}
 
+
+	/**
+	 * @return the teams
+	 */
+	public List<Team> getTeams() {
+		return teams;
+	}
+
+
+	/**
+	 * @param teams the teams to set
+	 */
+	public void setTeams(List<Team> teams) {
+		this.teams = teams;
+	}
 }

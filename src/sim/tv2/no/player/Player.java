@@ -10,10 +10,11 @@ import java.util.Comparator;
  */
 public class Player implements Comparator<Player>, Comparable<Player> {
 	
-	private String name;
+	private String name, team;
 	private int number, sprints;
 	private double distance, avgSpeed, topSpeed;
 	private DecimalFormat df;
+	private boolean isHomeTeam;
 	
 	/*
 	 * Constructor the player class
@@ -25,18 +26,24 @@ public class Player implements Comparator<Player>, Comparable<Player> {
 	 * @params topSpeed	the top speed for the player
 	 */
 	public Player(String name, int number, int sprints, double distance,
-			double avgSpeed, double topSpeed) {
+			double avgSpeed, double topSpeed, String team, boolean homeTeam) {
 		this.name = name;
 		this.number = number;
 		this.sprints = sprints;
 		this.distance = distance;
 		this.avgSpeed = avgSpeed;
 		this.topSpeed = topSpeed;
+		this.team = team;
+		this.isHomeTeam = homeTeam;
 		df = new DecimalFormat("##.##");
 	}
 	
 	public Player(String name) {
 		this.name = name;
+	}
+	
+	public boolean isHomePlayer() {
+		return isHomeTeam;
 	}
 
 	/**
@@ -192,5 +199,33 @@ public class Player implements Comparator<Player>, Comparable<Player> {
 	@Override
 	public int compare(Player o1, Player o2) {
 		return 0;
+	}
+
+	/**
+	 * @return the team
+	 */
+	public String getTeam() {
+		return team;
+	}
+
+	/**
+	 * @param team the team to set
+	 */
+	public void setTeam(String team) {
+		this.team = team;
+	}
+
+	/**
+	 * @return the isHomeTeam
+	 */
+	public boolean isHomeTeam() {
+		return isHomeTeam;
+	}
+
+	/**
+	 * @param isHomeTeam the isHomeTeam to set
+	 */
+	public void setHomeTeam(boolean isHomeTeam) {
+		this.isHomeTeam = isHomeTeam;
 	}
 }
