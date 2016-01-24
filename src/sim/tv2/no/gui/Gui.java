@@ -66,6 +66,7 @@ public class Gui extends JFrame {
 	private JCheckBox textSearchCheckBox;
 	private JCheckBox awayTexSearchCheckBox;
 	private JTextArea awayTeamSearch;
+	private JButton generateReportButton;
 	
 	private Gui() {
 		setupGui();
@@ -208,6 +209,9 @@ public class Gui extends JFrame {
 		setSelectTextCheckBox(new JCheckBox("Marker tekst"));
 		getSelectTextCheckBox().setFocusable(true);
 		
+		setGenerateReportButton(new JButton("Full rapport"));
+		
+		
 		
 		numberOfPlayersArea = new JComboBox<Integer>();
 		numberOfPlayersArea.setToolTipText("Velg antall spillere du ønsker kalkulert");	
@@ -230,6 +234,7 @@ public class Gui extends JFrame {
 		checkBoxToolBar.add(getRemoveFirstNameCheckBox());
 		checkBoxToolBar.add(getShowCategoryCheckBox());
 		checkBoxToolBar.add(getSelectTextCheckBox());
+		checkBoxToolBar.add(getGenerateReportButton());
 		
 
 		northPanel.add(dropDownToolBar, BorderLayout.NORTH);
@@ -715,5 +720,19 @@ public class Gui extends JFrame {
 	 */
 	public void setAwayTeamSearch(JTextArea awayTeamSearch) {
 		this.awayTeamSearch = awayTeamSearch;
+	}
+
+	/**
+	 * @return the generateReportButton
+	 */
+	public JButton getGenerateReportButton() {
+		return generateReportButton;
+	}
+
+	/**
+	 * @param generateReportButton the generateReportButton to set
+	 */
+	public void setGenerateReportButton(JButton generateReportButton) {
+		this.generateReportButton = generateReportButton;
 	}
 }

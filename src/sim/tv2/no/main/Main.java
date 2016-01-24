@@ -12,8 +12,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
@@ -284,6 +286,8 @@ public class Main {
 		gui.getAwayTeamNames().addActionListener(e);
 		gui.getH2hButton().addActionListener(e);
 		
+		gui.getGenerateReportButton().addActionListener(new GenerateRapportAction("Full rapport"));
+		
 		// Key events
 		gui.getOpenFileBtn().getActionMap().put("openFile", new OpenFileAction());
 		gui.getOpenFileBtn().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("control O"), "openFile");
@@ -395,75 +399,101 @@ public class Main {
 	 * Method to output the desired numbers of players to the gui
 	 * @params numberOfPlayers		the number of players the user wants output of
 	 */
-	public void calculate(int numberOfPlayers, int category) {
+	public String calculate(int numberOfPlayers, int category, boolean fullRapport) {
 		// øk antall spillere med "en" fordi JComboBox teller fra 0 og det kan forvirre sluttbrukeren.
 		numberOfPlayers++;
-		gui.getOutputPane().setText("");
-		List<Team> players = parser.getPlayers();	
+		String teamName = "";
+		gui.getOutputPane().setText(teamName);
+		List<Team> teams = parser.getTeams();
 		
-		sortPlayers(players, category);
-		
-		if(gui.getOrderCheckBox().isSelected()) {
-			Collections.reverse(players);
-		}
-		
-		
-		boolean removeName = gui.getRemoveFirstNameCheckBox().isSelected();		
-	
-		if(numberOfPlayers < 0) {
-			gui.showMessage("Vennligst fyll inn et positivt tall");
-			gui.getNumberOfPlayersArea().setSelectedIndex(4);
-		} else {
-				if(numberOfPlayers <= players.size() && players.size() > 0) {
-					gui.getOutputPane().setBorder(new TitledBorder("Viser " + numberOfPlayers + " av " + parser.getSize() + " tilgjengelige spillere"));	
-					if(gui.getShowCategoryCheckBox().isSelected()) {
-						switch (category) {
-							case 0:
-								gui.getOutputPane().setText("\nDistanse løpt\n");
-								break;
-							case 1:
-								gui.getOutputPane().setText("\nAntall sprinter\n");
-								break;
-							case 2:
-								gui.getOutputPane().setText("\nGjennomsnittsfart\n");
-								break;
-							case 3:
-								gui.getOutputPane().setText("\nToppfart\n");
-								break;
-							default:
-								break;
-							}
-						}
-					
-				
-						for(int i = 0; i < numberOfPlayers; i++) {
-							String output = gui.getOutputPane().getText();
-							switch (category) {
-							case 0:
-								gui.getOutputPane().setText(output + "\n" + players.get(i).toString(removeName).trim());
-								break;
-							case 1:
-								gui.getOutputPane().setText(output + "\n" + players.get(i).printSprints(removeName).trim());
-								break;
-							case 2:
-								gui.getOutputPane().setText(output + "\n" + players.get(i).printAvgSpeed(removeName).trim());
-								break;
-							case 3:
-								gui.getOutputPane().setText(output + "\n" + players.get(i).printTopSpeed(removeName).trim());
-								break;
-							default:
-								break;
-							}
-						}
-						
-						selectAllText(gui.getSelectTextCheckBox().isSelected());
-						
-					} else {
-						gui.showMessage("Du prøver å vise flere spillere enn det finnes\n Du prøvde: " + numberOfPlayers + ". Det er bare " + players.size() + " spillere tilgjengelig");
-						gui.getOutputPane().setBorder(new TitledBorder("Viser " + 0 + " av " + parser.getSize() + " tilgjengelige spillere"));
-						gui.getNumberOfPlayersArea().setSelectedIndex(4);
+		for(int index = 0; index < teams.size(); index++) {
+			Team team = teams.get(index);
+			List<Player> players = team.getPlayers();
+			
+			teamName = gui.getOutputPane().getText();
+			
+			
+			if(!fullRapport) {
+				if(index <= 0) {
+					teamName += team.getTeamName() + "\n";
+				} else {
+					teamName += "\n\n" + team.getTeamName() + "\n";
 				}
-			} 
+			} else {
+				if(index <= 0) {
+					teamName += "\n\n" + team.getTeamName() + "\n";
+				} else {
+					teamName += "\n\n" + team.getTeamName() + "\n";
+				}
+			}
+			
+			gui.getOutputPane().setText(teamName);
+			
+			sortPlayers(players, category);
+			
+			if(gui.getOrderCheckBox().isSelected()) {
+				Collections.reverse(players);
+			}
+			
+			boolean removeName = gui.getRemoveFirstNameCheckBox().isSelected();		
+		
+			if(numberOfPlayers < 0) {
+				gui.showMessage("Vennligst fyll inn et positivt tall");
+				gui.getNumberOfPlayersArea().setSelectedIndex(4);
+			} else {
+					if(numberOfPlayers <= players.size() && players.size() > 0) {
+//						gui.getOutputPane().setBorder(new TitledBorder("Viser " + numberOfPlayers + " av " + parser.getSize() + " tilgjengelige spillere"));	
+						if(gui.getShowCategoryCheckBox().isSelected()) {
+							switch (category) {
+								case 0:
+									gui.getOutputPane().setText("\nDistanse løpt\n");
+									break;
+								case 1:
+									gui.getOutputPane().setText("\nAntall sprinter\n");
+									break;
+								case 2:
+									gui.getOutputPane().setText("\nGjennomsnittsfart\n");
+									break;
+								case 3:
+									gui.getOutputPane().setText("\nToppfart\n");
+									break;
+								default:
+									break;
+								}
+							}
+						
+						
+							for(int i = 0; i < numberOfPlayers; i++) {
+								String output = gui.getOutputPane().getText();
+								switch (category) {
+								case 0:
+									gui.getOutputPane().setText(output + "\n" + players.get(i).toString(removeName).trim());
+									break;
+								case 1:
+									gui.getOutputPane().setText(output + "\n" + players.get(i).printSprints(removeName).trim());
+									break;
+								case 2:
+									gui.getOutputPane().setText(output + "\n" + players.get(i).printAvgSpeed(removeName).trim());
+									break;
+								case 3:
+									gui.getOutputPane().setText(output + "\n" + players.get(i).printTopSpeed(removeName).trim());
+									break;
+								default:
+									break;
+								}
+							}
+							
+							selectAllText(gui.getSelectTextCheckBox().isSelected());
+							
+						} else {
+							gui.showMessage("Du prøver å vise flere spillere enn det finnes\n Du prøvde: " + numberOfPlayers + ". Det er bare " + players.size() + " spillere tilgjengelig");
+							gui.getOutputPane().setBorder(new TitledBorder("Viser " + 0 + " av " + parser.getSize() + " tilgjengelige spillere"));
+							gui.getNumberOfPlayersArea().setSelectedIndex(4);
+					}
+				} 
+			
+			}
+			return gui.getOutputPane().getText();
 		} 
 	
 	/**
@@ -529,7 +559,7 @@ public class Main {
 				gui.getStatusTextArea().setText(gui.getStatusTextArea().getText() + " Åpner en tab for hver kamp i Firefox. Dette kan ta litt tid");
 				optaWebDriver.openOptaTabs();
 			} else if(e.getSource() == gui.getCategoryDropdow()) {
-				calculate(gui.getNumberOfPlayersArea().getSelectedIndex(), gui.getCategoryDropdow().getSelectedIndex());
+				calculate(gui.getNumberOfPlayersArea().getSelectedIndex(), gui.getCategoryDropdow().getSelectedIndex(), false);
 			} else if (e.getSource() == gui.getSelectTextCheckBox()) {
 				selectAllText(gui.getSelectTextCheckBox().isSelected());
 			} else if (e.getSource() == gui.getH2hButton()) {
@@ -589,9 +619,18 @@ public class Main {
 				setupPlayers(teams.get(teamName).getTeamId(), 1);
 			}
 		}
-		
 	}
 	
+	private void generateRapport() {
+		int categories = gui.getCategoryDropdow().getItemCount();
+//		gui.getShowCategoryCheckBox().setSelected(true);
+		String output = "";
+		gui.getOutputPane().setText(output);
+		for(int i = 0; i < categories; i++) {
+			output += calculate(5, i, true);
+		}
+		gui.getOutputPane().setText(output);
+	}
 	
 	/**
 	 * Private class for key listeners
@@ -638,7 +677,7 @@ public class Main {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			try {
-				calculate(gui.getNumberOfPlayersArea().getSelectedIndex(), gui.getCategoryDropdow().getSelectedIndex());
+				calculate(gui.getNumberOfPlayersArea().getSelectedIndex(), gui.getCategoryDropdow().getSelectedIndex(), false);
 			} catch(IllegalArgumentException ex) {
 				System.out.println("Du har ikke lest inn en fil enda");
 				System.out.println(ex.getMessage());
@@ -689,5 +728,28 @@ public class Main {
 				System.exit(0);
 			}
 		}
+	}
+	
+	private class GenerateRapportAction extends AbstractAction {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 7842770879089217159L;
+		
+		public GenerateRapportAction() {
+			// TODO Auto-generated constructor stub
+		}
+		
+		public GenerateRapportAction(String name) {
+			super(name);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			generateRapport();
+			
+		}
+		
 	}
 }

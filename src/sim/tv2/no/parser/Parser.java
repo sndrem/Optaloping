@@ -99,13 +99,19 @@ public class Parser{
 				awayTeamPlayers.add(pl);
 			}
 		}
-		Team homeTeam = new Team(homeTeamPlayers.get(0).getTeam());
-		Team awayTeam = new Team(awayTeamPlayers.get(0).getTeam());
+		if(homeTeamPlayers.size() > 0) {
+			Team homeTeam = new Team(homeTeamPlayers.get(0).getTeam());
+			
+			homeTeam.getPlayers().addAll(homeTeamPlayers);
+			getTeams().add(homeTeam);
+		}
 		
-		homeTeam.getPlayers().addAll(homeTeamPlayers);
-		awayTeam.getPlayers().addAll(awayTeamPlayers);
-		getTeams().add(homeTeam);
-		getTeams().add(awayTeam);
+		if(awayTeamPlayers.size() > 0) {
+			Team awayTeam = new Team(awayTeamPlayers.get(0).getTeam());
+			awayTeam.getPlayers().addAll(awayTeamPlayers);
+			getTeams().add(awayTeam);
+		}
+		
 		return getTeams();
 	}
 	
