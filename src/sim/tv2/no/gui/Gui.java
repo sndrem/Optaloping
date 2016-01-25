@@ -301,7 +301,7 @@ public class Gui extends JFrame {
 		chooser.setDialogType(JFileChooser.SAVE_DIALOG);
 		int choice = chooser.showSaveDialog(this);
 		if(choice == JFileChooser.APPROVE_OPTION) {
-			return chooser.getCurrentDirectory().getAbsolutePath();
+			return chooser.getSelectedFile().getAbsolutePath();
 		} else {
 			return null;
 		}

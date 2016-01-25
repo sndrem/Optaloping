@@ -1,3 +1,4 @@
+home:everton
 3	Leighton Baines	10.44	53	6.55	29.48
 5	John Stones	9.80	37	6.15	31.08
 9	Arouna Koné	7.05	42	6.90	30.63
@@ -10,6 +11,7 @@
 20	Ross Barkley	11.39	47	7.15	32.46
 23	Seamus Coleman	11.02	61	6.92	31.82
 24	Tim Howard	3.67	3	2.31	22.12
+away:tottenham
 25	Ramiro Funes Mori	10.19	36	6.39	30.17
 1	Hugo Lloris	5.23	10	3.28	28.62
 2	Kyle Walker	10.87	75	6.83	31.80

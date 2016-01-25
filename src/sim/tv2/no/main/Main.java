@@ -8,7 +8,10 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -648,20 +651,23 @@ public class Main {
 	}
 	
 	private void generateFile(Match match, String directory) {
-		System.out.println(match.toString());
-		System.out.println(match.getAbbreviatedFileName());
-		//		File matchFile = new File(directory + match.getAbbreviatedFileName());
-//		PrintWriter writer = null;
-//		try {
-//			writer = new PrintWriter(matchFile);
-//		} catch (FileNotFoundException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		writer.append(match.getHomeTeam().toUpperCase());
-//		writer.append("\n");
-//		writer.append(match.getAwayTeam().toUpperCase());
-//		writer.close();
+		System.out.println(directory);
+//		System.out.println(match.getAbbreviatedFileName());
+		File matchFile = new File(directory + "/" + match.getHomeTeam() + "VS" + match.getAwayTeam() + ".txt");
+		PrintWriter writer = null;
+		try {
+			writer = new PrintWriter(matchFile, "UTF-8");
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		writer.append("home:" + match.getHomeTeam().toLowerCase());
+		writer.append("\n\n\n");
+		writer.append("away:" + match.getAwayTeam().toLowerCase());
+		writer.close();
 	}
 	
 	
