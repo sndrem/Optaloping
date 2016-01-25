@@ -67,6 +67,7 @@ public class Gui extends JFrame {
 	private JCheckBox awayTexSearchCheckBox;
 	private JTextArea awayTeamSearch;
 	private JButton generateReportButton;
+	private JMenuItem createFilesMenuItem;
 	
 	private Gui() {
 		setupGui();
@@ -276,6 +277,10 @@ public class Gui extends JFrame {
 		getOpenOptaItem().setToolTipText("Åpner en tab for hver kamp i Firefox. Dette kan ta litt tid");
 		toolsMenu.add(getOpenOptaItem());
 		
+		setCreateFilesMenuItem(new JMenuItem("Opprett .txt-filer"));
+		getCreateFilesMenuItem().setToolTipText("Oppretter .txt-filer basert på kampene");
+		toolsMenu.add(getCreateFilesMenuItem());
+		
 		setOpenFileMenuItem(new JMenuItem("Åpne tekstfil"));
 		getOpenFileMenuItem().setAccelerator(KeyStroke.getKeyStroke("ctrl O"));
 		menu.add(getOpenFileMenuItem());
@@ -284,6 +289,22 @@ public class Gui extends JFrame {
 		menu.add(getExitItem());
 		
 		this.setJMenuBar(menuBar);
+	}
+	
+	/**
+	 * Method to present a file chooser to the user
+	 * @return String - the directory the user chooses
+	 */
+	public String showFileChooser() {
+		JFileChooser chooser = new JFileChooser("");
+		chooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
+		chooser.setDialogType(JFileChooser.SAVE_DIALOG);
+		int choice = chooser.showSaveDialog(this);
+		if(choice == JFileChooser.APPROVE_OPTION) {
+			return chooser.getCurrentDirectory().getAbsolutePath();
+		} else {
+			return null;
+		}
 	}
 
 	/**
@@ -734,5 +755,19 @@ public class Gui extends JFrame {
 	 */
 	public void setGenerateReportButton(JButton generateReportButton) {
 		this.generateReportButton = generateReportButton;
+	}
+
+	/**
+	 * @return the createFilesMenuItem
+	 */
+	public JMenuItem getCreateFilesMenuItem() {
+		return createFilesMenuItem;
+	}
+
+	/**
+	 * @param createFilesMenuItem the createFilesMenuItem to set
+	 */
+	public void setCreateFilesMenuItem(JMenuItem createFilesMenuItem) {
+		this.createFilesMenuItem = createFilesMenuItem;
 	}
 }
