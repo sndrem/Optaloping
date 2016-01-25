@@ -12,10 +12,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.JComponent;
@@ -36,6 +34,7 @@ import sim.tv2.no.comparators.DistanceComparator;
 import sim.tv2.no.comparators.SprintComparator;
 import sim.tv2.no.comparators.TopSpeedComparator;
 import sim.tv2.no.gui.Gui;
+import sim.tv2.no.match.Match;
 import sim.tv2.no.parser.Parser;
 import sim.tv2.no.player.H2HPlayer;
 import sim.tv2.no.player.Player;
@@ -273,6 +272,7 @@ public class Main {
 		gui.getRunButton().setAction(new RunAction("Kjør"));
 		gui.getCopyButton().setAction(new CopyAction("Kopier til clipboard"));
 		gui.getOpenOptaItem().addActionListener(e);
+		gui.getCreateFilesMenuItem().setAction(new CreateTextFilesAction("Opprett .txt-filer"));
 		gui.getExitItem().setAction(new ExitAction("Lukk"));
 		gui.getExitItem().setAccelerator(KeyStroke.getKeyStroke("ctrl Q"));
 		gui.getRemoveFirstNameCheckBox().setAction(new RunAction("Fjern fornavn"));
@@ -374,7 +374,6 @@ public class Main {
 		if(size >= 5) {
 			gui.getNumberOfPlayersArea().setSelectedIndex(4);
 		}
-		
 	}
 
 	private void showFileProcessError(NumberFormatException ex, String fileName, Color color) {
@@ -621,6 +620,9 @@ public class Main {
 		}
 	}
 	
+	/**
+	 * Method to generate a full rapport for each of the categories 
+	 */
 	private void generateRapport() {
 		int categories = gui.getCategoryDropdow().getItemCount();
 //		gui.getShowCategoryCheckBox().setSelected(true);
@@ -631,6 +633,39 @@ public class Main {
 		}
 		gui.getOutputPane().setText(output);
 	}
+	
+	/**
+	 * Method to create text files, based on a list of matches
+	 */
+	private void createTextFiles() {
+		List<Match> matches = parser.getNextMatches();
+//		PrintWriter writer = new PrintWriter(new File(), csn)
+		String directory = gui.showFileChooser();
+		
+		for(Match match : matches) {
+			generateFile(match, directory);
+		}
+	}
+	
+	private void generateFile(Match match, String directory) {
+		System.out.println(match.toString());
+		System.out.println(match.getAbbreviatedFileName());
+		//		File matchFile = new File(directory + match.getAbbreviatedFileName());
+//		PrintWriter writer = null;
+//		try {
+//			writer = new PrintWriter(matchFile);
+//		} catch (FileNotFoundException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		writer.append(match.getHomeTeam().toUpperCase());
+//		writer.append("\n");
+//		writer.append(match.getAwayTeam().toUpperCase());
+//		writer.close();
+	}
+	
+	
+	
 	
 	/**
 	 * Private class for key listeners
@@ -750,6 +785,29 @@ public class Main {
 			generateRapport();
 			
 		}
+	}
+	
+	private class CreateTextFilesAction extends AbstractAction {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = -4596842558589964145L;
+		
+		public CreateTextFilesAction() {
+			
+		}
+		
+		public CreateTextFilesAction(String name) {
+			super(name);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			createTextFiles();
+			
+		}
 		
 	}
+	
 }

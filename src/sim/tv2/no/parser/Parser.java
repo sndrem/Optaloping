@@ -15,6 +15,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import sim.tv2.no.match.Match;
 import sim.tv2.no.player.Player;
 import sim.tv2.no.team.Team;
 
@@ -32,6 +33,7 @@ public class Parser{
 	public static final String STATS_PAGE = "http://www.premierleague.com/en-gb/players/profile.statistics.html/";
 	public static final String TEAM_PAGE = "http://www.premierleague.com/en-gb/players/index.html?paramSearchType=BY_CLUB&paramSeason=squad&paramClubId=";
 	public static final String PREMIER_LEAGUE = "http://www.premierleague.com/";
+	private static final String ALT_OM_FOTBALL_PL = "http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=230&useFullUrl=false";
 
 	public Parser() {
 		setTeams(new ArrayList<Team>());
@@ -173,8 +175,26 @@ public class Parser{
 				System.out.println(e.getMessage());
 			}
 		}
-		
 		return teams;
+	}
+	
+	public List<Match> getNextMatches() {
+		List<Match> matches = new ArrayList<Match>();
+		try {
+			Document doc = Jsoup.connect(Parser.ALT_OM_FOTBALL_PL).get();
+			Element nextMatchSection = doc.getElementById("sd_fixtures_table_next");
+			Elements nextMatchRows = nextMatchSection.select("tr");
+			for(Element row : nextMatchRows) {
+				String homeTeam = row.getElementsByClass("sd_fixtures_home").text();
+				String awayTeam = row.getElementsByClass("sd_fixtures_away").text();
+				Match match = new Match(homeTeam, awayTeam);
+				matches.add(match);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return matches;
 	}
 	
 	public int getSize() {
