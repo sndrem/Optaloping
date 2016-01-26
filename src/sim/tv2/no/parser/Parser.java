@@ -15,6 +15,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import sim.tv2.no.exceptions.GetMatchesException;
 import sim.tv2.no.match.Match;
 import sim.tv2.no.player.Player;
 import sim.tv2.no.team.Team;
@@ -187,7 +188,7 @@ public class Parser{
 	 * Method to parse and return a list of the next matches in the Premier League
 	 * @return list of the next matches to be played
 	 */
-	public List<Match> getNextMatches() {
+	public List<Match> getNextMatches() throws GetMatchesException{
 		List<Match> matches = new ArrayList<Match>();
 		try {
 			Document doc = Jsoup.connect(Parser.ALT_OM_FOTBALL_PL).get();
@@ -202,6 +203,7 @@ public class Parser{
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			throw new GetMatchesException("Kunne ikke hente kamper. Sjekk at du er koblet til internett og prøv igjen");
 		}
 		return matches;
 	}

@@ -36,6 +36,7 @@ import sim.tv2.no.comparators.AvgSpeedComparator;
 import sim.tv2.no.comparators.DistanceComparator;
 import sim.tv2.no.comparators.SprintComparator;
 import sim.tv2.no.comparators.TopSpeedComparator;
+import sim.tv2.no.exceptions.GetMatchesException;
 import sim.tv2.no.gui.Gui;
 import sim.tv2.no.match.Match;
 import sim.tv2.no.parser.Parser;
@@ -643,8 +644,15 @@ public class Main {
 	 * Method to create text files, based on a list of matches
 	 */
 	private void createTextFiles() {
-		List<Match> matches = parser.getNextMatches();
 		String directory = gui.showFileChooser();
+		List<Match> matches = null;
+		try {
+			matches = parser.getNextMatches();
+		} catch (GetMatchesException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			gui.showMessage(e.getMessage());
+		}
 		
 		for(Match match : matches) {
 			generateFile(match, directory);
