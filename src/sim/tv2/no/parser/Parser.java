@@ -91,6 +91,11 @@ public class Parser{
 		return getTeams();
 	}
 	
+	/**
+	 * Method for dividing players between home team and away team.
+	 * @param players - the players you want to divide
+	 * @return a list of the teams, with the players divided into each of their separate teams
+	 */
 	private List<Team> dividePlayers(List<Player> players) {
 		List<Player> homeTeamPlayers = new ArrayList<Player>();
 		List<Player> awayTeamPlayers = new ArrayList<Player>();
@@ -178,6 +183,10 @@ public class Parser{
 		return teams;
 	}
 	
+	/**
+	 * Method to parse and return a list of the next matches in the Premier League
+	 * @return list of the next matches to be played
+	 */
 	public List<Match> getNextMatches() {
 		List<Match> matches = new ArrayList<Match>();
 		try {
@@ -196,7 +205,7 @@ public class Parser{
 		}
 		return matches;
 	}
-	
+
 	public int getSize() {
 		if(this.teams != null) {
 			int size = 0;

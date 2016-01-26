@@ -233,7 +233,7 @@ public class Gui extends JFrame {
 		JToolBar checkBoxToolBar = new JToolBar();
 		checkBoxToolBar.add(getOrderCheckBox());
 		checkBoxToolBar.add(getRemoveFirstNameCheckBox());
-		checkBoxToolBar.add(getShowCategoryCheckBox());
+//		checkBoxToolBar.add(getShowCategoryCheckBox());
 		checkBoxToolBar.add(getSelectTextCheckBox());
 		checkBoxToolBar.add(getGenerateReportButton());
 		

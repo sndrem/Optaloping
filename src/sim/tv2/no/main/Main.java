@@ -304,6 +304,9 @@ public class Main {
 		
 		gui.getExitItem().getActionMap().put("exitAction", new ExitAction());
 		gui.getExitItem().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ctrl Q"), "exitAction");
+		
+		gui.getCreateFilesMenuItem().getActionMap().put("textFileAction", new CreateTextFilesAction("Opprett .txt-filer"));
+		gui.getCreateFilesMenuItem().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_DOWN_MASK), "textFileAction");
 	}
 	
 	/*
@@ -628,7 +631,6 @@ public class Main {
 	 */
 	private void generateRapport() {
 		int categories = gui.getCategoryDropdow().getItemCount();
-//		gui.getShowCategoryCheckBox().setSelected(true);
 		String output = "";
 		gui.getOutputPane().setText(output);
 		for(int i = 0; i < categories; i++) {
@@ -642,7 +644,6 @@ public class Main {
 	 */
 	private void createTextFiles() {
 		List<Match> matches = parser.getNextMatches();
-//		PrintWriter writer = new PrintWriter(new File(), csn)
 		String directory = gui.showFileChooser();
 		
 		for(Match match : matches) {
@@ -650,10 +651,13 @@ public class Main {
 		}
 	}
 	
+	/**
+	 * Method to generate a text-file 
+	 * @param match - the match we want to create the file for
+	 * @param directory - the directory where we want to store the file
+	 */
 	private void generateFile(Match match, String directory) {
-		System.out.println(directory);
-//		System.out.println(match.getAbbreviatedFileName());
-		File matchFile = new File(directory + "/" + match.getHomeTeam() + "VS" + match.getAwayTeam() + ".txt");
+		File matchFile = new File(directory + "/" + match.getHomeTeam() + "-VS-" + match.getAwayTeam() + ".txt");
 		PrintWriter writer = null;
 		try {
 			writer = new PrintWriter(matchFile, "UTF-8");
@@ -772,15 +776,11 @@ public class Main {
 	}
 	
 	private class GenerateRapportAction extends AbstractAction {
-
+		
 		/**
-		 * 
+		 * Private class for generating a rapport action object 
 		 */
 		private static final long serialVersionUID = 7842770879089217159L;
-		
-		public GenerateRapportAction() {
-			// TODO Auto-generated constructor stub
-		}
 		
 		public GenerateRapportAction(String name) {
 			super(name);
@@ -793,16 +793,17 @@ public class Main {
 		}
 	}
 	
+	/**
+	 * Private class for creation of text files. 
+	 * @author Sindre
+	 *
+	 */
 	private class CreateTextFilesAction extends AbstractAction {
 
 		/**
 		 * 
 		 */
 		private static final long serialVersionUID = -4596842558589964145L;
-		
-		public CreateTextFilesAction() {
-			
-		}
 		
 		public CreateTextFilesAction(String name) {
 			super(name);

@@ -37,7 +37,7 @@ public class Team {
 	 * @return the teamName
 	 */
 	public String getTeamName() {
-		return teamName;
+		return teamName.toUpperCase();
 	}
 	/**
 	 * @param teamName the teamName to set
