@@ -665,7 +665,7 @@ public class Main {
 			e.printStackTrace();
 		}
 		writer.append("home:" + match.getHomeTeam().toLowerCase());
-		writer.append("\n\n\n");
+		writer.append("\n\n");
 		writer.append("away:" + match.getAwayTeam().toLowerCase());
 		writer.close();
 	}
