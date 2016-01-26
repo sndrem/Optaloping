@@ -206,17 +206,22 @@ public class Parser{
 		return matches;
 	}
 
+	/**
+	 * Method to return the size of the team with least players presents
+	 * @return int - the size of the team with the least amount of players present
+	 */
 	public int getSize() {
-		if(this.teams != null) {
-			int size = 0;
-			for(Team t : teams) {
-				for(Player p : t.getPlayers()) {
-					size++;
-				}
+		Team homeTeam = teams.get(0);
+		Team awayTeam = teams.get(1);
+		int size = 0;
+		if(homeTeam != null && awayTeam != null) {
+			if(homeTeam.getPlayers().size() <= awayTeam.getPlayers().size()) {
+				size = homeTeam.getPlayers().size();
+			} else {
+				size = awayTeam.getPlayers().size();
 			}
-			return size;
 		}
-		return 0;
+		return size;
 	}
 
 
