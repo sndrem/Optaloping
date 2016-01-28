@@ -135,7 +135,6 @@ public class Parser{
 		}
 		if(homeTeamPlayers.size() > 0) {
 			Team homeTeam = new Team(homeTeamPlayers.get(0).getTeam());
-			
 			homeTeam.getPlayers().addAll(homeTeamPlayers);
 			getTeams().add(homeTeam);
 		}
@@ -153,7 +152,13 @@ public class Parser{
 	 * Method to create a file and return it
 	 */
 	public File createFile(String directory, String fileName) {
-		File file = new File(directory + "/" + fileName);
+		String osVersion = System.getProperty("os.name");
+		File file = null;
+		if(osVersion.equalsIgnoreCase("Mac OS X")) {
+			file = new File(directory + "/" + fileName);
+		} else {
+			file = new File(directory + "\\" + fileName);
+		}
 		setDirectory(directory);
 		return file;
 	}

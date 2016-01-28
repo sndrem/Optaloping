@@ -82,6 +82,10 @@ public class Team {
 		this.players = players;
 	}
 	
+	public String toString() {
+		return this.teamName;
+	}
+	
 	
 
 }

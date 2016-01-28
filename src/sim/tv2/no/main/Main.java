@@ -390,6 +390,12 @@ public class Main {
 		}
 	}
 
+	/**
+	 * Method to show a file process error
+	 * @param ex
+	 * @param fileName
+	 * @param color
+	 */
 	private void showFileProcessError(NumberFormatException ex, String fileName, Color color) {
 		if(ex != null) {
 			gui.showMessage(ex.getMessage());
@@ -401,6 +407,10 @@ public class Main {
 		gui.getOutputPane().setText(0 + " spillere er tilgjengelig");
 	}
 
+	/**
+	 * Method to show the file process info for a file
+	 * @param fileName
+s	 */
 	private void showFileProcessInfo(String fileName) {
 		String status = gui.getStatusTextArea().getText();
 		status = "--> " + fileName + " er prosessert";
@@ -417,6 +427,22 @@ public class Main {
 		numberOfPlayers++;
 		String teamName = "";
 		gui.getOutputPane().setText(teamName);
+		
+		// Fjern alle lagene 
+		parser.getTeams().clear();
+		
+		// Hent filen som er valgt 
+		File file = parser.getFileMap().get((String) gui.getFileComboBox().getSelectedItem());
+		try {
+			parser.parseFile(file);
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		List<Team> teams = parser.getTeams();
 		
 		for(int index = 0; index < teams.size(); index++) {
