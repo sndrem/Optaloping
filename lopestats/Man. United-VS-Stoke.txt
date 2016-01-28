@@ -1,0 +1,32 @@
+home:man. united
+1	David de Gea	3.55	2	2.20	24.99
+8	Juan Mata	6.05	22	7.26	30.34
+9	Anthony Martial	8.53	39	5.28	30.72
+10	Wayne Rooney	10.25	45	6.34	32.65
+11	Adnan Januzaj	1.09	6	6.88	24.02
+12	Chris Smalling	9.08	44	5.62	32.70
+17	Daley Blind	9.37	39	5.80	30.44
+21	Ander Herrera	11.20	56	6.93	31.07
+27	Marouane Fellaini	5.78	22	7.38	27.19
+28	Morgan Schneiderlin	11.36	45	7.03	30.98
+33	Patrick McNair	3.45	17	5.82	29.01
+35	Jesse Lingard	11.06	73	6.84	32.20
+36	Matteo Darmian	6.28	30	6.13	28.08
+43	Cameron Borthwick-Jackson	9.76	45	6.69	32.82
+
+
+away:stoke
+2	Cédric Soares	11.00	56	6.81	31.58
+4	Jordy Clasie	7.30	27	6.44	31.26
+6	Jose Fonte	9.61	31	5.94	29.91
+7	Shane Long	9.87	74	6.11	31.90
+10	Sadio Mané	8.90	47	6.60	33.63
+11	Dusan Tadic	7.85	46	6.89	29.86
+12	Victor Wanyama	10.66	31	6.59	30.15
+14	Oriol Romeu	3.58	12	7.41	25.68
+16	James Ward-Prowse	3.63	17	7.61	27.69
+17	Virgil van Dijk	9.18	35	5.68	29.38
+21	Ryan Bertrand	9.63	24	5.96	32.04
+28	Charlie Austin	1.69	14	6.32	29.08
+33	Matt Targett	9.56	38	5.91	30.22
+44	Fraser Forster	4.45	2	2.75	22.52

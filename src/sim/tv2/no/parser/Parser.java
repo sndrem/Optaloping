@@ -35,9 +35,12 @@ public class Parser{
 	public static final String TEAM_PAGE = "http://www.premierleague.com/en-gb/players/index.html?paramSearchType=BY_CLUB&paramSeason=squad&paramClubId=";
 	public static final String PREMIER_LEAGUE = "http://www.premierleague.com/";
 	private static final String ALT_OM_FOTBALL_PL = "http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=230&useFullUrl=false";
+	private Map<String, File> fileMap;
+	private String directory;
 
 	public Parser() {
 		setTeams(new ArrayList<Team>());
+		setFileMap(new HashMap<String, File>());
 	}
 		
 	
@@ -66,22 +69,26 @@ public class Parser{
 				}
 				
 				String[] columns = line.split("\t");
-				int number = Integer.parseInt(columns[0]);
-				String name = columns[1];
-				float distance = Float.parseFloat(columns[2]);
-				int sprints = Integer.parseInt(columns[3]);
-				float avgSpeed = Float.parseFloat(columns[4]);
-				float topSpeed = Float.parseFloat(columns[5]);
-				
-				Player player = new Player(name, number, sprints, distance, avgSpeed, topSpeed, teamName, homeOrAway);
-				teamPlayers.add(player);
-				lineNumber++;
+				if(columns.length >= 2) {
+					
+					int number = Integer.parseInt(columns[0]);
+					String name = columns[1];
+					float distance = Float.parseFloat(columns[2]);
+					int sprints = Integer.parseInt(columns[3]);
+					float avgSpeed = Float.parseFloat(columns[4]);
+					float topSpeed = Float.parseFloat(columns[5]);
+					
+					Player player = new Player(name, number, sprints, distance, avgSpeed, topSpeed, teamName, homeOrAway);
+					teamPlayers.add(player);
+					lineNumber++;
+				}
 			}
 			
 		} catch(NumberFormatException e) {
 			System.out.println(e.getMessage());
 			br.close();
 			throw new NumberFormatException("Feil format på " + file.getName() + ". Dobbelsjekk tekstfilen og prøv igjen. Sjekk linje: " + lineNumber);
+			
 		} catch(IOException e) {
 			System.out.println(e.getMessage());
 		}
@@ -90,6 +97,25 @@ public class Parser{
 		dividePlayers(teamPlayers);
 		
 		return getTeams();
+	}
+	
+	public List<String> loadDirectory(String directory) {
+		List<String> fileNames = new ArrayList<String>();
+		
+		File dir = new File(directory);
+		for(File file : dir.listFiles()) {
+			if(file.isFile() && file.getName().toLowerCase().endsWith(".txt")) {
+				fileNames.add(file.getName());
+			}
+		}
+		return fileNames;
+	}
+	
+	public void addFilesToFileMap(File[] files) {
+		for (int i = 0; i < files.length; i++) {
+			File file = files[i];
+			fileMap.put(file.getName(), file);
+		}
 	}
 	
 	/**
@@ -121,6 +147,15 @@ public class Parser{
 		}
 		
 		return getTeams();
+	}
+	
+	/**
+	 * Method to create a file and return it
+	 */
+	public File createFile(String directory, String fileName) {
+		File file = new File(directory + "/" + fileName);
+		setDirectory(directory);
+		return file;
 	}
 	
 	/**
@@ -213,14 +248,17 @@ public class Parser{
 	 * @return int - the size of the team with the least amount of players present
 	 */
 	public int getSize() {
-		Team homeTeam = teams.get(0);
-		Team awayTeam = teams.get(1);
 		int size = 0;
-		if(homeTeam != null && awayTeam != null) {
-			if(homeTeam.getPlayers().size() <= awayTeam.getPlayers().size()) {
-				size = homeTeam.getPlayers().size();
-			} else {
-				size = awayTeam.getPlayers().size();
+		if(teams.size() > 0) {
+			
+			Team homeTeam = teams.get(0);
+			Team awayTeam = teams.get(1);
+			if(homeTeam != null && awayTeam != null) {
+				if(homeTeam.getPlayers().size() <= awayTeam.getPlayers().size()) {
+					size = homeTeam.getPlayers().size();
+				} else {
+					size = awayTeam.getPlayers().size();
+				}
 			}
 		}
 		return size;
@@ -240,5 +278,37 @@ public class Parser{
 	 */
 	public void setTeams(List<Team> teams) {
 		this.teams = teams;
+	}
+
+
+	/**
+	 * @return the fileMap
+	 */
+	public Map<String, File> getFileMap() {
+		return fileMap;
+	}
+
+
+	/**
+	 * @param fileMap the fileMap to set
+	 */
+	public void setFileMap(Map<String, File> fileMap) {
+		this.fileMap = fileMap;
+	}
+
+
+	/**
+	 * @return the directory
+	 */
+	public String getDirectory() {
+		return directory;
+	}
+
+
+	/**
+	 * @param directory the directory to set
+	 */
+	public void setDirectory(String directory) {
+		this.directory = directory;
 	}
 }

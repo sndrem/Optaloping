@@ -292,6 +292,7 @@ public class Main {
 		gui.getH2hButton().addActionListener(e);
 		
 		gui.getGenerateReportButton().addActionListener(new GenerateRapportAction("Full rapport"));
+		gui.getFileComboBox().addActionListener(e);
 		
 		// Key events
 		gui.getOpenFileBtn().getActionMap().put("openFile", new OpenFileAction());
@@ -323,10 +324,13 @@ public class Main {
 		if(returnVal == JFileChooser.APPROVE_OPTION) {
 			File[] files = fileChooser.getSelectedFiles();
 			if(files.length == 1) {
-				gui.getStatusTextArea().setText("Åpnet: " + files[0].getName());
+				gui.getStatusTextArea().setText("Åpnet: " + files[0].getName());				
 			} else {
 				gui.getStatusTextArea().setText("Åpnet flere filer");
 			}
+			parser.addFilesToFileMap(files);
+			gui.addFilesToDropdown(files);
+			
 			processFiles(files);
 			gui.getRunButton().setEnabled(true);
 			gui.getCategoryDropdow().setEnabled(true);
@@ -350,7 +354,9 @@ public class Main {
 			for(File file : files) {
 				try {
 					parser.parseFile(file);
-					showFileProcessInfo(file.getName());					
+					showFileProcessInfo(file.getName());
+					parser.getFileMap().put(file.getName(), file);
+					
 				} catch (NumberFormatException ex) {
 					System.out.println(ex.getMessage());
 					if(files.length == 1) {
@@ -366,7 +372,7 @@ public class Main {
 			gui.getOutputPane().setText(parser.getSize() + " spillere er tilgjengelig");
 			gui.getOutputPane().setBorder(new TitledBorder(""));
 			populateNumbersArea(parser.getSize());
-			gui.getNumberOfPlayersArea().requestFocus();
+//			gui.getNumberOfPlayersArea().requestFocus();
 		}
 	}
 
@@ -397,8 +403,8 @@ public class Main {
 
 	private void showFileProcessInfo(String fileName) {
 		String status = gui.getStatusTextArea().getText();
-		status += " \n--> " + fileName + " er prosessert";
-		gui.getStatusTextArea().setText(status);
+		status = "--> " + fileName + " er prosessert";
+		gui.getStatusTextArea().setText("Fil ok");
 	}
 
 
@@ -586,7 +592,6 @@ public class Main {
 				// Hvis brukeren skriver i hjemmelaget sitt tekstfelt, men ikke bortelaget
 				} else if (gui.getHomeTextSearchBox().isSelected() && !gui.getAwayTexSearchCheckBox().isSelected()) {
 					String playerUrlName = convertToPlayerUrl(gui.getHomeTeamSearch().getText());
-					System.out.println(playerUrlName);
 					processPlayerUrl(playerUrlName, true);
 					
 					String awayPlayerUrl = awayPlayers.get((String) gui.getAwayPlayerNames().getSelectedItem());
@@ -598,7 +603,6 @@ public class Main {
 				// Hvis brukeren skriver i bortelaget sitt tekstfelt, men ikke i hjemmelaget
 				} else if(!gui.getHomeTextSearchBox().isSelected() && gui.getAwayTexSearchCheckBox().isSelected()) {
 					String playerUrlName = convertToPlayerUrl(gui.getAwayTeamSearch().getText());
-					System.out.println(playerUrlName);
 					processPlayerUrl(playerUrlName, false);
 					
 					String homePlayerUrl = homePlayers.get((String) gui.getHomePlayerNames().getSelectedItem());
@@ -620,10 +624,19 @@ public class Main {
 				String teamName = (String) gui.getHomeTeamNames().getSelectedItem();
 				parser.fetchPlayers(teams.get(teamName).getTeamId());
 				setupPlayers(teams.get(teamName).getTeamId(), 0);
+				
 			} else if (e.getSource() == gui.getAwayTeamNames()) {
 				String teamName = (String) gui.getAwayTeamNames().getSelectedItem();
 				parser.fetchPlayers(teams.get(teamName).getTeamId());
 				setupPlayers(teams.get(teamName).getTeamId(), 1);
+				
+			} else if(e.getSource() == gui.getFileComboBox()) {
+				String fileName = (String) gui.getFileComboBox().getSelectedItem();
+				File file = parser.getFileMap().get(fileName);
+				File[] files = new File[1];
+				files[0] = file;
+				processFiles(files);
+				calculate(gui.getNumberOfPlayersArea().getSelectedIndex(), gui.getCategoryDropdow().getSelectedIndex(), false);
 			}
 		}
 	}
@@ -687,7 +700,17 @@ public class Main {
 	 * Method to load all files in a given directory
 	 */
 	public void loadDirectory() {
-		
+		String directory = gui.showFileChooser();
+		List<String> fileNames = parser.loadDirectory(directory);
+		File[] files = new File[fileNames.size()];
+		for(int i = 0; i < fileNames.size(); i++) {
+			File file = parser.createFile(directory, fileNames.get(i));
+			files[i] = file;
+		}
+		parser.addFilesToFileMap(files);
+		gui.addFilesToDropdown(files);
+		processFiles(files);
+		gui.getFileComboBox().setEnabled(true);
 	}
 	
 	

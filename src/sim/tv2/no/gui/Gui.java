@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
+import java.io.File;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
@@ -69,6 +70,7 @@ public class Gui extends JFrame {
 	private JButton generateReportButton;
 	private JMenuItem createFilesMenuItem;
 	private JMenuItem openDir;
+	private JComboBox<String> fileComboBox;
 	
 	private Gui() {
 		setupGui();
@@ -231,6 +233,9 @@ public class Gui extends JFrame {
 		dropDownToolBar.add(getCategoryDropdow());
 		dropDownToolBar.add(getNumberOfPlayersArea());
 		
+		setFileComboBox(new JComboBox<String>());
+		getFileComboBox().setEnabled(false);
+		
 		
 		
 		JToolBar checkBoxToolBar = new JToolBar();
@@ -239,6 +244,7 @@ public class Gui extends JFrame {
 //		checkBoxToolBar.add(getShowCategoryCheckBox());
 		checkBoxToolBar.add(getSelectTextCheckBox());
 		checkBoxToolBar.add(getGenerateReportButton());
+		checkBoxToolBar.add(getFileComboBox());
 		
 
 		northPanel.add(dropDownToolBar, BorderLayout.NORTH);
@@ -267,6 +273,13 @@ public class Gui extends JFrame {
 		getOptaRunningPanel().add(northPanel, BorderLayout.NORTH);
 		getOptaRunningPanel().add(centerPanel, BorderLayout.CENTER);
 		getOptaRunningPanel().add(getStatusPanel(), BorderLayout.SOUTH);
+	}
+	
+	public void addFilesToDropdown(File[] files) {
+		for (int i = 0; i < files.length; i++) {
+			File file = files[i];
+			getFileComboBox().addItem(file.getName());
+		}
 	}
 
 	private void createMenuBar() {
@@ -789,5 +802,19 @@ public class Gui extends JFrame {
 	 */
 	public void setOpenDir(JMenuItem openDir) {
 		this.openDir = openDir;
+	}
+
+	/**
+	 * @return the fileComboBox
+	 */
+	public JComboBox<String> getFileComboBox() {
+		return fileComboBox;
+	}
+
+	/**
+	 * @param fileComboBox the fileComboBox to set
+	 */
+	public void setFileComboBox(JComboBox<String> fileComboBox) {
+		this.fileComboBox = fileComboBox;
 	}
 }
