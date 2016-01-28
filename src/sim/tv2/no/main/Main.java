@@ -273,6 +273,7 @@ public class Main {
 		gui.getOpenFileBtn().setAction(new OpenFileAction("Åpne tekstfil"));
 		gui.getOpenFileMenuItem().setAction(new OpenFileAction("Åpne tekstfil"));
 		gui.getOpenFileMenuItem().setAccelerator(KeyStroke.getKeyStroke("ctrl O"));
+		gui.getOpenDir().setAction(new OpenDirectoryAction("Last mappe"));
 		gui.getRunButton().setAction(new RunAction("Kjør"));
 		gui.getCopyButton().setAction(new CopyAction("Kopier til clipboard"));
 		gui.getOpenOptaItem().addActionListener(e);
@@ -682,6 +683,12 @@ public class Main {
 		writer.close();
 	}
 	
+	/**
+	 * Method to load all files in a given directory
+	 */
+	public void loadDirectory() {
+		
+	}
 	
 	
 	
@@ -820,6 +827,27 @@ public class Main {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			createTextFiles();
+			
+		}
+	}
+	
+	/**
+	 * Private class for the loading of a directory
+	 */
+	private class OpenDirectoryAction extends AbstractAction {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 6683399042791348941L;
+		
+		public OpenDirectoryAction(String name) {
+			super(name);
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			loadDirectory();
 			
 		}
 		

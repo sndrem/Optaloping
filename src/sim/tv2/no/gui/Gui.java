@@ -68,6 +68,7 @@ public class Gui extends JFrame {
 	private JTextArea awayTeamSearch;
 	private JButton generateReportButton;
 	private JMenuItem createFilesMenuItem;
+	private JMenuItem openDir;
 	
 	private Gui() {
 		setupGui();
@@ -230,6 +231,8 @@ public class Gui extends JFrame {
 		dropDownToolBar.add(getCategoryDropdow());
 		dropDownToolBar.add(getNumberOfPlayersArea());
 		
+		
+		
 		JToolBar checkBoxToolBar = new JToolBar();
 		checkBoxToolBar.add(getOrderCheckBox());
 		checkBoxToolBar.add(getRemoveFirstNameCheckBox());
@@ -284,6 +287,9 @@ public class Gui extends JFrame {
 		setOpenFileMenuItem(new JMenuItem("Åpne tekstfil"));
 		getOpenFileMenuItem().setAccelerator(KeyStroke.getKeyStroke("ctrl O"));
 		menu.add(getOpenFileMenuItem());
+		
+		setOpenDir(new JMenuItem("Last mappe"));
+		menu.add(getOpenDir());
 		
 		setExitItem(new JMenuItem("Lukk"));
 		menu.add(getExitItem());
@@ -769,5 +775,19 @@ public class Gui extends JFrame {
 	 */
 	public void setCreateFilesMenuItem(JMenuItem createFilesMenuItem) {
 		this.createFilesMenuItem = createFilesMenuItem;
+	}
+
+	/**
+	 * @return the openDir
+	 */
+	public JMenuItem getOpenDir() {
+		return openDir;
+	}
+
+	/**
+	 * @param openDir the openDir to set
+	 */
+	public void setOpenDir(JMenuItem openDir) {
+		this.openDir = openDir;
 	}
 }
