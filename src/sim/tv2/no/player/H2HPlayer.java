@@ -18,10 +18,12 @@ public class H2HPlayer extends Player {
 	private int assists;
 	private int number;
 	private int seasonalGoals;
+	private boolean homePlayer;
+	
 	
 	public H2HPlayer(String name, int age, int appearances,
 			int careerGoals, int yellowCards, int redCards, double height,
-			double weight, String gamesInThisSeason, int assists, int number, int seasonalGoals) {
+			double weight, String gamesInThisSeason, int assists, int number, int seasonalGoals, boolean homePlayer) {
 		super(name);
 		this.age = age;
 		this.appearances = appearances;
@@ -34,6 +36,7 @@ public class H2HPlayer extends Player {
 		this.assists = assists;
 		this.number = number;
 		this.setSeasonalGoals(seasonalGoals);
+		this.setHomePlayer(homePlayer);
 	}
 
 	/**
@@ -195,6 +198,20 @@ public class H2HPlayer extends Player {
 				+ " " + this.getAssists() + " ganger.";
 		
 
+	}
+
+	/**
+	 * @return the homePlayer
+	 */
+	public boolean isHomePlayer() {
+		return homePlayer;
+	}
+
+	/**
+	 * @param homePlayer the homePlayer to set
+	 */
+	public void setHomePlayer(boolean homePlayer) {
+		this.homePlayer = homePlayer;
 	}
 	
 	

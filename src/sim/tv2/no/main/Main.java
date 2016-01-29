@@ -27,11 +27,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
-
+import sim.tv2.no.Head2Head.H2HParser;
 import sim.tv2.no.comparators.AvgSpeedComparator;
 import sim.tv2.no.comparators.DistanceComparator;
 import sim.tv2.no.comparators.SprintComparator;
@@ -61,6 +57,7 @@ public class Main {
 	private Map<String, Team> teams = new HashMap<String, Team>();
 	private Map<String, String> homePlayers;
 	private Map<String, String> awayPlayers;
+	private H2HParser h2hParser;
 	
 	private H2HPlayer homePlayer;
 	private H2HPlayer awayPlayer;
@@ -81,9 +78,59 @@ public class Main {
 				parser = new Parser();
 				setupTeams();
 				setupActionListeners();
+				h2hParser = new H2HParser();
 			}
 		});
 	}
+	
+	/*
+	 * Method to assign actionlisteners to the buttons
+	 */
+	private void setupActionListeners() {
+		Events e = new Events();
+		gui.getOpenFileBtn().setAction(new OpenFileAction("Åpne tekstfil"));
+		gui.getOpenFileMenuItem().setAction(new OpenFileAction("Åpne tekstfil"));
+		gui.getOpenFileMenuItem().setAccelerator(KeyStroke.getKeyStroke("ctrl O"));
+		gui.getOpenDir().setAction(new OpenDirectoryAction("Last mappe"));
+		gui.getRunButton().setAction(new RunAction("Kjør"));
+		gui.getCopyButton().setAction(new CopyAction("Kopier til clipboard"));
+		gui.getOpenOptaItem().addActionListener(e);
+		gui.getCreateFilesMenuItem().setAction(new CreateTextFilesAction("Opprett .txt-filer"));
+		gui.getExitItem().setAction(new ExitAction("Lukk"));
+		gui.getExitItem().setAccelerator(KeyStroke.getKeyStroke("ctrl Q"));
+		gui.getRemoveFirstNameCheckBox().setAction(new RunAction("Fjern fornavn"));
+		gui.getOrderCheckBox().setAction(new RunAction("Reverse"));
+		gui.getCategoryDropdow().setAction(new RunAction());
+		gui.getNumberOfPlayersArea().addActionListener(new RunAction());
+		gui.getShowCategoryCheckBox().setAction(new RunAction("Vis kategorinavn"));
+		gui.getSelectTextCheckBox().addActionListener(e);
+		
+		gui.getHomeTeamNames().addActionListener(e);
+		gui.getAwayTeamNames().addActionListener(e);
+		gui.getH2hButton().addActionListener(e);
+		
+		gui.getGenerateReportButton().addActionListener(new GenerateRapportAction("Full rapport"));
+		gui.getFileComboBox().addActionListener(e);
+		
+		// Key events
+		gui.getOpenFileBtn().getActionMap().put("openFile", new OpenFileAction());
+		gui.getOpenFileBtn().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("control O"), "openFile");
+		gui.getOpenFileBtn().getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.CTRL_MASK), "openFile");
+		
+		gui.getRunButton().getActionMap().put("runCalculations", new RunAction());
+		gui.getRunButton().getInputMap().put(KeyStroke.getKeyStroke((char) KeyEvent.VK_ENTER), "runCalculations");
+		
+		gui.getCopyButton().getActionMap().put("copyContent", new CopyAction());
+		gui.getCopyButton().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_DOWN_MASK), "copyContent");
+		
+		gui.getExitItem().getActionMap().put("exitAction", new ExitAction());
+		gui.getExitItem().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ctrl Q"), "exitAction");
+		
+		gui.getCreateFilesMenuItem().getActionMap().put("textFileAction", new CreateTextFilesAction("Opprett .txt-filer"));
+		gui.getCreateFilesMenuItem().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_DOWN_MASK), "textFileAction");
+	}
+	
+	//############# H2H - kode ################//	
 	
 	/**
 	 * Method to initialize the teams used for H2H
@@ -110,7 +157,8 @@ public class Main {
 		 teams.put("Watford", new Team("Watford", "WAT", 57));
 		 teams.put("West Bromwich", new Team("West Bromwich", "WBA", 35));
 		 teams.put("West Ham", new Team("West Ham", "WHA", 21));
-		for(String teamName : teams.keySet()) {
+		
+		 for(String teamName : teams.keySet()) {
 			gui.getHomeTeamNames().addItem(teamName);
 		}
 		
@@ -148,65 +196,7 @@ public class Main {
 		}
 	}
 	
-	/**
-	 * Method to crawl the Premier League pages for information about a given player
-	 * @param url - the player url
-	 * @param isHomePlayer - a boolean representing wheter or not the player is playing for the home team or away team
-	 */
-	private void processPlayerUrl(String url, boolean isHomePlayer) {
-		Document doc = null;
-		try {
-			
-			// Get the number and name of the player
-			doc = Jsoup.connect(Parser.PROFILE_PAGE + url).get();
-			Elements heroName = doc.getElementsByClass("hero-name");
-			Elements liElements = heroName.select("ul");
-			
-			int playerNumber = Integer.parseInt(liElements.select("li").get(0).text());
-			String playerName = liElements.select("li").get(1).text();
-			
-			// Get the data from the overview page
-			Elements playerOverviewSection = doc.getElementsByClass("playerprofileoverview");
-			Elements tableRows = playerOverviewSection.select("tr");
-			double height = Double.parseDouble(tableRows.get(1).select("td").get(3).text().split(" ")[0]);
-			int age = Integer.parseInt(tableRows.get(2).select("td").get(1).text());
-			double weight = Double.parseDouble(tableRows.get(2).select("td").get(3).text().split(" ")[0]);
-			int appearances = Integer.parseInt(tableRows.get(6).select("td").get(1).text());
-			int careerGoals = Integer.parseInt(tableRows.get(7).select("td").get(1).text());
-			int yellowCards = Integer.parseInt(tableRows.get(8).select("td").get(1).text());
-			int redCards = Integer.parseInt(tableRows.get(9).select("td").get(1).text());
-			
-			// Get the data from the history page
-			// Need to get hold of the urlname for the player, the format is name-name-name
-			String[] splitUrl = url.split("/");
-			String urlPlayerName = splitUrl[splitUrl.length - 1];
-			
-			doc = Jsoup.connect(Parser.CAREER_PAGE + urlPlayerName).get();
-			Elements historyTable = doc.getElementsByClass("playerInfoPod");
-			Elements historyTableRows = historyTable.select("tr");
-			String gamesThisSeason = historyTableRows.get(1).select("td").get(1).text();
-
-			// Get the data from the stats page
-			doc = Jsoup.connect(Parser.STATS_PAGE + urlPlayerName).get();
-			Element statsElement = doc.getElementById("clubsTabsAttacking");
-			Elements ulStatsElements = statsElement.select("ul");
-			int seasonalGoals = Integer.parseInt(ulStatsElements.get(1).select("div").get(1).text());
-			int assists = Integer.parseInt(ulStatsElements.get(1).select("div").get(7).text());
-			
-			// Create a new player
-			if(isHomePlayer) {
-				homePlayer = new H2HPlayer(playerName, age, appearances, careerGoals, yellowCards, redCards, height, weight, gamesThisSeason, assists, playerNumber, seasonalGoals);
-			} else if(!isHomePlayer) {
-				awayPlayer = new H2HPlayer(playerName, age, appearances, careerGoals, yellowCards, redCards, height, weight, gamesThisSeason, assists, playerNumber, seasonalGoals);
-			}
-			
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			gui.showMessage("Ingen spillere med navn " + url + " tilgjengelig\nPrøv et nytt navn");
-			e.printStackTrace();
-		}
-		
-	}
+	
 	
 	/**
 	 * Method to show the player information for both players
@@ -265,52 +255,9 @@ public class Main {
 		return Integer.parseInt(temp.replace(".", ""));
 	}
 	
-	/*
-	 * Method to assign actionlisteners to the buttons
-	 */
-	private void setupActionListeners() {
-		Events e = new Events();
-		gui.getOpenFileBtn().setAction(new OpenFileAction("Åpne tekstfil"));
-		gui.getOpenFileMenuItem().setAction(new OpenFileAction("Åpne tekstfil"));
-		gui.getOpenFileMenuItem().setAccelerator(KeyStroke.getKeyStroke("ctrl O"));
-		gui.getOpenDir().setAction(new OpenDirectoryAction("Last mappe"));
-		gui.getRunButton().setAction(new RunAction("Kjør"));
-		gui.getCopyButton().setAction(new CopyAction("Kopier til clipboard"));
-		gui.getOpenOptaItem().addActionListener(e);
-		gui.getCreateFilesMenuItem().setAction(new CreateTextFilesAction("Opprett .txt-filer"));
-		gui.getExitItem().setAction(new ExitAction("Lukk"));
-		gui.getExitItem().setAccelerator(KeyStroke.getKeyStroke("ctrl Q"));
-		gui.getRemoveFirstNameCheckBox().setAction(new RunAction("Fjern fornavn"));
-		gui.getOrderCheckBox().setAction(new RunAction("Reverse"));
-		gui.getCategoryDropdow().setAction(new RunAction());
-		gui.getNumberOfPlayersArea().addActionListener(new RunAction());
-		gui.getShowCategoryCheckBox().setAction(new RunAction("Vis kategorinavn"));
-		gui.getSelectTextCheckBox().addActionListener(e);
-		
-		gui.getHomeTeamNames().addActionListener(e);
-		gui.getAwayTeamNames().addActionListener(e);
-		gui.getH2hButton().addActionListener(e);
-		
-		gui.getGenerateReportButton().addActionListener(new GenerateRapportAction("Full rapport"));
-		gui.getFileComboBox().addActionListener(e);
-		
-		// Key events
-		gui.getOpenFileBtn().getActionMap().put("openFile", new OpenFileAction());
-		gui.getOpenFileBtn().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("control O"), "openFile");
-		gui.getOpenFileBtn().getInputMap(JComponent.WHEN_FOCUSED).put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, KeyEvent.CTRL_MASK), "openFile");
-		
-		gui.getRunButton().getActionMap().put("runCalculations", new RunAction());
-		gui.getRunButton().getInputMap().put(KeyStroke.getKeyStroke((char) KeyEvent.VK_ENTER), "runCalculations");
-		
-		gui.getCopyButton().getActionMap().put("copyContent", new CopyAction());
-		gui.getCopyButton().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_C, KeyEvent.CTRL_DOWN_MASK), "copyContent");
-		
-		gui.getExitItem().getActionMap().put("exitAction", new ExitAction());
-		gui.getExitItem().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("ctrl Q"), "exitAction");
-		
-		gui.getCreateFilesMenuItem().getActionMap().put("textFileAction", new CreateTextFilesAction("Opprett .txt-filer"));
-		gui.getCreateFilesMenuItem().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_DOWN_MASK), "textFileAction");
-	}
+	//############# Slutt på H2H - kode ################//
+	
+	//############# Opta-løpestats - kode ################//
 	
 	/*
 	 * Method to open a filechooser
@@ -587,6 +534,8 @@ s	 */
 		}
 	}
 	
+	//############# Slutt på Opta-løpestats - kode ################//
+	
 	/*
 	 * Private class that implements the ActionListener interface
 	 */
@@ -604,44 +553,59 @@ s	 */
 			} else if (e.getSource() == gui.getH2hButton()) {
 				// Hvis brukeren ikke skriver i noen av tekstfeltene
 				if(!gui.getHomeTextSearchBox().isSelected() && !gui.getAwayTexSearchCheckBox().isSelected()) {
-					
-					String homePlayerUrl = homePlayers.get((String) gui.getHomePlayerNames().getSelectedItem());
-					if(homePlayerUrl != null) {
-						processPlayerUrl(homePlayerUrl, true);
-					}
-					
-					String awayPlayerUrl = awayPlayers.get((String) gui.getAwayPlayerNames().getSelectedItem());
-					
-					if(awayPlayerUrl != null) {
-						processPlayerUrl(awayPlayerUrl, false);
+					try {
+						String homePlayerUrl = homePlayers.get((String) gui.getHomePlayerNames().getSelectedItem());
+						if(homePlayerUrl != null) {
+							homePlayer = h2hParser.processPlayerUrl(homePlayerUrl, true);
+						}
+						
+						String awayPlayerUrl = awayPlayers.get((String) gui.getAwayPlayerNames().getSelectedItem());
+						
+						if(awayPlayerUrl != null) {
+							awayPlayer = h2hParser.processPlayerUrl(awayPlayerUrl, false);
+						}
+					} catch (IOException ex) {
+						gui.showMessage(ex.getMessage());
 					}
 				// Hvis brukeren skriver i hjemmelaget sitt tekstfelt, men ikke bortelaget
 				} else if (gui.getHomeTextSearchBox().isSelected() && !gui.getAwayTexSearchCheckBox().isSelected()) {
-					String playerUrlName = convertToPlayerUrl(gui.getHomeTeamSearch().getText());
-					processPlayerUrl(playerUrlName, true);
-					
-					String awayPlayerUrl = awayPlayers.get((String) gui.getAwayPlayerNames().getSelectedItem());
-					
-					if(awayPlayerUrl != null) {
-						processPlayerUrl(awayPlayerUrl, false);
+					try {
+						String playerUrlName = convertToPlayerUrl(gui.getHomeTeamSearch().getText());
+						homePlayer = h2hParser.processPlayerUrl(playerUrlName, true);
+						
+						String awayPlayerUrl = awayPlayers.get((String) gui.getAwayPlayerNames().getSelectedItem());
+						
+						if(awayPlayerUrl != null) {
+							awayPlayer = h2hParser.processPlayerUrl(awayPlayerUrl, false);
+						}
+					} catch(IOException ex) {
+						gui.showMessage(ex.getMessage());
 					}
-				
 				// Hvis brukeren skriver i bortelaget sitt tekstfelt, men ikke i hjemmelaget
 				} else if(!gui.getHomeTextSearchBox().isSelected() && gui.getAwayTexSearchCheckBox().isSelected()) {
-					String playerUrlName = convertToPlayerUrl(gui.getAwayTeamSearch().getText());
-					processPlayerUrl(playerUrlName, false);
-					
-					String homePlayerUrl = homePlayers.get((String) gui.getHomePlayerNames().getSelectedItem());
-					
-					if(homePlayerUrl != null) {
-						processPlayerUrl(homePlayerUrl, true);
+					try {
+						String playerUrlName = convertToPlayerUrl(gui.getAwayTeamSearch().getText());
+						homePlayer = h2hParser.processPlayerUrl(playerUrlName, false);
+						
+						String homePlayerUrl = homePlayers.get((String) gui.getHomePlayerNames().getSelectedItem());
+						
+						if(homePlayerUrl != null) {
+							awayPlayer = h2hParser.processPlayerUrl(homePlayerUrl, true);
+						}
+					} catch(IOException ex) {
+						gui.showMessage(ex.getMessage());
 					}
 				// Hvis brukeren skriver i både hjemmelaget og bortelaget sitt felt
 				} else if (gui.getHomeTextSearchBox().isSelected() && gui.getAwayTexSearchCheckBox().isSelected()) {
-					String homePlayerUrl = convertToPlayerUrl(gui.getHomeTeamSearch().getText());
-					String awayPlayerUrl = convertToPlayerUrl(gui.getAwayTeamSearch().getText());
-					processPlayerUrl(homePlayerUrl, true);
-					processPlayerUrl(awayPlayerUrl, false);
+					try {
+						String homePlayerUrl = convertToPlayerUrl(gui.getHomeTeamSearch().getText());
+						String awayPlayerUrl = convertToPlayerUrl(gui.getAwayTeamSearch().getText());
+						homePlayer = h2hParser.processPlayerUrl(homePlayerUrl, true);
+						awayPlayer = h2hParser.processPlayerUrl(awayPlayerUrl, false);
+					} catch(IOException ex) {
+						gui.showMessage(ex.getMessage());
+					}
+					
 				}
 				showPlayerInfo(homePlayer, awayPlayer);
 				
