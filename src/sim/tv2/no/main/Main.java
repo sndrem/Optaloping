@@ -797,7 +797,7 @@ s	 */
 		
 		public void actionPerformed(ActionEvent e) {
 			int choice = JOptionPane.showConfirmDialog(gui, "Er du sikker på at du vil stenge programmet", "Stenge programmet?", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-			if(choice == 0) {
+			if(choice == JOptionPane.OK_OPTION) {
 				System.exit(0);
 			}
 		}
