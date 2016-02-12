@@ -27,6 +27,8 @@ import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.TitledBorder;
 
+import sim.tv2.no.utilities.Util;
+
 
 /*
  * Class for the graphical user interface 
@@ -320,7 +322,11 @@ public class Gui extends JFrame {
 		chooser.setDialogType(JFileChooser.SAVE_DIALOG);
 		int choice = chooser.showSaveDialog(this);
 		if(choice == JFileChooser.APPROVE_OPTION) {
-			return chooser.getSelectedFile().getParent();
+			if(!Util.isWindows()) {
+				return chooser.getSelectedFile().getParent();
+			} else {
+				return chooser.getSelectedFile().getAbsolutePath();
+			}
 		} else {
 			return null;
 		}
