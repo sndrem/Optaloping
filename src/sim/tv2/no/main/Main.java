@@ -39,6 +39,7 @@ import sim.tv2.no.parser.Parser;
 import sim.tv2.no.player.H2HPlayer;
 import sim.tv2.no.player.Player;
 import sim.tv2.no.team.Team;
+import sim.tv2.no.utilities.Util;
 import sim.tv2.no.webDriver.OpenOpta;
 
 /*
@@ -681,7 +682,11 @@ s	 */
 			e.printStackTrace();
 		}
 		writer.append("home:" + match.getHomeTeam().toLowerCase());
-		writer.append("\n\n");
+		if(!Util.isWindows()) {
+			writer.append("\n\n");
+		} else {
+			writer.append("\r\n\r\n");
+		}
 		writer.append("away:" + match.getAwayTeam().toLowerCase());
 		writer.close();
 	}
