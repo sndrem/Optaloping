@@ -670,7 +670,12 @@ s	 */
 	 * @param directory - the directory where we want to store the file
 	 */
 	private void generateFile(Match match, String directory) {
-		File matchFile = new File(directory + "/" + match.getHomeTeam() + "-VS-" + match.getAwayTeam() + ".txt");
+		File matchFile = null;
+		if(!Util.isWindows()) {
+			matchFile = new File(directory + "/" + Util.removeWhiteSpace(match.getHomeTeam()) + "-VS-" + Util.removeWhiteSpace(match.getAwayTeam()) + ".txt");
+		} else {
+			matchFile = new File(directory + "\\" + Util.removeWhiteSpace(match.getHomeTeam()) + "-VS-" + Util.removeWhiteSpace(match.getAwayTeam()) + ".txt");
+		}
 		PrintWriter writer = null;
 		try {
 			writer = new PrintWriter(matchFile, "UTF-8");
@@ -681,13 +686,13 @@ s	 */
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		writer.append("home:" + match.getHomeTeam().toLowerCase());
+		writer.append("home:" + Util.removeWhiteSpace(match.getHomeTeam().toLowerCase()));
 		if(!Util.isWindows()) {
 			writer.append("\n\n");
 		} else {
 			writer.append("\r\n\r\n");
 		}
-		writer.append("away:" + match.getAwayTeam().toLowerCase());
+		writer.append("away:" + Util.removeWhiteSpace(match.getAwayTeam().toLowerCase()));
 		writer.close();
 	}
 	
@@ -696,16 +701,18 @@ s	 */
 	 */
 	public void loadDirectory() {
 		String directory = gui.showFileChooser();
-		List<String> fileNames = parser.loadDirectory(directory);
-		File[] files = new File[fileNames.size()];
-		for(int i = 0; i < fileNames.size(); i++) {
-			File file = parser.createFile(directory, fileNames.get(i));
-			files[i] = file;
+		if(directory != null) {
+			List<String> fileNames = parser.loadDirectory(directory);
+			File[] files = new File[fileNames.size()];
+			for(int i = 0; i < fileNames.size(); i++) {
+				File file = parser.createFile(directory, fileNames.get(i));
+				files[i] = file;
+			}
+			parser.addFilesToFileMap(files);
+			gui.addFilesToDropdown(files);
+			processFiles(files);
+			gui.getFileComboBox().setEnabled(true);
 		}
-		parser.addFilesToFileMap(files);
-		gui.addFilesToDropdown(files);
-		processFiles(files);
-		gui.getFileComboBox().setEnabled(true);
 	}
 	
 	

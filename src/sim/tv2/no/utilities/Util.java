@@ -12,5 +12,9 @@ public class Util {
 			return true;
 		} else return false;
 	}
+	
+	public static String removeWhiteSpace(String string) {
+		return string.replace("\u00a0", " ");
+	}
 
 }

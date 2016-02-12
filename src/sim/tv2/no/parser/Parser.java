@@ -236,7 +236,8 @@ public class Parser{
 			Elements nextMatchRows = nextMatchSection.select("tr");
 			for(Element row : nextMatchRows) {
 				String homeTeam = row.getElementsByClass("sd_fixtures_home").text();
-				String awayTeam = row.getElementsByClass("sd_fixtures_away").text();
+				String awayTeam = row.getElementsByClass("sd_fixtures_away").text();			
+				
 				Match match = new Match(homeTeam, awayTeam);
 				matches.add(match);
 			}
