@@ -73,6 +73,7 @@ public class Gui extends JFrame {
 	private JMenuItem createFilesMenuItem;
 	private JMenuItem openDir;
 	private JComboBox<String> fileComboBox;
+	private JMenuItem resetItem;
 	
 	private Gui() {
 		setupGui();
@@ -306,10 +307,20 @@ public class Gui extends JFrame {
 		setOpenDir(new JMenuItem("Last mappe"));
 		menu.add(getOpenDir());
 		
+		setResetItem(new JMenuItem("Reset"));
+		menu.add(getResetItem());
+		
 		setExitItem(new JMenuItem("Lukk"));
 		menu.add(getExitItem());
 		
 		this.setJMenuBar(menuBar);
+	}
+	
+	/**
+	 * Method to reset the gui components
+	 */
+	public void reset() {
+		getFileComboBox().removeAllItems();
 	}
 	
 	/**
@@ -822,5 +833,19 @@ public class Gui extends JFrame {
 	 */
 	public void setFileComboBox(JComboBox<String> fileComboBox) {
 		this.fileComboBox = fileComboBox;
+	}
+
+	/**
+	 * @return the resetItem
+	 */
+	public JMenuItem getResetItem() {
+		return resetItem;
+	}
+
+	/**
+	 * @param resetItem the resetItem to set
+	 */
+	public void setResetItem(JMenuItem resetItem) {
+		this.resetItem = resetItem;
 	}
 }
