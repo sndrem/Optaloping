@@ -113,6 +113,8 @@ public class Main {
 		gui.getGenerateReportButton().addActionListener(new GenerateRapportAction("Full rapport"));
 		gui.getFileComboBox().addActionListener(e);
 		
+		gui.getResetItem().addActionListener(e);
+		
 		// Key events
 		gui.getOpenFileBtn().getActionMap().put("openFile", new OpenFileAction());
 		gui.getOpenFileBtn().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("control O"), "openFile");
@@ -305,7 +307,10 @@ public class Main {
 					showFileProcessInfo(file.getName());
 					parser.getFileMap().put(file.getName(), file);
 					
-				} catch (NumberFormatException ex) {
+				} catch(NullPointerException e) {
+					System.out.println(e.getMessage());
+				}catch (NumberFormatException ex) {
+				
 					System.out.println(ex.getMessage());
 					if(files.length == 1) {
 						showFileProcessError(ex, file.getName(), Color.RED);
@@ -535,6 +540,17 @@ s	 */
 		}
 	}
 	
+	/**
+	 * Method to reset the program
+	 * This method removes all files and acts just as if you were starting the program again
+	 * @author Sindre
+	 *
+	 */
+	private void reset() {
+		parser.reset();
+		gui.reset();
+	}
+	
 	//############# Slutt på Opta-løpestats - kode ################//
 	
 	/*
@@ -628,6 +644,8 @@ s	 */
 				files[0] = file;
 				processFiles(files);
 				calculate(gui.getNumberOfPlayersArea().getSelectedIndex(), gui.getCategoryDropdow().getSelectedIndex(), false);
+			} else if(e.getSource() == gui.getResetItem()) {
+				reset();
 			}
 		}
 	}
@@ -676,10 +694,11 @@ s	 */
 		File matchFile = null;
 		
 		if(!Util.isWindows()) {
+
 			matchFile = new File(directory + "/" + Util.padIndex(index) + "_" + Util.removeWhiteSpace(match.getHomeTeam()) + "-VS-" + Util.removeWhiteSpace(match.getAwayTeam()) + ".txt");
 		} else {
 			matchFile = new File(directory + "\\" + Util.padIndex(index) + "_" + Util.removeWhiteSpace(match.getHomeTeam()) + "-VS-" + Util.removeWhiteSpace(match.getAwayTeam()) + ".txt");
-		}
+		} 
 		PrintWriter writer = null;
 		try {
 			writer = new PrintWriter(matchFile, "UTF-8");
@@ -690,13 +709,18 @@ s	 */
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		writer.append("home:" + Util.removeWhiteSpace(match.getHomeTeam().toLowerCase()));
+		writer.append("home:" + match.getHomeTeam().toLowerCase());
 		if(!Util.isWindows()) {
 			writer.append("\n\n");
 		} else {
 			writer.append("\r\n\r\n");
 		}
-		writer.append("away:" + Util.removeWhiteSpace(match.getAwayTeam().toLowerCase()));
+		writer.append("away:" + match.getAwayTeam().toLowerCase());
+		if(!Util.isWindows()) {
+			writer.append("\n");
+		} else {
+			writer.append("\r\n");
+		}
 		writer.close();
 	}
 	

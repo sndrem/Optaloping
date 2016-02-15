@@ -19,6 +19,7 @@ import sim.tv2.no.exceptions.GetMatchesException;
 import sim.tv2.no.match.Match;
 import sim.tv2.no.player.Player;
 import sim.tv2.no.team.Team;
+import sim.tv2.no.utilities.Util;
 
 /*
  * Class for the parser
@@ -50,51 +51,53 @@ public class Parser{
 	 * @return List<Player> the list of players
 	 */
 	public List<Team> parseFile(File file) throws IOException, NumberFormatException {
-		BufferedReader br = new BufferedReader(new FileReader(file));
-		int lineNumber = 1;
-		List<Player> teamPlayers = new ArrayList<Player>();
-		boolean homeOrAway = false;
-		try {
-			String line;
-			String teamName = "";
-			while((line = br.readLine()) != null) {
-				if(line.toLowerCase().startsWith("home")) {
-					teamName = line.split(":")[1];
-					homeOrAway = true;
-					continue;
-				} else if(line.toLowerCase().startsWith("away")) {
-					teamName = line.split(":")[1];
-					homeOrAway = false;
-					continue;
+		if(file != null) {
+			BufferedReader br = new BufferedReader(new FileReader(file));
+			int lineNumber = 1;
+			List<Player> teamPlayers = new ArrayList<Player>();
+			boolean homeOrAway = false;
+			try {
+				String line;
+				String teamName = "";
+				while((line = br.readLine()) != null) {
+					if(line.toLowerCase().startsWith("home")) {
+						teamName = line.split(":")[1];
+						homeOrAway = true;
+						continue;
+					} else if(line.toLowerCase().startsWith("away")) {
+						teamName = line.split(":")[1];
+						homeOrAway = false;
+						continue;
+					}
+					
+					String[] columns = line.split("\t");
+					if(columns.length >= 2) {
+						
+						int number = Integer.parseInt(columns[0]);
+						String name = columns[1];
+						float distance = Float.parseFloat(columns[2]);
+						int sprints = Integer.parseInt(columns[3]);
+						float avgSpeed = Float.parseFloat(columns[4]);
+						float topSpeed = Float.parseFloat(columns[5]);
+						
+						Player player = new Player(name, number, sprints, distance, avgSpeed, topSpeed, teamName, homeOrAway);
+						teamPlayers.add(player);
+						lineNumber++;
+					}
 				}
 				
-				String[] columns = line.split("\t");
-				if(columns.length >= 2) {
-					
-					int number = Integer.parseInt(columns[0]);
-					String name = columns[1];
-					float distance = Float.parseFloat(columns[2]);
-					int sprints = Integer.parseInt(columns[3]);
-					float avgSpeed = Float.parseFloat(columns[4]);
-					float topSpeed = Float.parseFloat(columns[5]);
-					
-					Player player = new Player(name, number, sprints, distance, avgSpeed, topSpeed, teamName, homeOrAway);
-					teamPlayers.add(player);
-					lineNumber++;
-				}
+			} catch(NumberFormatException e) {
+				System.out.println(e.getMessage());
+				br.close();
+				throw new NumberFormatException("Feil format på " + file.getName() + ". Dobbelsjekk tekstfilen og prøv igjen. Sjekk linje: " + lineNumber);
+				
+			} catch(IOException e) {
+				System.out.println(e.getMessage());
 			}
-			
-		} catch(NumberFormatException e) {
-			System.out.println(e.getMessage());
 			br.close();
-			throw new NumberFormatException("Feil format på " + file.getName() + ". Dobbelsjekk tekstfilen og prøv igjen. Sjekk linje: " + lineNumber);
 			
-		} catch(IOException e) {
-			System.out.println(e.getMessage());
+			dividePlayers(teamPlayers);
 		}
-		br.close();
-		
-		dividePlayers(teamPlayers);
 		
 		return getTeams();
 	}
@@ -116,6 +119,14 @@ public class Parser{
 			File file = files[i];
 			fileMap.put(file.getName(), file);
 		}
+	}
+	
+	/**
+	 * This method resets the parser
+	 */
+	public void reset() {
+		this.teams.clear();
+		this.fileMap.clear();
 	}
 	
 	/**
@@ -238,8 +249,8 @@ public class Parser{
 			Element nextMatchSection = doc.getElementById("sd_fixtures_table_next");
 			Elements nextMatchRows = nextMatchSection.select("tr");
 			for(Element row : nextMatchRows) {
-				String homeTeam = row.getElementsByClass("sd_fixtures_home").text();
-				String awayTeam = row.getElementsByClass("sd_fixtures_away").text();			
+				String homeTeam = Util.removeWhiteSpace(row.getElementsByClass("sd_fixtures_home").text());
+				String awayTeam = Util.removeWhiteSpace(row.getElementsByClass("sd_fixtures_away").text());			
 				
 				Match match = new Match(homeTeam, awayTeam);
 				matches.add(match);
@@ -260,8 +271,20 @@ public class Parser{
 		int size = 0;
 		if(teams.size() > 0) {
 			
-			Team homeTeam = teams.get(0);
-			Team awayTeam = teams.get(1);
+			Team homeTeam = null;
+			Team awayTeam = null;
+			try {
+				homeTeam = teams.get(0);
+				
+			} catch(IndexOutOfBoundsException e) {
+				size = 5; 
+			}
+			
+			try {
+				awayTeam = teams.get(1);
+			} catch(IndexOutOfBoundsException exe) {
+				size = 5;
+			}
 			if(homeTeam != null && awayTeam != null) {
 				if(homeTeam.getPlayers().size() <= awayTeam.getPlayers().size()) {
 					size = homeTeam.getPlayers().size();
