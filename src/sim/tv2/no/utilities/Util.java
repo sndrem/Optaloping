@@ -16,5 +16,14 @@ public class Util {
 	public static String removeWhiteSpace(String string) {
 		return string.replace("\u00a0", " ");
 	}
+	
+	public static String padIndex(int index) {
+		
+		if(index < 10) {
+			return "0" + index;
+		} else {
+			return "" + index;
+		}
+	}
 
 }

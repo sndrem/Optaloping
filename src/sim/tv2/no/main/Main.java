@@ -659,8 +659,10 @@ s	 */
 			gui.showMessage(e.getMessage());
 		}
 		
+		int index = 0;
 		for(Match match : matches) {
-			generateFile(match, directory);
+			generateFile(match, directory, index);
+			index++;
 		}
 	}
 	
@@ -668,13 +670,15 @@ s	 */
 	 * Method to generate a text-file 
 	 * @param match - the match we want to create the file for
 	 * @param directory - the directory where we want to store the file
+	 * @param index - the index for the numbering of the file
 	 */
-	private void generateFile(Match match, String directory) {
+	private void generateFile(Match match, String directory, int index) {
 		File matchFile = null;
+		
 		if(!Util.isWindows()) {
-			matchFile = new File(directory + "/" + Util.removeWhiteSpace(match.getHomeTeam()) + "-VS-" + Util.removeWhiteSpace(match.getAwayTeam()) + ".txt");
+			matchFile = new File(directory + "/" + Util.padIndex(index) + "_" + Util.removeWhiteSpace(match.getHomeTeam()) + "-VS-" + Util.removeWhiteSpace(match.getAwayTeam()) + ".txt");
 		} else {
-			matchFile = new File(directory + "\\" + Util.removeWhiteSpace(match.getHomeTeam()) + "-VS-" + Util.removeWhiteSpace(match.getAwayTeam()) + ".txt");
+			matchFile = new File(directory + "\\" + Util.padIndex(index) + "_" + Util.removeWhiteSpace(match.getHomeTeam()) + "-VS-" + Util.removeWhiteSpace(match.getAwayTeam()) + ".txt");
 		}
 		PrintWriter writer = null;
 		try {
@@ -695,6 +699,7 @@ s	 */
 		writer.append("away:" + Util.removeWhiteSpace(match.getAwayTeam().toLowerCase()));
 		writer.close();
 	}
+	
 	
 	/**
 	 * Method to load all files in a given directory

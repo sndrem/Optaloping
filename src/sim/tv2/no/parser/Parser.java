@@ -149,7 +149,10 @@ public class Parser{
 	}
 	
 	/**
-	 * Method to create a file and return it
+	 * method to create a file and return it
+	 * @param directory the directory you want the file to be stored in
+	 * @param fileName the name of the file
+	 * @return the file
 	 */
 	public File createFile(String directory, String fileName) {
 		String osVersion = System.getProperty("os.name");
