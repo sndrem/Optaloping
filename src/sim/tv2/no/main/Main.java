@@ -25,6 +25,8 @@ import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
+import javax.swing.event.ListDataEvent;
+import javax.swing.event.ListDataListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import sim.tv2.no.Head2Head.H2HParser;
@@ -58,6 +60,7 @@ public class Main {
 	private Map<String, Team> teams = new HashMap<String, Team>();
 	private Map<String, String> homePlayers;
 	private Map<String, String> awayPlayers;
+	private Map<String, String> altOmFotballTeams = new HashMap<String, String>();
 	private H2HParser h2hParser;
 	
 	private H2HPlayer homePlayer;
@@ -78,6 +81,7 @@ public class Main {
 				gui = Gui.getInstance();
 				parser = new Parser();
 				setupTeams();
+				setupPlTeams();
 				setupActionListeners();
 				h2hParser = new H2HParser();
 			}
@@ -115,6 +119,8 @@ public class Main {
 		
 		gui.getResetItem().addActionListener(e);
 		
+		gui.getTeamStatList().addActionListener(e);
+		
 		// Key events
 		gui.getOpenFileBtn().getActionMap().put("openFile", new OpenFileAction());
 		gui.getOpenFileBtn().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke("control O"), "openFile");
@@ -139,7 +145,6 @@ public class Main {
 	 * Method to initialize the teams used for H2H
 	 */
 	private void setupTeams() {
-//		teams = parser.loadTeamNames("lagnavn/teamNames.txt");
 		 teams.put("Arsenal", new Team("Arsenal", "ARS", 3));
 		 teams.put("Aston Villa", new Team("Aston Villa", "AVI", 7));
 		 teams.put("Bournemouth", new Team("Bournemouth", "BOU", 91));
@@ -199,7 +204,7 @@ public class Main {
 		}
 	}
 	
-	
+		
 	
 	/**
 	 * Method to show the player information for both players
@@ -646,6 +651,10 @@ s	 */
 				calculate(gui.getNumberOfPlayersArea().getSelectedIndex(), gui.getCategoryDropdow().getSelectedIndex(), false);
 			} else if(e.getSource() == gui.getResetItem()) {
 				reset();
+			} else if(e.getSource() == gui.getTeamStatList()) {
+				String teamName = (String) gui.getTeamStatList().getSelectedItem();
+				String url = altOmFotballTeams.get(teamName);
+				System.out.println("Valgt: " + teamName + " med url: " + url);
 			}
 		}
 	}
@@ -741,6 +750,21 @@ s	 */
 			gui.addFilesToDropdown(files);
 			processFiles(files);
 			gui.getFileComboBox().setEnabled(true);
+		}
+	}
+	
+	// ####### Team stat code #######
+	
+	/**
+	 * Method to fetch all urls of the teams in the premier league
+	 */
+	private void setupPlTeams() {
+		this.altOmFotballTeams = parser.fetchAltOmFotballTeamIds();
+		for(String key : this.altOmFotballTeams.keySet()) {
+			if(key.equals("")) {
+				continue;
+			}
+			gui.getTeamStatModel().addElement(key);
 		}
 	}
 	
@@ -906,5 +930,5 @@ s	 */
 		}
 		
 	}
-	
+		
 }

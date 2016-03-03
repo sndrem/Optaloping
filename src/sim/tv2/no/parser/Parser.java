@@ -36,6 +36,7 @@ public class Parser{
 	public static final String TEAM_PAGE = "http://www.premierleague.com/en-gb/players/index.html?paramSearchType=BY_CLUB&paramSeason=squad&paramClubId=";
 	public static final String PREMIER_LEAGUE = "http://www.premierleague.com/";
 	private static final String ALT_OM_FOTBALL_PL = "http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=230&useFullUrl=false";
+	
 	private Map<String, File> fileMap;
 	private String directory;
 
@@ -102,6 +103,11 @@ public class Parser{
 		return getTeams();
 	}
 	
+	/**
+	 * Method to load a directory
+	 * @param directory the directory to load
+	 * @return a list of all files selected
+	 */
 	public List<String> loadDirectory(String directory) {
 		List<String> fileNames = new ArrayList<String>();
 		
@@ -114,6 +120,10 @@ public class Parser{
 		return fileNames;
 	}
 	
+	/**
+	 * Method to add the files to a file map
+	 * @param files the files to be added
+	 */
 	public void addFilesToFileMap(File[] files) {
 		for (int i = 0; i < files.length; i++) {
 			File file = files[i];
@@ -201,6 +211,9 @@ public class Parser{
 			}
 		return players;
 	}
+	
+	
+	
 	
 	/**
 	 * Method to read the team names and return a hashmap
@@ -296,6 +309,30 @@ public class Parser{
 		return size;
 	}
 
+	/**
+	 * Method to fetch all the urls for the teams in the premier league via the AltOmFotball page
+	 */
+	public Map<String, String> fetchAltOmFotballTeamIds() {
+		String altOmFotballPL = "http://www.altomfotball.no/element.do?cmd=tournament&tournamentId=230&useFullUrl=false";
+		Map<String, String> teams = new HashMap<String, String>();
+		
+		try {
+			Document doc = Jsoup.connect(altOmFotballPL).get();
+			Element table = doc.getElementById("sd_table_230");
+			Elements td_teams = table.getElementsByClass("sd_table_team");
+			for(Element td : td_teams) {
+				Elements a_tag = td.getElementsByTag("a");
+				String teamName = a_tag.text();
+				String url = a_tag.attr("href");
+				teams.put(teamName, url);
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return teams;
+		
+	}
 
 	/**
 	 * @return the teams

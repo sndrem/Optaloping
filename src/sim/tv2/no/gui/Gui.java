@@ -74,6 +74,10 @@ public class Gui extends JFrame {
 	private JMenuItem openDir;
 	private JComboBox<String> fileComboBox;
 	private JMenuItem resetItem;
+	private JPanel teamStatsPanel;
+	private DefaultComboBoxModel<String> teamStatModel;
+	private JTextArea teamStatTxtArea;
+	private JComboBox<String> teamStatList;
 	
 	private Gui() {
 		setupGui();
@@ -105,15 +109,38 @@ public class Gui extends JFrame {
 		
 		createOptaRunningPanel();
 		createHead2HeadPanel();
+		createTeamStatsPanel();
 		
 		tabbedPane = new JTabbedPane();
 		tabbedPane.add("Løping", getOptaRunningPanel());
 		tabbedPane.add("H2H", getHead2headPanel());
+		tabbedPane.add("Lagstats", getTeamStatsPanel());
 		
 		
 		this.add(tabbedPane);
 		
 		this.setVisible(true);
+		
+	}
+	
+	private void createTeamStatsPanel() {
+		setTeamStatsPanel(new JPanel(new BorderLayout()));
+		
+		JPanel buttonPanel = new JPanel(new BorderLayout());
+		
+		setTeamStatList(new JComboBox<String>());
+		setTeamStatModel(new DefaultComboBoxModel<String>());
+		getTeamStatList().setModel(getTeamStatModel());
+		
+		setTeamStatTxtArea(new JTextArea());
+		getTeamStatTxtArea().setEditable(true);
+		getTeamStatTxtArea().setLineWrap(true);
+		getTeamStatTxtArea().setWrapStyleWord(true);
+		
+		
+		buttonPanel.add(getTeamStatList());
+		getTeamStatsPanel().add(buttonPanel, BorderLayout.NORTH);
+		getTeamStatsPanel().add(getTeamStatTxtArea(), BorderLayout.CENTER);
 		
 	}
 	
@@ -847,5 +874,61 @@ public class Gui extends JFrame {
 	 */
 	public void setResetItem(JMenuItem resetItem) {
 		this.resetItem = resetItem;
+	}
+
+	/**
+	 * @return the teamStatsPanel
+	 */
+	public JPanel getTeamStatsPanel() {
+		return teamStatsPanel;
+	}
+
+	/**
+	 * @param teamStatsPanel the teamStatsPanel to set
+	 */
+	public void setTeamStatsPanel(JPanel teamStatsPanel) {
+		this.teamStatsPanel = teamStatsPanel;
+	}
+
+	/**
+	 * @return the teamStatModel
+	 */
+	public DefaultComboBoxModel<String> getTeamStatModel() {
+		return teamStatModel;
+	}
+
+	/**
+	 * @param teamStatModel the teamStatModel to set
+	 */
+	public void setTeamStatModel(DefaultComboBoxModel<String> teamStatModel) {
+		this.teamStatModel = teamStatModel;
+	}
+
+	/**
+	 * @return the teamStatTxtArea
+	 */
+	public JTextArea getTeamStatTxtArea() {
+		return teamStatTxtArea;
+	}
+
+	/**
+	 * @param teamStatTxtArea the teamStatTxtArea to set
+	 */
+	public void setTeamStatTxtArea(JTextArea teamStatTxtArea) {
+		this.teamStatTxtArea = teamStatTxtArea;
+	}
+
+	/**
+	 * @return the teamStatList
+	 */
+	public JComboBox<String> getTeamStatList() {
+		return teamStatList;
+	}
+
+	/**
+	 * @param teamStatList the teamStatList to set
+	 */
+	public void setTeamStatList(JComboBox<String> teamStatList) {
+		this.teamStatList = teamStatList;
 	}
 }

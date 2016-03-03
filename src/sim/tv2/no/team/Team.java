@@ -14,7 +14,7 @@ public class Team {
 	
 	private String teamName;
 	private String teamAbbreviation;
-	private int teamId;
+	private int teamId, matchesWon, matchesDrawn, matchesLost;
 	private List<Player> players;
 	
 	/**
@@ -84,6 +84,48 @@ public class Team {
 	
 	public String toString() {
 		return this.teamName;
+	}
+
+	/**
+	 * @return the matchesWon
+	 */
+	public int getMatchesWon() {
+		return matchesWon;
+	}
+
+	/**
+	 * @param matchesWon the matchesWon to set
+	 */
+	public void setMatchesWon(int matchesWon) {
+		this.matchesWon = matchesWon;
+	}
+
+	/**
+	 * @return the matchesDrawn
+	 */
+	public int getMatchesDrawn() {
+		return matchesDrawn;
+	}
+
+	/**
+	 * @param matchesDrawn the matchesDrawn to set
+	 */
+	public void setMatchesDrawn(int matchesDrawn) {
+		this.matchesDrawn = matchesDrawn;
+	}
+
+	/**
+	 * @return the matchesLost
+	 */
+	public int getMatchesLost() {
+		return matchesLost;
+	}
+
+	/**
+	 * @param matchesLost the matchesLost to set
+	 */
+	public void setMatchesLost(int matchesLost) {
+		this.matchesLost = matchesLost;
 	}
 	
 	
