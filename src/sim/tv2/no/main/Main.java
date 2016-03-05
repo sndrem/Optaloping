@@ -667,7 +667,7 @@ s	 */
 		String output = "";
 		gui.getOutputPane().setText(output);
 		for(int i = 0; i < categories; i++) {
-			output += calculate(5, i, true);
+			output += calculate(4, i, true);
 		}
 		gui.getOutputPane().setText(output);
 	}
