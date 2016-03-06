@@ -288,6 +288,7 @@ public class Main {
 			
 			processFiles(files);
 			gui.getRunButton().setEnabled(true);
+			gui.getFileComboBox().setEnabled(true);
 			gui.getCategoryDropdow().setEnabled(true);
 			gui.getRemoveFirstNameCheckBox().setEnabled(true);
 			gui.getOrderCheckBox().setEnabled(true);
