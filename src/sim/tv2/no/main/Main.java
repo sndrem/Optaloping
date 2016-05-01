@@ -19,14 +19,13 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.AbstractAction;
+import javax.swing.ComboBoxModel;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ListDataEvent;
-import javax.swing.event.ListDataListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import sim.tv2.no.Head2Head.H2HParser;
@@ -284,6 +283,7 @@ public class Main {
 				gui.getStatusTextArea().setText("Åpnet flere filer");
 			}
 			parser.addFilesToFileMap(files);
+			
 			gui.addFilesToDropdown(files);
 			
 			processFiles(files);
@@ -295,7 +295,7 @@ public class Main {
 			gui.getRunButton().requestFocus();
 		} 
 	}
-	
+		
 	/*
 	 * Method to process a file
 	 * @params file 	the file to parse
