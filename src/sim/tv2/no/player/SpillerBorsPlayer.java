@@ -37,5 +37,9 @@ public class SpillerBorsPlayer extends Player {
 	public String toString() {
 		return super.getName();
 	}
+	
+	public String getDogbarText() {
+		return super.getName() + " - " + this.score + ", ";
+	}
 
 }

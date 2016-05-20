@@ -25,6 +25,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.JToolBar;
 import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
@@ -82,6 +83,8 @@ public class Gui extends JFrame {
 	private JButton calculateSumButton;
 	private List<JComboBox<SpillerBorsPlayer>> inputFields;
 	private JLabel sumLabel;
+	private JButton createDogbarText;
+	private JTextField dogbarField;
 	
 	private Gui() {
 		setupGui();
@@ -139,10 +142,17 @@ public class Gui extends JFrame {
 		
 		getPlayerBorsPanel().add(playerPanel);
 		setCalculateSumButton(new JButton("Summer spillere"));
+		setCreateDogbarText(new JButton("Generer dogbar-tekst"));
+		
+		setDogbarField(new JTextField(50));
+		getDogbarField().setBorder(new TitledBorder("Tekst for Dogbar"));
+		
 		getPlayerBorsPanel().add(getCalculateSumButton());
+		getPlayerBorsPanel().add(getCreateDogbarText());
 		
 		setSumLabel(new JLabel(""));
 		getPlayerBorsPanel().add(getSumLabel());
+		getPlayerBorsPanel().add(getDogbarField());
 		
 		
 	}
@@ -933,5 +943,33 @@ public class Gui extends JFrame {
 	 */
 	public void setSumLabel(JLabel sumLabel) {
 		this.sumLabel = sumLabel;
+	}
+
+	/**
+	 * @return the createDogbarText
+	 */
+	public JButton getCreateDogbarText() {
+		return createDogbarText;
+	}
+
+	/**
+	 * @param createDogbarText the createDogbarText to set
+	 */
+	public void setCreateDogbarText(JButton createDogbarText) {
+		this.createDogbarText = createDogbarText;
+	}
+
+	/**
+	 * @return the dogbarField
+	 */
+	public JTextField getDogbarField() {
+		return dogbarField;
+	}
+
+	/**
+	 * @param dogbarField the dogbarField to set
+	 */
+	public void setDogbarField(JTextField dogbarField) {
+		this.dogbarField = dogbarField;
 	}
 }

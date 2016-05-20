@@ -173,6 +173,7 @@ public class Main {
 		gui.getResetItem().addActionListener(e);
 		
 		gui.getCalculateSumButton().addActionListener(e);
+		gui.getCreateDogbarText().addActionListener(e);
 		
 		// Key events
 		gui.getOpenFileBtn().getActionMap().put("openFile", new OpenFileAction());
@@ -632,6 +633,15 @@ s	 */
 		gui.getSumLabel().setText("Sum for valgt lag er: " + sum);
 	}
 	
+	private void createDogbarText() {
+		String info = "";
+		for(JComboBox<SpillerBorsPlayer> combobox : gui.getInputFields()) {
+			SpillerBorsPlayer player = (SpillerBorsPlayer) combobox.getSelectedItem();
+			info += player.getDogbarText();
+		}
+		gui.getDogbarField().setText(info);
+	}
+	
 	// ############ Slutt på spillerbørs-kode ############# //
 	/*
 	 * Private class that implements the ActionListener interface
@@ -728,6 +738,8 @@ s	 */
 				reset();
 			} else if(e.getSource() == gui.getCalculateSumButton()) {
 				calculateBors();
+			} else if(e.getSource() == gui.getCreateDogbarText()) {
+				createDogbarText();
 			}
 		}
 	}
