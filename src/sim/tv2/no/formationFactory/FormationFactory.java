@@ -18,6 +18,8 @@ public class FormationFactory {
 			formation = new Formation4141();
 		} else if(formationText.equalsIgnoreCase("4-3-3")) {
 			formation = new Formation433();
+		} else if (formationText.equalsIgnoreCase("4-3-2-1")) {
+			formation = new Formation4321();
 		}
 		
 		return formation;

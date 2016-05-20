@@ -202,6 +202,7 @@ public class Main {
 		gui.getFormations().addItem("4-2-3-1");
 		gui.getFormations().addItem("4-1-4-1");
 		gui.getFormations().addItem("4-3-3");
+		gui.getFormations().addItem("4-3-2-1");
 	}
 	
 	//############# H2H - kode ################//	
