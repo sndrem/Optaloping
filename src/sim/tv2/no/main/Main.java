@@ -28,12 +28,15 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.TitledBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import sim.tv2.no.FormationInterface.Formation;
 import sim.tv2.no.Head2Head.H2HParser;
 import sim.tv2.no.comparators.AvgSpeedComparator;
 import sim.tv2.no.comparators.DistanceComparator;
 import sim.tv2.no.comparators.SprintComparator;
 import sim.tv2.no.comparators.TopSpeedComparator;
 import sim.tv2.no.exceptions.GetMatchesException;
+import sim.tv2.no.exceptions.TeamNotFullException;
+import sim.tv2.no.formationFactory.FormationFactory;
 import sim.tv2.no.gui.Gui;
 import sim.tv2.no.match.Match;
 import sim.tv2.no.parser.Parser;
@@ -85,40 +88,42 @@ public class Main {
 				setupActionListeners();
 				setBorsPlayers(new ArrayList<SpillerBorsPlayer>());
 				// Crystal Palace
-//				getBorsPlayers().add(new SpillerBorsPlayer("Hennesey", 7));
-//				getBorsPlayers().add(new SpillerBorsPlayer("Ward", 6));
-//				getBorsPlayers().add(new SpillerBorsPlayer("Dann", 7));
-//				getBorsPlayers().add(new SpillerBorsPlayer("Delaney", 6));
-//				getBorsPlayers().add(new SpillerBorsPlayer("Souaré", 6));
-//				getBorsPlayers().add(new SpillerBorsPlayer("McArthur", 6));
-//				getBorsPlayers().add(new SpillerBorsPlayer("Cabaye", 7));
-//				getBorsPlayers().add(new SpillerBorsPlayer("Zaha", 6));
-//				getBorsPlayers().add(new SpillerBorsPlayer("Puncheon", 6));
-//				getBorsPlayers().add(new SpillerBorsPlayer("Bolasie", 7));
-//				getBorsPlayers().add(new SpillerBorsPlayer("Wickham", 5));
-//				getBorsPlayers().add(new SpillerBorsPlayer("Adebayor", 6));
-//				getBorsPlayers().add(new SpillerBorsPlayer("Gayle", 5));
-//				getBorsPlayers().add(new SpillerBorsPlayer("Kelly", 5));
-//				getBorsPlayers().add(new SpillerBorsPlayer("Mutch", 5));
-//				getBorsPlayers().add(new SpillerBorsPlayer("Jedinak", 6));
-//				
-//				// Man. United
-//				getBorsPlayers().add(new SpillerBorsPlayer("de Gea", 9));
-//				getBorsPlayers().add(new SpillerBorsPlayer("Rojo", 6));
-//				getBorsPlayers().add(new SpillerBorsPlayer("Valencia", 7));
-//				getBorsPlayers().add(new SpillerBorsPlayer("Smalling", 8));
-//				getBorsPlayers().add(new SpillerBorsPlayer("Blind", 6));
-//				getBorsPlayers().add(new SpillerBorsPlayer("Borthwick-Jackson", 6));
-//				getBorsPlayers().add(new SpillerBorsPlayer("Carrick", 6));
-//				getBorsPlayers().add(new SpillerBorsPlayer("Lingard", 6));
-//				getBorsPlayers().add(new SpillerBorsPlayer("Mata", 6));
-//				getBorsPlayers().add(new SpillerBorsPlayer("Rooney", 7));
-//				getBorsPlayers().add(new SpillerBorsPlayer("Martial", 8));
-//				getBorsPlayers().add(new SpillerBorsPlayer("Rashford", 7));
-//				getBorsPlayers().add(new SpillerBorsPlayer("Fellaini", 6));
-//				getBorsPlayers().add(new SpillerBorsPlayer("Schneiderlin", 7));
-//				getBorsPlayers().add(new SpillerBorsPlayer("Memphis", 6));
-//				getBorsPlayers().add(new SpillerBorsPlayer("Jones", 6));
+				getBorsPlayers().add(new SpillerBorsPlayer("Hennesey", 7));
+				getBorsPlayers().add(new SpillerBorsPlayer("Ward", 6));
+				getBorsPlayers().add(new SpillerBorsPlayer("Dann", 7));
+				getBorsPlayers().add(new SpillerBorsPlayer("Delaney", 6));
+				getBorsPlayers().add(new SpillerBorsPlayer("Souaré", 6));
+				getBorsPlayers().add(new SpillerBorsPlayer("McArthur", 6));
+				getBorsPlayers().add(new SpillerBorsPlayer("Cabaye", 7));
+				getBorsPlayers().add(new SpillerBorsPlayer("Zaha", 6));
+				getBorsPlayers().add(new SpillerBorsPlayer("Puncheon", 6));
+				getBorsPlayers().add(new SpillerBorsPlayer("Bolasie", 7));
+				getBorsPlayers().add(new SpillerBorsPlayer("Wickham", 5));
+				getBorsPlayers().add(new SpillerBorsPlayer("Adebayor", 6));
+				getBorsPlayers().add(new SpillerBorsPlayer("Gayle", 5));
+				getBorsPlayers().add(new SpillerBorsPlayer("Kelly", 5));
+				getBorsPlayers().add(new SpillerBorsPlayer("Mutch", 5));
+				getBorsPlayers().add(new SpillerBorsPlayer("Jedinak", 6));
+				
+				// Man. United
+				getBorsPlayers().add(new SpillerBorsPlayer("de Gea", 9));
+				getBorsPlayers().add(new SpillerBorsPlayer("Rojo", 6));
+				getBorsPlayers().add(new SpillerBorsPlayer("Valencia", 7));
+				getBorsPlayers().add(new SpillerBorsPlayer("Smalling", 8));
+				getBorsPlayers().add(new SpillerBorsPlayer("Blind", 6));
+				getBorsPlayers().add(new SpillerBorsPlayer("Borthwick-Jackson", 6));
+				getBorsPlayers().add(new SpillerBorsPlayer("Carrick", 6));
+				getBorsPlayers().add(new SpillerBorsPlayer("Lingard", 6));
+				getBorsPlayers().add(new SpillerBorsPlayer("Mata", 6));
+				getBorsPlayers().add(new SpillerBorsPlayer("Rooney", 7));
+				getBorsPlayers().add(new SpillerBorsPlayer("Martial", 8));
+				getBorsPlayers().add(new SpillerBorsPlayer("Rashford", 7));
+				getBorsPlayers().add(new SpillerBorsPlayer("Fellaini", 6));
+				getBorsPlayers().add(new SpillerBorsPlayer("Schneiderlin", 7));
+				getBorsPlayers().add(new SpillerBorsPlayer("Memphis", 6));
+				getBorsPlayers().add(new SpillerBorsPlayer("Jones", 6));
+				
+				setupFormations();
 				
 				h2hParser = new H2HParser();
 			}
@@ -190,6 +195,13 @@ public class Main {
 		
 		gui.getCreateFilesMenuItem().getActionMap().put("textFileAction", new CreateTextFilesAction("Opprett .txt-filer"));
 		gui.getCreateFilesMenuItem().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(KeyStroke.getKeyStroke(KeyEvent.VK_D, KeyEvent.CTRL_DOWN_MASK), "textFileAction");
+	}
+	
+	private void setupFormations() {
+		gui.getFormations().addItem("4-4-2");
+		gui.getFormations().addItem("4-2-3-1");
+		gui.getFormations().addItem("4-1-4-1");
+		gui.getFormations().addItem("4-3-3");
 	}
 	
 	//############# H2H - kode ################//	
@@ -632,13 +644,21 @@ s	 */
 		gui.getSumLabel().setText("Sum for valgt lag er: " + sum);
 	}
 	
-	private void createDogbarText() {
-		String info = "";
-		for(JComboBox<SpillerBorsPlayer> combobox : gui.getSpillerBorsDropbox()) {
-			SpillerBorsPlayer player = (SpillerBorsPlayer) combobox.getSelectedItem();
-			info += player.getDogbarText();
+	private void createDogbarText(String formationString) {
+		Formation formation = FormationFactory.createFormation(formationString);
+		if(formation != null) {
+			List<SpillerBorsPlayer> players = new ArrayList<SpillerBorsPlayer>();
+			for(JComboBox<SpillerBorsPlayer> playerDropBox : gui.getSpillerBorsDropbox()) {
+				players.add((SpillerBorsPlayer) playerDropBox.getSelectedItem());
+			}
+			formation.setPlayers(players);
+			try {
+				gui.getDogbarField().setText(formation.getFormationText());
+			} catch (TeamNotFullException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		gui.getDogbarField().setText(info);
 	}
 	
 	// ############ Slutt på spillerbørs-kode ############# //
@@ -738,7 +758,7 @@ s	 */
 			} else if(e.getSource() == gui.getCalculateSumButton()) {
 				calculateBors();
 			} else if(e.getSource() == gui.getCreateDogbarText()) {
-				createDogbarText();
+				createDogbarText((String) gui.getFormations().getSelectedItem());
 			} else if (e.getSource() == gui.getOpenBorsButton()) {
 				int choice = gui.getFileChooser().showDialog(gui, "Åpne fil");
 				if(choice == JFileChooser.APPROVE_OPTION) {

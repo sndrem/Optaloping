@@ -86,6 +86,7 @@ public class Gui extends JFrame {
 	private JButton createDogbarText;
 	private JTextField dogbarField;
 	private JButton openBorsButton;
+	private JComboBox<String> formations;
 	
 	private Gui() {
 		setupGui();
@@ -153,6 +154,8 @@ public class Gui extends JFrame {
 		getDogbarField().setBorder(new TitledBorder("Tekst for Dogbar"));
 		
 		getPlayerBorsPanel().add(getCalculateSumButton());
+		setFormations(new JComboBox<String>());
+		getPlayerBorsPanel().add(getFormations());
 		getPlayerBorsPanel().add(getCreateDogbarText());
 		
 		setSumLabel(new JLabel(""));
@@ -991,5 +994,19 @@ public class Gui extends JFrame {
 	 */
 	public void setOpenBorsButton(JButton openBorsButton) {
 		this.openBorsButton = openBorsButton;
+	}
+
+	/**
+	 * @return the formations
+	 */
+	public JComboBox<String> getFormations() {
+		return formations;
+	}
+
+	/**
+	 * @param formations the formations to set
+	 */
+	public void setFormations(JComboBox<String> formations) {
+		this.formations = formations;
 	}
 }
