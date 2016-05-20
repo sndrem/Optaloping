@@ -81,10 +81,11 @@ public class Gui extends JFrame {
 	private JMenuItem resetItem;
 	private JPanel playerBorsPanel;
 	private JButton calculateSumButton;
-	private List<JComboBox<SpillerBorsPlayer>> inputFields;
+	private List<JComboBox<SpillerBorsPlayer>> spillerBorsDropbox;
 	private JLabel sumLabel;
 	private JButton createDogbarText;
 	private JTextField dogbarField;
+	private JButton openBorsButton;
 	
 	private Gui() {
 		setupGui();
@@ -133,12 +134,16 @@ public class Gui extends JFrame {
 	private void createPlayerBorsPanel() {
 		setPlayerBorsPanel(new JPanel());
 		JPanel playerPanel = new JPanel(new GridLayout(11,1));
-		setInputFields(new ArrayList<JComboBox<SpillerBorsPlayer>>());
+		setSpillerBorsDropbox(new ArrayList<JComboBox<SpillerBorsPlayer>>());
 		for(int i = 0; i < 11; i++) {
 			JComboBox<SpillerBorsPlayer> field = new JComboBox<SpillerBorsPlayer>();
-			getInputFields().add(field);
+			getSpillerBorsDropbox().add(field);
 			playerPanel.add(field);
 		}
+		
+		setOpenBorsButton(new JButton("Velg fil"));
+		getPlayerBorsPanel().add(getOpenBorsButton());
+		getOpenBorsButton().setToolTipText("Åpne en .txt-fil med format: Navn:Børspoeng");
 		
 		getPlayerBorsPanel().add(playerPanel);
 		setCalculateSumButton(new JButton("Summer spillere"));
@@ -918,20 +923,6 @@ public class Gui extends JFrame {
 	}
 
 	/**
-	 * @return the inputFields
-	 */
-	public List<JComboBox<SpillerBorsPlayer>> getInputFields() {
-		return inputFields;
-	}
-
-	/**
-	 * @param arrayList the inputFields to set
-	 */
-	public void setInputFields(List<JComboBox<SpillerBorsPlayer>> arrayList) {
-		this.inputFields = arrayList;
-	}
-
-	/**
 	 * @return the sumLabel
 	 */
 	public JLabel getSumLabel() {
@@ -971,5 +962,34 @@ public class Gui extends JFrame {
 	 */
 	public void setDogbarField(JTextField dogbarField) {
 		this.dogbarField = dogbarField;
+	}
+
+	/**
+	 * @return the spillerBorsDropbox
+	 */
+	public List<JComboBox<SpillerBorsPlayer>> getSpillerBorsDropbox() {
+		return spillerBorsDropbox;
+	}
+
+	/**
+	 * @param spillerBorsDropbox the spillerBorsDropbox to set
+	 */
+	public void setSpillerBorsDropbox(
+			List<JComboBox<SpillerBorsPlayer>> spillerBorsDropbox) {
+		this.spillerBorsDropbox = spillerBorsDropbox;
+	}
+
+	/**
+	 * @return the openBorsButton
+	 */
+	public JButton getOpenBorsButton() {
+		return openBorsButton;
+	}
+
+	/**
+	 * @param openBorsButton the openBorsButton to set
+	 */
+	public void setOpenBorsButton(JButton openBorsButton) {
+		this.openBorsButton = openBorsButton;
 	}
 }

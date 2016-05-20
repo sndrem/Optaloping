@@ -2,9 +2,13 @@ package sim.tv2.no.parser;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -18,6 +22,7 @@ import org.jsoup.select.Elements;
 import sim.tv2.no.exceptions.GetMatchesException;
 import sim.tv2.no.match.Match;
 import sim.tv2.no.player.Player;
+import sim.tv2.no.player.SpillerBorsPlayer;
 import sim.tv2.no.team.Team;
 import sim.tv2.no.utilities.Util;
 
@@ -101,6 +106,45 @@ public class Parser{
 		}
 		
 		return getTeams();
+	}
+	
+	/**
+	 * Method to parse the spillerbors .txt-file
+	 * @param File file the file to parse
+	 */
+	public List<SpillerBorsPlayer> parseSpillerbors(File file) {
+		List<SpillerBorsPlayer> players = new ArrayList<>();
+		String line;
+		
+		    InputStream fis = null;
+		    InputStreamReader isr = null;;
+		    BufferedReader br = null;;
+			try {
+				fis = new FileInputStream(file);
+				isr = new InputStreamReader(fis, Charset.forName("UTF-8"));
+				br = new BufferedReader(isr);
+					while ((line = br.readLine()) != null) {
+						String[] info = line.split(":");
+						String name = info[0];
+						int score = Integer.parseInt(info[1]);
+						players.add(new SpillerBorsPlayer(name, score));
+					}
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} finally {
+				try {
+					br.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			return players;
+		
 	}
 	
 	/**
