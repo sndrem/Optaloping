@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.swing.AbstractAction;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -38,6 +39,7 @@ import sim.tv2.no.match.Match;
 import sim.tv2.no.parser.Parser;
 import sim.tv2.no.player.H2HPlayer;
 import sim.tv2.no.player.Player;
+import sim.tv2.no.player.SpillerBorsPlayer;
 import sim.tv2.no.team.Team;
 import sim.tv2.no.utilities.Util;
 import sim.tv2.no.webDriver.OpenOpta;
@@ -74,12 +76,67 @@ public class Main {
 	public Main() {
 		// TODO Auto-generated constructor stub
 		SwingUtilities.invokeLater(new Runnable() {
+			private List<SpillerBorsPlayer> borsPlayers;
+
 			public void run() {			
 				gui = Gui.getInstance();
 				parser = new Parser();
 				setupTeams();
 				setupActionListeners();
+				setBorsPlayers(new ArrayList<SpillerBorsPlayer>());
+				// Crystal Palace
+				getBorsPlayers().add(new SpillerBorsPlayer("Hennesey", 7));
+				getBorsPlayers().add(new SpillerBorsPlayer("Ward", 6));
+				getBorsPlayers().add(new SpillerBorsPlayer("Dann", 7));
+				getBorsPlayers().add(new SpillerBorsPlayer("Delaney", 6));
+				getBorsPlayers().add(new SpillerBorsPlayer("Souaré", 6));
+				getBorsPlayers().add(new SpillerBorsPlayer("McArthur", 6));
+				getBorsPlayers().add(new SpillerBorsPlayer("Cabaye", 7));
+				getBorsPlayers().add(new SpillerBorsPlayer("Zaha", 6));
+				getBorsPlayers().add(new SpillerBorsPlayer("Puncheon", 6));
+				getBorsPlayers().add(new SpillerBorsPlayer("Bolasie", 7));
+				getBorsPlayers().add(new SpillerBorsPlayer("Wickham", 5));
+				getBorsPlayers().add(new SpillerBorsPlayer("Adebayor", 6));
+				getBorsPlayers().add(new SpillerBorsPlayer("Gayle", 5));
+				getBorsPlayers().add(new SpillerBorsPlayer("Kelly", 5));
+				getBorsPlayers().add(new SpillerBorsPlayer("Mutch", 5));
+				getBorsPlayers().add(new SpillerBorsPlayer("Jedinak", 6));
+				
+				// Man. United
+				getBorsPlayers().add(new SpillerBorsPlayer("de Gea", 9));
+				getBorsPlayers().add(new SpillerBorsPlayer("Rojo", 6));
+				getBorsPlayers().add(new SpillerBorsPlayer("Valencia", 7));
+				getBorsPlayers().add(new SpillerBorsPlayer("Smalling", 8));
+				getBorsPlayers().add(new SpillerBorsPlayer("Blind", 6));
+				getBorsPlayers().add(new SpillerBorsPlayer("Borthwick-Jackson", 6));
+				getBorsPlayers().add(new SpillerBorsPlayer("Carrick", 6));
+				getBorsPlayers().add(new SpillerBorsPlayer("Lingard", 6));
+				getBorsPlayers().add(new SpillerBorsPlayer("Mata", 6));
+				getBorsPlayers().add(new SpillerBorsPlayer("Rooney", 7));
+				getBorsPlayers().add(new SpillerBorsPlayer("Martial", 8));
+				getBorsPlayers().add(new SpillerBorsPlayer("Rashford", 7));
+				getBorsPlayers().add(new SpillerBorsPlayer("Fellaini", 6));
+				getBorsPlayers().add(new SpillerBorsPlayer("Schneiderlin", 7));
+				getBorsPlayers().add(new SpillerBorsPlayer("Memphis", 6));
+				getBorsPlayers().add(new SpillerBorsPlayer("Jones", 6));
+				
+				
+				addPlayersToSpillerBors(getBorsPlayers());
 				h2hParser = new H2HParser();
+			}
+
+			/**
+			 * @return the borsPlayers
+			 */
+			public List<SpillerBorsPlayer> getBorsPlayers() {
+				return borsPlayers;
+			}
+
+			/**
+			 * @param borsPlayers the borsPlayers to set
+			 */
+			public void setBorsPlayers(List<SpillerBorsPlayer> borsPlayers) {
+				this.borsPlayers = borsPlayers;
 			}
 		});
 	}
@@ -114,6 +171,8 @@ public class Main {
 		gui.getFileComboBox().addActionListener(e);
 		
 		gui.getResetItem().addActionListener(e);
+		
+		gui.getCalculateSumButton().addActionListener(e);
 		
 		// Key events
 		gui.getOpenFileBtn().getActionMap().put("openFile", new OpenFileAction());
@@ -553,6 +612,27 @@ s	 */
 	
 	//############# Slutt på Opta-løpestats - kode ################//
 	
+	
+	// ############ Spillerbørs-kode ################### //
+	
+	private void addPlayersToSpillerBors(List<SpillerBorsPlayer> players) {
+		for(SpillerBorsPlayer player : players) {
+			for(JComboBox<SpillerBorsPlayer> combobox : gui.getInputFields()) {
+				combobox.addItem(player);
+			}
+		}
+	}
+	
+	private void calculateBors() {
+		int sum = 0;
+		for(JComboBox<SpillerBorsPlayer> combobox : gui.getInputFields()) {
+			SpillerBorsPlayer player = (SpillerBorsPlayer) combobox.getSelectedItem();
+			sum += player.getScore();
+		}
+		gui.getSumLabel().setText("Sum for valgt lag er: " + sum);
+	}
+	
+	// ############ Slutt på spillerbørs-kode ############# //
 	/*
 	 * Private class that implements the ActionListener interface
 	 */
@@ -646,6 +726,8 @@ s	 */
 				calculate(gui.getNumberOfPlayersArea().getSelectedIndex(), gui.getCategoryDropdow().getSelectedIndex(), false);
 			} else if(e.getSource() == gui.getResetItem()) {
 				reset();
+			} else if(e.getSource() == gui.getCalculateSumButton()) {
+				calculateBors();
 			}
 		}
 	}

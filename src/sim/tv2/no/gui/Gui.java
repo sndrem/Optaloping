@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
@@ -14,6 +16,7 @@ import javax.swing.JComboBox;
 import javax.swing.JEditorPane;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
@@ -27,6 +30,7 @@ import javax.swing.KeyStroke;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.TitledBorder;
 
+import sim.tv2.no.player.SpillerBorsPlayer;
 import sim.tv2.no.utilities.Util;
 
 
@@ -74,6 +78,10 @@ public class Gui extends JFrame {
 	private JMenuItem openDir;
 	private JComboBox<String> fileComboBox;
 	private JMenuItem resetItem;
+	private JPanel playerBorsPanel;
+	private JButton calculateSumButton;
+	private List<JComboBox<SpillerBorsPlayer>> inputFields;
+	private JLabel sumLabel;
 	
 	private Gui() {
 		setupGui();
@@ -105,10 +113,12 @@ public class Gui extends JFrame {
 		
 		createOptaRunningPanel();
 		createHead2HeadPanel();
+		createPlayerBorsPanel();
 		
 		tabbedPane = new JTabbedPane();
 		tabbedPane.add("Løping", getOptaRunningPanel());
 		tabbedPane.add("H2H", getHead2headPanel());
+		tabbedPane.add("Spillerbørs", getPlayerBorsPanel());
 		
 		
 		this.add(tabbedPane);
@@ -117,6 +127,26 @@ public class Gui extends JFrame {
 		
 	}
 	
+	private void createPlayerBorsPanel() {
+		setPlayerBorsPanel(new JPanel());
+		JPanel playerPanel = new JPanel(new GridLayout(11,1));
+		setInputFields(new ArrayList<JComboBox<SpillerBorsPlayer>>());
+		for(int i = 0; i < 11; i++) {
+			JComboBox<SpillerBorsPlayer> field = new JComboBox<SpillerBorsPlayer>();
+			getInputFields().add(field);
+			playerPanel.add(field);
+		}
+		
+		getPlayerBorsPanel().add(playerPanel);
+		setCalculateSumButton(new JButton("Summer spillere"));
+		getPlayerBorsPanel().add(getCalculateSumButton());
+		
+		setSumLabel(new JLabel(""));
+		getPlayerBorsPanel().add(getSumLabel());
+		
+		
+	}
+
 	private void createHead2HeadPanel() {
 		head2headPanel = new JPanel(new BorderLayout());
 		
@@ -847,5 +877,61 @@ public class Gui extends JFrame {
 	 */
 	public void setResetItem(JMenuItem resetItem) {
 		this.resetItem = resetItem;
+	}
+
+	/**
+	 * @return the playerBorsPanel
+	 */
+	public JPanel getPlayerBorsPanel() {
+		return playerBorsPanel;
+	}
+
+	/**
+	 * @param playerBorsPanel the playerBorsPanel to set
+	 */
+	public void setPlayerBorsPanel(JPanel playerBorsPanel) {
+		this.playerBorsPanel = playerBorsPanel;
+	}
+
+	/**
+	 * @return the calculateSumButton
+	 */
+	public JButton getCalculateSumButton() {
+		return calculateSumButton;
+	}
+
+	/**
+	 * @param calculateSumButton the calculateSumButton to set
+	 */
+	public void setCalculateSumButton(JButton calculateSumButton) {
+		this.calculateSumButton = calculateSumButton;
+	}
+
+	/**
+	 * @return the inputFields
+	 */
+	public List<JComboBox<SpillerBorsPlayer>> getInputFields() {
+		return inputFields;
+	}
+
+	/**
+	 * @param arrayList the inputFields to set
+	 */
+	public void setInputFields(List<JComboBox<SpillerBorsPlayer>> arrayList) {
+		this.inputFields = arrayList;
+	}
+
+	/**
+	 * @return the sumLabel
+	 */
+	public JLabel getSumLabel() {
+		return sumLabel;
+	}
+
+	/**
+	 * @param sumLabel the sumLabel to set
+	 */
+	public void setSumLabel(JLabel sumLabel) {
+		this.sumLabel = sumLabel;
 	}
 }
