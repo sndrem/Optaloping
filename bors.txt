@@ -26,3 +26,4 @@ Mata:7
 Rooney:7
 Martial:8
 Rashford:7
+Sindre:10

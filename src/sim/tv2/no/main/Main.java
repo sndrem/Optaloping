@@ -88,7 +88,7 @@ public class Main {
 				setupActionListeners();
 				setBorsPlayers(new ArrayList<SpillerBorsPlayer>());
 				// Crystal Palace
-				getBorsPlayers().add(new SpillerBorsPlayer("Hennesey", 7));
+				getBorsPlayers().add(new SpillerBorsPlayer("Hennessey", 7));
 				getBorsPlayers().add(new SpillerBorsPlayer("Ward", 6));
 				getBorsPlayers().add(new SpillerBorsPlayer("Dann", 7));
 				getBorsPlayers().add(new SpillerBorsPlayer("Delaney", 6));
@@ -122,6 +122,7 @@ public class Main {
 				getBorsPlayers().add(new SpillerBorsPlayer("Schneiderlin", 7));
 				getBorsPlayers().add(new SpillerBorsPlayer("Memphis", 6));
 				getBorsPlayers().add(new SpillerBorsPlayer("Jones", 6));
+				
 				addPlayersToSpillerBors(getBorsPlayers());
 				
 				setupFormations();
@@ -631,11 +632,27 @@ s	 */
 	
 	// ############ Spillerbørs-kode ################### //
 	
+	/**
+	 * Method to populate jcomboboxes for spillerborsplayers
+	 * Call to this method resets the previous added items to the list
+	 * @param players list of the players to populate
+	 */
 	private void addPlayersToSpillerBors(List<SpillerBorsPlayer> players) {
+		resetBorsPlayers();
 		for(SpillerBorsPlayer player : players) {
 			for(JComboBox<SpillerBorsPlayer> combobox : gui.getSpillerBorsDropbox()) {
+				
 				combobox.addItem(player);
 			}
+		}
+	}
+	
+	/**
+	 * Method for resetting the spillerbørs-players
+	 */
+	private void resetBorsPlayers() {
+		for(JComboBox<SpillerBorsPlayer> combobox : gui.getSpillerBorsDropbox()) {
+			combobox.removeAllItems();
 		}
 	}
 	

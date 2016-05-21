@@ -35,7 +35,7 @@ public class SpillerBorsPlayer extends Player {
 	
 	@Override
 	public String toString() {
-		return super.getName();
+		return getDogbarText();
 	}
 	
 	public String getDogbarText() {
