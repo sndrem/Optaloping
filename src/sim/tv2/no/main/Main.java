@@ -122,6 +122,7 @@ public class Main {
 				getBorsPlayers().add(new SpillerBorsPlayer("Schneiderlin", 7));
 				getBorsPlayers().add(new SpillerBorsPlayer("Memphis", 6));
 				getBorsPlayers().add(new SpillerBorsPlayer("Jones", 6));
+				addPlayersToSpillerBors(getBorsPlayers());
 				
 				setupFormations();
 				
@@ -203,6 +204,8 @@ public class Main {
 		gui.getFormations().addItem("4-1-4-1");
 		gui.getFormations().addItem("4-3-3");
 		gui.getFormations().addItem("4-3-2-1");
+		gui.getFormations().addItem("4-4-1-1");
+		gui.getFormations().addItem("4-5-1");
 	}
 	
 	//############# H2H - kode ################//	

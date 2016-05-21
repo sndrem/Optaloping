@@ -20,6 +20,10 @@ public class FormationFactory {
 			formation = new Formation433();
 		} else if (formationText.equalsIgnoreCase("4-3-2-1")) {
 			formation = new Formation4321();
+		} else if(formationText.equalsIgnoreCase("4-4-1-1")) {
+			formation = new Formation4411();
+		} else if (formationText.equalsIgnoreCase("4-5-1")) {
+			formation = new Formation451();
 		}
 		
 		return formation;

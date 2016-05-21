@@ -2,6 +2,7 @@ package sim.tv2.no.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.Rectangle;
 import java.io.File;
@@ -133,8 +134,12 @@ public class Gui extends JFrame {
 	}
 	
 	private void createPlayerBorsPanel() {
-		setPlayerBorsPanel(new JPanel());
+		setPlayerBorsPanel(new JPanel(new BorderLayout()));
+		
+		JPanel buttonPanel = new JPanel(new FlowLayout());
 		JPanel playerPanel = new JPanel(new GridLayout(11,1));
+		JPanel outputPanel = new JPanel(new BorderLayout());
+		
 		setSpillerBorsDropbox(new ArrayList<JComboBox<SpillerBorsPlayer>>());
 		for(int i = 0; i < 11; i++) {
 			JComboBox<SpillerBorsPlayer> field = new JComboBox<SpillerBorsPlayer>();
@@ -143,24 +148,29 @@ public class Gui extends JFrame {
 		}
 		
 		setOpenBorsButton(new JButton("Velg fil"));
-		getPlayerBorsPanel().add(getOpenBorsButton());
 		getOpenBorsButton().setToolTipText("Åpne en .txt-fil med format: Navn:Børspoeng");
 		
-		getPlayerBorsPanel().add(playerPanel);
+		getPlayerBorsPanel().add(buttonPanel, BorderLayout.NORTH);
+		getPlayerBorsPanel().add(playerPanel, BorderLayout.CENTER);
+		getPlayerBorsPanel().add(outputPanel, BorderLayout.SOUTH);
+		
 		setCalculateSumButton(new JButton("Summer spillere"));
 		setCreateDogbarText(new JButton("Generer dogbar-tekst"));
 		
-		setDogbarField(new JTextField(50));
+		setDogbarField(new JTextField(70));
 		getDogbarField().setBorder(new TitledBorder("Tekst for Dogbar"));
 		
-		getPlayerBorsPanel().add(getCalculateSumButton());
 		setFormations(new JComboBox<String>());
-		getPlayerBorsPanel().add(getFormations());
-		getPlayerBorsPanel().add(getCreateDogbarText());
+		
+		buttonPanel.add(getOpenBorsButton());
+		buttonPanel.add(getCalculateSumButton());
+		buttonPanel.add(getFormations());
+		buttonPanel.add(getCreateDogbarText());
+		
 		
 		setSumLabel(new JLabel(""));
-		getPlayerBorsPanel().add(getSumLabel());
-		getPlayerBorsPanel().add(getDogbarField());
+		outputPanel.add(getSumLabel(), BorderLayout.NORTH);
+		outputPanel.add(getDogbarField(), BorderLayout.SOUTH);
 		
 		
 	}
